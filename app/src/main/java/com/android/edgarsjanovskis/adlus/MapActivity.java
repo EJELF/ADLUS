@@ -231,7 +231,7 @@ public class MapActivity extends AppCompatActivity
     private void permissionsDenied() {
         Log.w(TAG, "permissionsDenied()");
         // close app and warn user was in to-do list
-        Toast toast = Toast.makeText(getApplicationContext(),"Programma nevar strādāt bez Jūsu atļaujas!!!", Toast.LENGTH_LONG);
+        Toast toast = Toast.makeText(getApplicationContext(),"Lai ADLUS strādātu, ir nepieciešama Jūsu atļauja piekļūt lokācijai", Toast.LENGTH_LONG);
         toast.show();
         setResult(0);
         finish();

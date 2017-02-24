@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 /**
  * Created by Edgars on 09.12.16.
+ * DATUBĀZES KONTROLIERIS LAI IZVEIDOTU VISAS TABULAS KAS JĀSINHRONIZĒ AR MSSQL
  */
 
 public class DatabaseControler extends SQLiteOpenHelper {
@@ -17,7 +18,7 @@ public class DatabaseControler extends SQLiteOpenHelper {
     public static final String PROJECT_ID_COLUMN = "ProjectId";
     public static final String LATITUDE_COLUMN = "Latitude";
     public static final String LONGITUDE_COLUMN = "Longitude";
-    //public static final String TS_COLUMN = "ts";
+    public static final String TS_COLUMN = "ts";
     public static final String RADIUS_COLUMN= "Radius";
 
     public DatabaseControler(Context context, String name, SQLiteDatabase.CursorFactory factory, int version)
@@ -28,7 +29,7 @@ public class DatabaseControler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String createTableRequest = "CREATE TABLE " + DATABASE_TABLE + " ( GeofenceId INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + PROJECT_ID_COLUMN + " Integer, " + LATITUDE_COLUMN + " Float, " + LONGITUDE_COLUMN + " Float, "
+                + PROJECT_ID_COLUMN + " Integer, " + LATITUDE_COLUMN + " Float, " + LONGITUDE_COLUMN + " Float, " + TS_COLUMN + " Integer, "
                 + RADIUS_COLUMN + " Integer); ";
         db.execSQL(createTableRequest);
     }

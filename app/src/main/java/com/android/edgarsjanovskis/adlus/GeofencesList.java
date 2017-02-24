@@ -1,5 +1,6 @@
 package com.android.edgarsjanovskis.adlus;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -14,7 +15,7 @@ public class GeofencesList extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_geofences_list);
+        setContentView(R.layout.list_item);
     }
 
     @Override
@@ -48,7 +49,7 @@ public class GeofencesList extends AppCompatActivity {
         String[] data = new String[list.size()];
         for (int i = 0; i<list.size(); i++){
             data[i] = list.get(i);
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, data);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_activated_1, data);
             lv.setAdapter(adapter);
         }
 

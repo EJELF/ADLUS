@@ -38,12 +38,22 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
     <Button
-        android:id="@+id/showList"
+        android:id="@+id/showVersion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Show Item List from response"
-        android:onClick="buttonList_onClick"
+        android:text="Show App version"
+        android:onClick="buttonVersion_onClick"
         android:layout_below="@+id/showUUID"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+           android:id="@+id/showList"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="Show Item List from response"
+           android:onClick="buttonList_onClick"
+        android:layout_below="@+id/showVersion"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 

@@ -17,9 +17,13 @@ public class SplashScreen extends Activity {
             public void run(){
                 try{
                     sleep(5000);
-                }catch(InterruptedException e){
+
+                }
+                catch(InterruptedException e){
                     e.printStackTrace();
-                }finally{
+                }
+                finally {
+
                     Intent intent = new Intent(SplashScreen.this,MainActivity.class);
                     // Šim jānovērš vairāku launcher ikonu veidošanu
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

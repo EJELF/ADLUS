@@ -1,10 +1,13 @@
 package com.android.edgarsjanovskis.adlus;
 
+import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -23,16 +26,21 @@ public class MyGeofences extends AppCompatActivity {
 
     private ProgressDialog pDialog;
     private ListView lv;
-    //private static int phoneID = 5;
+    // Jāizmanto statiskās komponentes, kuras tiks ievadītas no lietotāja puses!!!
+    private static final String myurl = "192.168.10.86:5111";
+    private static final String myimei = "359959046287276";
+
+
 
     // URL to get contacts JSON
-    private static String url = "http://192.168.10.86:5111/api/AndroidDbUpdates";
+
+    private static String url = "http://"+ myurl +"/api/AndroidDbUpdates";
 
     ArrayList<HashMap<String, String>> geofencesList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_list);
 
         geofencesList = new ArrayList<>();
 
@@ -67,10 +75,11 @@ public class MyGeofences extends AppCompatActivity {
                 try {
                     //JSONObject jsonObj = new JSONObject(jsonStr);
 
+
                     // Getting JSON Array node
                     JSONArray geofences = new JSONArray(jsonStr);
 
-                    // looping through All Contacts
+                    // looping through All Array
                     for (int i = 0; i < geofences.length(); i++) {
                         JSONObject c = geofences.getJSONObject(i);
 
@@ -86,13 +95,6 @@ public class MyGeofences extends AppCompatActivity {
                         String projectName = c.getString("ProjectName");
                         String ts = c.getString("ts");
 
-/*
-                        // Phone node is JSON Object
-                        JSONObject phone = c.getJSONObject("phone");
-                        String mobile = phone.getString("mobile");
-                        String home = phone.getString("home");
-                        String office = phone.getString("office");
-*/
                         // tmp hash map for single contact
                         HashMap<String, String> geofence = new HashMap<>();
                         // adding each child node to HashMap key => value
@@ -110,6 +112,7 @@ public class MyGeofences extends AppCompatActivity {
                         // adding geofences to geofences list
                         geofencesList.add(geofence);
                     }
+
                 } catch (final JSONException e) {
                     Log.e(TAG, "Json parsing error: " + e.getMessage());
                     runOnUiThread(new Runnable() {
@@ -122,7 +125,8 @@ public class MyGeofences extends AppCompatActivity {
                         }
                     });
                 }
-            } else {
+            }
+            else {
                 Log.e(TAG, "Couldn't get json from server.");
                 runOnUiThread(new Runnable() {
                     @Override
@@ -146,16 +150,35 @@ public class MyGeofences extends AppCompatActivity {
             /**
              * Updating parsed JSON data into ListView
              * */
-                ListAdapter adapter = new SimpleAdapter(
-                        MyGeofences.this, geofencesList,
-                        R.layout.list_item, new String[]{"LR", "ProjectName", "Latitude",
-                        "Longitude"}, new int[]{R.id.lr,
-                        R.id.projectName,
-                        R.id.lat, R.id.lng});
-                lv.setAdapter(adapter);
+            ListAdapter adapter = new SimpleAdapter(
+                    MyGeofences.this, geofencesList,
+                    R.layout.list_item, new String[]{"LR", "ProjectName", "Latitude",
+                    "Longitude", "IMEI"}, new int[]{R.id.lr,
+                    R.id.projectName,
+                    R.id.lat, R.id.lng, R.id.imei});
 
+            lv.setAdapter(adapter);
+            lv.setClickable(true); //aktivizē nospiešanu
+            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+
+                    //Toast.makeText(getApplicationContext(), "Nospiests: " + position, Toast.LENGTH_LONG).show();
+                    /*
+                    AlertDialog.Builder adb = new AlertDialog.Builder(
+                            MyGeofences.this);
+                    adb.setTitle("LR");
+                    adb.setMessage(" selected Item is="
+                            +lv.getItemAtPosition(position));
+                    adb.setPositiveButton("Ok", null);
+                    adb.show();*/
+                    MoreInfoDialog dialog = new MoreInfoDialog();
+                    FragmentManager fm = getFragmentManager();
+                    dialog.show(fm, "language");
+
+                }
+            });
         }
-
     }
 }
 
