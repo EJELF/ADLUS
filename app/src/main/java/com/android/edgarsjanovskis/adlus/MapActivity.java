@@ -20,6 +20,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -229,7 +230,11 @@ public class MapActivity extends AppCompatActivity
     // App cannot work without the permissions
     private void permissionsDenied() {
         Log.w(TAG, "permissionsDenied()");
-        // TODO close app and warn user
+        // close app and warn user was in to-do list
+        Toast toast = Toast.makeText(getApplicationContext(),"Programma nevar strādāt bez Jūsu atļaujas!!!", Toast.LENGTH_LONG);
+        toast.show();
+        setResult(0);
+        finish();
     }
 
     // Initialize GoogleMaps
@@ -358,19 +363,19 @@ public class MapActivity extends AppCompatActivity
         String title = latLng.latitude + ", " + latLng.longitude;
         // Define marker options
 
-        for(int ix = 0; ix < LRLOCATIONS.length; ix++) {
+        for (StoreLocation LRLOCATION : LRLOCATIONS) {
             MarkerOptions markerOptions = new MarkerOptions()
                     .position(latLng)
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
                     .title(title);
 
-        if ( map!=null ) {
-            // Remove last geoFenceMarker
-            if (geoFenceMarker != null)
-                geoFenceMarker.remove();
+            if (map != null) {
+                // Remove last geoFenceMarker
+                if (geoFenceMarker != null)
+                    geoFenceMarker.remove();
 
-            geoFenceMarker = map.addMarker(markerOptions);
-        }
+                geoFenceMarker = map.addMarker(markerOptions);
+            }
         }
     }
 
