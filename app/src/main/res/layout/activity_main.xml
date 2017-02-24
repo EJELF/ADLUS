@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.android.edgarsjanovskis.adlus.MainActivity">
+
+    <Button
+        android:id="@+id/showMapButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/show_map"
+        android:onClick="butonShowMap_onClick"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
+
+    <Button
+        android:id="@+id/showResponse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show REST response"
+        android:onClick="buttonResponse_onClick"
+        android:layout_below="@+id/showMapButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+    <Button
+        android:id="@+id/showUUID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show UUID"
+        android:onClick="buttonUUID_onClick"
+        android:layout_below="@+id/showResponse"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+    <Button
+        android:id="@+id/showList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show Item List from response"
+        android:onClick="buttonList_onClick"
+        android:layout_below="@+id/showUUID"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+</RelativeLayout>
