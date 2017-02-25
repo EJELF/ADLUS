@@ -248,7 +248,7 @@ public class MapActivity extends AppCompatActivity
     public void onMapReady(GoogleMap googleMap) {
         Log.d(TAG, "onMapReady()");
         map = googleMap;
-        map.setOnMapClickListener(this);
+        // map.setOnMapClickListener(this); We dont use clicks on map
         map.setOnMarkerClickListener(this);
     }
 
@@ -267,8 +267,8 @@ public class MapActivity extends AppCompatActivity
     private LocationRequest locationRequest;
     // Defined in mili seconds.
     // This number in extremely low, and should be used only for debug
-    private final int UPDATE_INTERVAL =  10000;
-    private final int FASTEST_INTERVAL = 9000;
+    private final int UPDATE_INTERVAL =  100000;
+    private final int FASTEST_INTERVAL = 90000;
 
     // Start location Updates
     private void startLocationUpdates(){
@@ -350,7 +350,7 @@ public class MapActivity extends AppCompatActivity
             if ( locationMarker != null )
                 locationMarker.remove();
             locationMarker = map.addMarker(markerOptions);
-            float zoom = 15f;
+            float zoom = 16f;
             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, zoom);
             map.animateCamera(cameraUpdate);
         }
@@ -363,7 +363,7 @@ public class MapActivity extends AppCompatActivity
         String title = latLng.latitude + ", " + latLng.longitude;
         // Define marker options
 
-        for (StoreLocation LRLOCATION : LRLOCATIONS) {
+        //for(StoreLocation LRLOCATIONS : LRLOCATIONS) {
             MarkerOptions markerOptions = new MarkerOptions()
                     .position(latLng)
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
@@ -376,7 +376,7 @@ public class MapActivity extends AppCompatActivity
 
                 geoFenceMarker = map.addMarker(markerOptions);
             }
-        }
+        //}
     }
 
     // Start Geofence creation process

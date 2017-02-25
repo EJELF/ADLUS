@@ -15,20 +15,24 @@ public class MainActivity extends AppCompatActivity {
     public static String uniqueID;
     final String PREFS_NAME = "AdlusPrefsFile";
     final String PREF_VERSION_CODE_KEY = "version_code";
+    final String APP_UUID = "app_uuid";
     final int DOESNT_EXIST = -1;
 
-
-    public void createUUID() {
-        uniqueID = UUID.randomUUID().toString();
+    //statisko metodi izmanto lai citā aktivitātē iegūtu vērtību
+    public static String getUniqueID() {
+        return uniqueID;
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         checkFirstRun();
-        createUUID();
+
         dbControler = new DatabaseControler(this);
     }
+
+
     public void checkFirstRun(){
 
         //Get current version code
@@ -51,14 +55,19 @@ public class MainActivity extends AppCompatActivity {
             return;
         } else if (savedVersionCode == DOESNT_EXIST){
             //this is a new install (of user cleared the shared prefs)
-            Intent intent = new Intent(MainActivity.this,SettingsActivity.class);
+            Intent intent = new Intent(MainActivity.this,WelcomeActivity.class);
             startActivity(intent);
+            createUUID();
         } else if (currentVersionCode > savedVersionCode){
             // This is an upgrade. Pagaidām neizmantoju
             return;
         }
         // Update the shared prefs with the current version code
         prefs.edit().putInt(PREF_VERSION_CODE_KEY, currentVersionCode).apply();
+        prefs.edit().putString(APP_UUID, uniqueID).apply();
+    }
+    public void createUUID() {
+        uniqueID = UUID.randomUUID().toString();
     }
     @Override
     protected void onPause() {

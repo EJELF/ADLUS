@@ -16,7 +16,7 @@
        android:layout_width="wrap_content"
        android:layout_height="25dp"
        android:textStyle="bold"
-       android:text="LR "/>
+       android:text="LR :"/>
 
     <!-- Line with Latitude and Longitude -->
     <LinearLayout

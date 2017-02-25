@@ -2,6 +2,7 @@ package com.android.edgarsjanovskis.adlus;
 
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -59,7 +60,16 @@ public class MyGeofences extends AppCompatActivity {
             // Showing progress dialog
             pDialog = new ProgressDialog(MyGeofences.this);
             pDialog.setMessage("Please wait...");
-            pDialog.setCancelable(false);
+            //šādi uzstāda atsaukšanu
+            pDialog.setCancelable(true);
+            pDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+
+                public void onCancel(DialogInterface arg0) {
+                    if(pDialog.isShowing())
+                        pDialog.dismiss();
+                    finish();
+                }
+            });
             pDialog.show();
         }
 
@@ -174,7 +184,7 @@ public class MyGeofences extends AppCompatActivity {
                     adb.show();*/
                     MoreInfoDialog dialog = new MoreInfoDialog();
                     FragmentManager fm = getFragmentManager();
-                    dialog.show(fm, "language");
+                    dialog.show(fm, "moreInfo");
 
                 }
             });

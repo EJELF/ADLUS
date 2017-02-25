@@ -9,7 +9,9 @@
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" /> <!-- uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" / -->
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
+    <!-- uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" / -->
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -31,7 +33,6 @@
         <activity android:name=".SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -40,7 +41,6 @@
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -49,7 +49,6 @@
             android:parentActivityName=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.QUICK_VIEW" />
-
                 <category android:name="android.intent.category.APP_MAPS" />
             </intent-filter>
         </activity>
@@ -59,7 +58,6 @@
         <activity android:name=".GeofencesList">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <!--
@@ -71,11 +69,9 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <!--
-                  ATTENTION: This data URL was auto-generated. We recommend that you use the HTTP scheme.
-                -->
+                <!-- ATTENTION: This data URL was auto-generated. We recommend that you use the HTTP scheme. -->
                 <data
-                    android:host="192.168.10.86:5111"
+                    android:host="your url"
                     android:pathPrefix="/geofenceslist"
                     android:scheme="http" />
             </intent-filter>
@@ -92,8 +88,14 @@
         <activity android:name=".MyGeofences">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".WelcomeActivity" />
+        <activity android:name=".MySettingsActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
