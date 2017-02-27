@@ -49,9 +49,10 @@ public class MyGeofences extends AppCompatActivity {
         new GetGeofences().execute();
     }
 
-    /**
-     * Async task class to get json by making HTTP call
-     */
+
+        /**
+         * Async task class to get json by making HTTP call
+         */
     private class GetGeofences extends AsyncTask<Void, Void, Void> {
 
         @Override
@@ -104,6 +105,8 @@ public class MyGeofences extends AppCompatActivity {
                         String customer = c.getString("CustomerName");
                         String projectName = c.getString("ProjectName");
                         String ts = c.getString("ts");
+                        String custodianSurname = c.getString("Custodian");
+                        String custodianPhone = c.getString("CustodianPhone");
 
                         // tmp hash map for single contact
                         HashMap<String, String> geofence = new HashMap<>();
@@ -119,6 +122,8 @@ public class MyGeofences extends AppCompatActivity {
                         geofence.put("CustomerName", customer);
                         geofence.put("ProjectName", projectName);
                         geofence.put("ts", ts);
+                        geofence.put("Custodian", custodianSurname);
+                        geofence.put("CustodianPhone", custodianPhone);
                         // adding geofences to geofences list
                         geofencesList.add(geofence);
                     }

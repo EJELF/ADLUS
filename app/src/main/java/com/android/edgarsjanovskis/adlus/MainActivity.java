@@ -1,10 +1,15 @@
 package com.android.edgarsjanovskis.adlus;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.UUID;
@@ -18,9 +23,21 @@ public class MainActivity extends AppCompatActivity {
     final String APP_UUID = "app_uuid";
     final int DOESNT_EXIST = -1;
 
+    EditText etResponse;
+    TextView tvIsConnected;
+
     //statisko metodi izmanto lai citā aktivitātē iegūtu vērtību
     public static String getUniqueID() {
         return uniqueID;
+    }
+
+    public boolean isConnected() {
+        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Activity.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected())
+            return true;
+        else
+            return false;
     }
 
     @Override
@@ -30,6 +47,20 @@ public class MainActivity extends AppCompatActivity {
         checkFirstRun();
 
         dbControler = new DatabaseControler(this);
+        // get reference to the views
+        etResponse = (EditText) findViewById(R.id.etResponse);
+        tvIsConnected = (TextView) findViewById(R.id.tvIsConnected);
+
+        // check if you are connected or not
+        if(isConnected()){
+            tvIsConnected.setBackgroundColor(0xFF00CC00);
+            tvIsConnected.setText("You are conncted");
+        }
+        else{
+            tvIsConnected.setText("You are NOT conncted");
+        }
+
+
     }
 
 
@@ -63,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         // Update the shared prefs with the current version code
+
         prefs.edit().putInt(PREF_VERSION_CODE_KEY, currentVersionCode).apply();
         prefs.edit().putString(APP_UUID, uniqueID).apply();
     }
@@ -105,4 +137,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+
 }
