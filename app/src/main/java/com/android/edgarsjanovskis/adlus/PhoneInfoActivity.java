@@ -16,6 +16,8 @@ public class PhoneInfoActivity extends Activity {
         addUUID();
         addEmail();
         addServer();
+        addStartTime();
+        addStopTime();
     }
 
     public void addUUID() {
@@ -42,6 +44,22 @@ public class PhoneInfoActivity extends Activity {
 
         TextView loading_Server = (TextView)findViewById(R.id.server);
         loading_Server.setText(server);
+    }
+    public void addStartTime() {
+        // Now read the desired content to a textview.
+        SharedPreferences prefs = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
+        String startTime = prefs.getString("App_Start_Time", " ");
+
+        TextView loading_Server = (TextView)findViewById(R.id.startTime);
+        loading_Server.setText(startTime);
+    }
+    public void addStopTime() {
+        // Now read the desired content to a textview.
+        SharedPreferences prefs = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
+        String stopTime = prefs.getString("App_Stop_Time", " ");
+
+        TextView loading_Server = (TextView)findViewById(R.id.stopTime);
+        loading_Server.setText(stopTime);
     }
 
 }

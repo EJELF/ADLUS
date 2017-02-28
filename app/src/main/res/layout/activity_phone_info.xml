@@ -52,5 +52,31 @@
         android:id="@+id/server"
         android:text="Serveris un ports nav preferencēs"
         android:textAlignment="center" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ieslēgšanās laiks"
+        android:textSize="16sp"
+        android:textColor="#FFC000"
+        android:id="@+id/text4" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/startTime"
+        android:text="Ieslēgšanās laiks"
+        android:textAlignment="center" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Izslēgšanās laiks"
+        android:textSize="16sp"
+        android:textColor="#FFC000"
+        android:id="@+id/text5" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/stopTime"
+        android:text="Izslēgšanās laiks"
+        android:textAlignment="center" />
 
 </LinearLayout>
