@@ -3,20 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
     android:orientation="vertical"
-    android:paddingTop="@dimen/activity_vertical_margin"
+
     tools:context="com.android.edgarsjanovskis.adlus.MapActivity">
 
-   <TextView
-
-       android:id="@+id/lr"
-       android:layout_width="wrap_content"
-       android:layout_height="25dp"
-       android:textStyle="bold"
-       android:text="LR :"/>
 
     <!-- Line with Latitude and Longitude -->
     <LinearLayout
@@ -34,7 +24,7 @@
             android:id="@+id/lat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/text"
+            android:textColor="@color/white"
             android:layout_weight="0.5"
             android:text="Lat: " />
 
@@ -43,7 +33,7 @@
             android:id="@+id/lon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/text"
+            android:textColor="@color/white"
             android:layout_weight="0.5"
             android:text="Long: " />
     </LinearLayout>

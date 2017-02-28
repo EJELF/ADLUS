@@ -1,14 +1,9 @@
 package com.android.edgarsjanovskis.adlus;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.TextView;
-
-import static com.android.edgarsjanovskis.adlus.MainActivity.getUniqueID;
-
-/**
- * Created by Edgars on 13.02.17.
- */
 
 public class PhoneInfoActivity extends Activity {
 
@@ -18,22 +13,35 @@ public class PhoneInfoActivity extends Activity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phone_info);
-        showUUID();
+        addUUID();
+        addEmail();
+        addServer();
     }
 
-    public void showUUID() {
+    public void addUUID() {
         // Now read the desired content to a textview.
+        SharedPreferences prefs = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
+        String savedUUID = prefs.getString("app_uuid", " ");
 
         TextView loading_UUID = (TextView)findViewById(R.id.deviceid);
-        if (getUniqueID() == null){
-            loading_UUID.setText(getUniqueID());
-        }
-        else loading_UUID.setText(" Nav izveidots UUID");
-        //SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-        //String savedVersionCode = prefs.getString(APP_UUID, " ");
-
+        loading_UUID.setText(savedUUID);
     }
 
+    public void addEmail() {
+        // Now read the desired content to a textview.
+        SharedPreferences prefs = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
+        String email = prefs.getString("User_email", " ");
 
+        TextView loading_email = (TextView)findViewById(R.id.usermail);
+        loading_email.setText(email);
+    }
+    public void addServer() {
+        // Now read the desired content to a textview.
+        SharedPreferences prefs = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
+        String server = prefs.getString("Server_URL", " ");
+
+        TextView loading_Server = (TextView)findViewById(R.id.server);
+        loading_Server.setText(server);
+    }
 
 }

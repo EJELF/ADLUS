@@ -5,4 +5,6 @@
     <item name="email_sign_in_button" type="id" />
     <item name="login_form" type="id" />
     <item name="login_progress" type="id" />
+    <item name="not_connected" type="id">You are not connected!</item>
+    <item name="usermail" type="id">useremail</item>
 </resources>

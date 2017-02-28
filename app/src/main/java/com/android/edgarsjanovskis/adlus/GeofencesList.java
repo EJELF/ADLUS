@@ -1,6 +1,5 @@
 package com.android.edgarsjanovskis.adlus;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -29,22 +28,22 @@ public class GeofencesList extends AppCompatActivity {
 
         final DatabaseControler dbContoler = new DatabaseControler(this);
         SQLiteDatabase dbReader = dbContoler.getReadableDatabase();
-        String query = "SELECT * FROM "+ dbContoler.DATABASE_TABLE;
+        String query = "SELECT * FROM "+ DatabaseControler.DATABASE_TABLE;
         Cursor reader = dbReader.rawQuery(query, null);
         ArrayList<String> list = new ArrayList<>();
         // ar if novērš kļūdu, kad android.database.CursorIndexOutOfBoundsException: Index 0 requested, with a size of 0
         if(reader != null && reader.moveToFirst()) {
-            while (reader.moveToNext()) ;
+            while (reader.moveToNext())
             {
                 id = reader.getInt(reader.getColumnIndex("GeofenceId"));
-                projectId = reader.getColumnIndex(dbContoler.PROJECT_ID_COLUMN);
-                lat = reader.getColumnIndex(dbContoler.LATITUDE_COLUMN);
-                lon = reader.getColumnIndex(dbContoler.LONGITUDE_COLUMN);
+                projectId = reader.getColumnIndex(DatabaseControler.PROJECT_ID_COLUMN);
+                lat = reader.getColumnIndex(DatabaseControler.LATITUDE_COLUMN);
+                lon = reader.getColumnIndex(DatabaseControler.LONGITUDE_COLUMN);
                 //timestamp = String.valueOf(reader.getColumnIndex(dbContoler.TS_COLUMN));
-                radius = reader.getColumnIndex(dbContoler.RADIUS_COLUMN);
-
+                radius = reader.getColumnIndex(DatabaseControler.RADIUS_COLUMN);
                 list.add(id + ":   " + projectId + " " + lat + "/" + lon + " Radius: " + radius);
             }
+            reader.close();
         }
         String[] data = new String[list.size()];
         for (int i = 0; i<list.size(); i++){

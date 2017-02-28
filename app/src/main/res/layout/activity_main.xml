@@ -10,66 +10,69 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.android.edgarsjanovskis.adlus.MainActivity">
 
-    <TextView
-        android:id="@+id/tvIsConnected"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/etResponse"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-    <Button
-        android:id="@+id/showMapButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/show_map"
-        android:onClick="butonShowMap_onClick"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
 
     <Button
-        android:id="@+id/showResponse"
+        android:id="@+id/showRest"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Show REST response"
         android:onClick="buttonResponse_onClick"
-        android:layout_below="@+id/showMapButton"
+        android:layout_marginTop="55dp"
+        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+
+    <Button
+           android:id="@+id/showSettings"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:text="Show Settings"
+           android:onClick="buttonSettings_onClick"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/tvIsConnected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/showVersion"
+        android:layout_toEndOf="@+id/showVersion"
+        android:layout_marginBottom="110dp" />
+
     <Button
         android:id="@+id/showUUID"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Show UUID"
         android:onClick="buttonUUID_onClick"
-        android:layout_below="@+id/showResponse"
+
+        android:layout_below="@+id/showRest"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+
     <Button
         android:id="@+id/showVersion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Show App version"
         android:onClick="buttonVersion_onClick"
+        android:layout_marginTop="14dp"
         android:layout_below="@+id/showUUID"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
     <Button
-           android:id="@+id/showList"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:text="Show Item List from response"
-           android:onClick="buttonList_onClick"
+        android:id="@+id/showMapButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/show_map"
+        android:onClick="butonShowMap_onClick"
+        android:layout_marginTop="16dp"
         android:layout_below="@+id/showVersion"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
-
-    <EditText
-        android:id="@+id/etResponse"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/showList"
-        android:layout_toRightOf="@+id/showUUID"
-        android:layout_toEndOf="@+id/showUUID" />
 
 </RelativeLayout>

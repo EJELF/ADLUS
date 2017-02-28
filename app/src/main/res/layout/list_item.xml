@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:paddingBottom="0dip"
         android:paddingTop="0dip"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/white"
         android:textSize="14sp"
         android:textStyle="normal" />
     <TextView
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:paddingBottom="0dip"
         android:paddingTop="0dip"
-        android:textColor="@color/text"
+        android:textColor="@color/white"
         android:textSize="14sp"
         android:textStyle="bold" />
 

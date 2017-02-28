@@ -32,9 +32,7 @@ public class MyGeofences extends AppCompatActivity {
     private static final String myimei = "359959046287276";
 
 
-
     // URL to get contacts JSON
-
     private static String url = "http://"+ myurl +"/api/AndroidDbUpdates";
 
     ArrayList<HashMap<String, String>> geofencesList;
@@ -48,7 +46,6 @@ public class MyGeofences extends AppCompatActivity {
         lv = (ListView) findViewById(R.id.list);
         new GetGeofences().execute();
     }
-
 
         /**
          * Async task class to get json by making HTTP call
@@ -84,29 +81,28 @@ public class MyGeofences extends AppCompatActivity {
 
             if (jsonStr != null) {
                 try {
-                    //JSONObject jsonObj = new JSONObject(jsonStr);
-
+                    //JSONObject jsonArray = new JSONObject(jsonStr);
 
                     // Getting JSON Array node
                     JSONArray geofences = new JSONArray(jsonStr);
-
                     // looping through All Array
                     for (int i = 0; i < geofences.length(); i++) {
+
                         JSONObject c = geofences.getJSONObject(i);
 
                         String id = c.getString("$id");
-                        String geofenceId = c.getString("GeofenceID");
-                        String lr = c.getString("LR");
-                        String lat = c.getString("Latitude");
-                        String lng = c.getString("Longitude");
-                        String radius = c.getString("Radius");
-                        String imei = c.getString("IMEI");
-                        String employee = c.getString("EmployeeName");
-                        String customer = c.getString("CustomerName");
-                        String projectName = c.getString("ProjectName");
+                        String geofenceId = c.getString("geofenceID");
+                        String lr = c.getString("lr");
+                        String lat = c.getString("latitude");
+                        String lng = c.getString("longitude");
+                        String radius = c.getString("radius");
+                        String imei = c.getString("imei");
+                        String employee = c.getString("employeeName");
+                        String customer = c.getString("customerName");
+                        String projectName = c.getString("projectName");
                         String ts = c.getString("ts");
-                        String custodianSurname = c.getString("Custodian");
-                        String custodianPhone = c.getString("CustodianPhone");
+                        String custodianSurname = c.getString("custodianSurname");
+                        String custodianPhone = c.getString("custodianPhone");
 
                         // tmp hash map for single contact
                         HashMap<String, String> geofence = new HashMap<>();

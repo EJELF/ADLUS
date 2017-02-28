@@ -111,8 +111,9 @@
     <string name="pref_ringtone_silent">Klusums</string>
 
     <string name="pref_title_vibrate">Vibrācija</string>
-    <string name="save">Saglabāt</string>
     <string name="cancel">Atcelt</string>
     <string name="ok">Labi</string>
-    <string name="Save">Saglabāt</string>
+    <string name="Save">Saglabāt iestatījumus</string>
+    <string name="aplikcijas_uuid">Aplikācijas UUID:</string>
+    <string name="connected">connected</string>
 </resources>

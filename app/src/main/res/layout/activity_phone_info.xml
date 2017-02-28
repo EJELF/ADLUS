@@ -1,19 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_phone_info"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.android.edgarsjanovskis.adlus.PhoneInfoActivity">
-<TextView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:id="@id/deviceid"
-    android:text="UUID"
-    android:textAlignment="center"/>
 
-</RelativeLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/aplikcijas_uuid"
+        android:textSize="16sp"
+        android:textColor="#FFC000"
+        android:id="@+id/text1" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/deviceid"
+        android:text="@string/aplikcijas_uuid"
+        android:textAlignment="center"
+         />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lietotāja epasts"
+        android:textSize="16sp"
+        android:textColor="#FFC000"
+        android:id="@+id/text2" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/usermail"
+        android:text="Lietotāja epasts nav preferencēs"
+        android:textAlignment="center" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Serveris"
+        android:textSize="16sp"
+        android:textColor="#FFC000"
+        android:id="@+id/text3" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/server"
+        android:text="Serveris un ports nav preferencēs"
+        android:textAlignment="center" />
+
+</LinearLayout>

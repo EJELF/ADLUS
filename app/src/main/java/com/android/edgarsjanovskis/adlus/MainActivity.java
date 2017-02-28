@@ -18,10 +18,10 @@ public class MainActivity extends AppCompatActivity {
 
     private DatabaseControler dbControler;
     public static String uniqueID;
-    final String PREFS_NAME = "AdlusPrefsFile";
+    public final String PREFS_NAME = "AdlusPrefsFile";
     final String PREF_VERSION_CODE_KEY = "version_code";
-    final String APP_UUID = "app_uuid";
-    final int DOESNT_EXIST = -1;
+    public final String APP_UUID = "app_uuid";
+    public final int DOESNT_EXIST = -1;
 
     EditText etResponse;
     TextView tvIsConnected;
@@ -34,10 +34,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean isConnected() {
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Activity.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        if (networkInfo != null && networkInfo.isConnected())
-            return true;
-        else
-            return false;
+        return networkInfo != null && networkInfo.isConnected();
     }
 
     @Override
@@ -48,21 +45,17 @@ public class MainActivity extends AppCompatActivity {
 
         dbControler = new DatabaseControler(this);
         // get reference to the views
-        etResponse = (EditText) findViewById(R.id.etResponse);
         tvIsConnected = (TextView) findViewById(R.id.tvIsConnected);
 
         // check if you are connected or not
         if(isConnected()){
             tvIsConnected.setBackgroundColor(0xFF00CC00);
-            tvIsConnected.setText("You are conncted");
+            tvIsConnected.setText(R.string.connected);
         }
         else{
-            tvIsConnected.setText("You are NOT conncted");
+            tvIsConnected.setText(R.string.not_connected);
         }
-
-
     }
-
 
     public void checkFirstRun(){
 
@@ -89,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this,WelcomeActivity.class);
             startActivity(intent);
             createUUID();
+
         } else if (currentVersionCode > savedVersionCode){
             // This is an upgrade. Pagaidām neizmantoju
             return;
@@ -100,6 +94,10 @@ public class MainActivity extends AppCompatActivity {
     }
     public void createUUID() {
         uniqueID = UUID.randomUUID().toString();
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        prefs.edit().putString(APP_UUID, uniqueID).apply();
+
+        Toast.makeText(getApplicationContext(), "UUID izveidots : " + uniqueID, Toast.LENGTH_LONG).show();
     }
     @Override
     protected void onPause() {
@@ -112,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void buttonResponse_onClick (View view){
-        Intent form = new Intent(this, GeofencesList.class);
+        Intent form = new Intent(this, MyGeofences.class);
         startActivity(form);
     }
 
@@ -121,8 +119,8 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void buttonList_onClick (View view){
-        Intent intent = new Intent(this, MyGeofences.class);
+    public void buttonSettings_onClick (View view){
+        Intent intent = new Intent(this, AppSettingsActivity.class);
         startActivity(intent);
     }
 
@@ -133,9 +131,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (android.content.pm.PackageManager.NameNotFoundException e){
             //handle exception
             e.printStackTrace();
-            return;
         }
-
     }
 
 
