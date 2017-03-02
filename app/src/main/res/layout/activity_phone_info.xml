@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/deviceid"
-        android:text="@string/aplikcijas_uuid"
+        android:hint="@string/aplikcijas_uuid"
         android:textAlignment="center"
          />
     <TextView
@@ -37,7 +37,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/usermail"
-        android:text="Lietotāja epasts nav preferencēs"
+        android:hint="Lietotāja epasts nav preferencēs"
         android:textAlignment="center" />
     <TextView
         android:layout_width="wrap_content"
@@ -50,7 +50,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/server"
-        android:text="Serveris un ports nav preferencēs"
+        android:hint="Serveris un ports nav preferencēs"
         android:textAlignment="center" />
     <TextView
         android:layout_width="wrap_content"
@@ -63,7 +63,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/startTime"
-        android:text="Ieslēgšanās laiks"
+        android:hint="Ieslēgšanās laiks"
         android:textAlignment="center" />
     <TextView
         android:layout_width="wrap_content"
@@ -76,7 +76,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/stopTime"
-        android:text="Izslēgšanās laiks"
+        android:hint="Izslēgšanās laiks"
         android:textAlignment="center" />
 
 </LinearLayout>
