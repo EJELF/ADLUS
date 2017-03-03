@@ -29,15 +29,15 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Lietotāja epasts"
+        android:text="Tālruņa IMEI"
         android:textSize="16sp"
         android:textColor="#FFC000"
         android:id="@+id/text2" />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/usermail"
-        android:hint="Lietotāja epasts nav preferencēs"
+        android:id="@+id/userimei"
+        android:hint="Tālruņa IMEI nav preferencēs"
         android:textAlignment="center" />
     <TextView
         android:layout_width="wrap_content"

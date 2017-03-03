@@ -20,7 +20,7 @@ import android.widget.Toast;
 public class AppSettingsActivity extends AppCompatActivity {
 
 
-    public final String USER_EMAIL = "User_email";
+    public final String USER_IMEI = "User_IMEI";
     public final String SERVER_URL = "Server_URL";
     public final String APP_START_TIME_HOUR = "startHour";
     public final String APP_START_TIME_MINUTE= "startMinute";
@@ -47,10 +47,10 @@ public class AppSettingsActivity extends AppCompatActivity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         //setupUI(findViewById(R.id.parent));
         SharedPreferences prefs = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
-        String email = prefs.getString("User_email", " ");
+        String imei = prefs.getString("User_IMEI", " ");
         final String server = prefs.getString("Server_URL", " ");
-        EditText et1 = (EditText) findViewById(R.id.etEmail);
-        et1.setText(email);
+        EditText et1 = (EditText) findViewById(R.id.etImei);
+        et1.setText(imei);
         EditText et2 = (EditText) findViewById(R.id.etServer);
         et2.setText(server);
         cb = (CheckBox)findViewById(R.id.cbTime);
@@ -153,12 +153,12 @@ public class AppSettingsActivity extends AppCompatActivity {
     }
 
     public void buttonSave_onClick (View view){
-        String userEmail;
+        String userImei;
         String serverUrl;
         setStartTime(this.tp1);
         setStopTime(this.tp2);
 
-        EditText et1 = (EditText)findViewById(R.id.etEmail);
+        EditText et1 = (EditText)findViewById(R.id.etImei);
         et1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
@@ -177,10 +177,10 @@ public class AppSettingsActivity extends AppCompatActivity {
             }
         });
 
-        userEmail = et1.getText().toString();
-        if(userEmail.equals(" ")) {
+        userImei = et1.getText().toString();
+        if(userImei.equals(" ")) {
             AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
-            builder1.setMessage("Lūdzu ievadiet savu e-pastu!");
+            builder1.setMessage("Lūdzu ievadiet tālruņa IMEI!");
             builder1.setCancelable(true);
 
             builder1.setPositiveButton(
@@ -188,6 +188,7 @@ public class AppSettingsActivity extends AppCompatActivity {
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             dialog.cancel();
+                            return;
                         }
                     });
 
@@ -196,16 +197,18 @@ public class AppSettingsActivity extends AppCompatActivity {
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             dialog.cancel();
+                            finish();
                         }
                     });
 
             AlertDialog alert11 = builder1.create();
             alert11.show();
+            return;
         }
         else{
 
-            SharedPreferences prefs3 = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
-            prefs3.edit().putString(USER_EMAIL, userEmail).apply();
+            SharedPreferences prefs = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
+            prefs.edit().putString(USER_IMEI, userImei).apply();
         }
 
         serverUrl = et2.getText().toString();
@@ -227,16 +230,18 @@ public class AppSettingsActivity extends AppCompatActivity {
                     "ATLIKT",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            return;
+                            dialog.cancel();
+                            finish();
                         }
                     });
 
             AlertDialog alert11 = builder1.create();
             alert11.show();
+            return;
         }
         else{
-            SharedPreferences prefs4 = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
-            prefs4.edit().putString(SERVER_URL, serverUrl).apply();
+            SharedPreferences prefs = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
+            prefs.edit().putString(SERVER_URL, serverUrl).apply();
         }
 
         finish();
@@ -246,6 +251,4 @@ public class AppSettingsActivity extends AppCompatActivity {
         InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
-
-
 }

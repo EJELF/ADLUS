@@ -3,6 +3,7 @@ package com.android.edgarsjanovskis.adlus;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -21,42 +22,48 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class MyGeofences extends AppCompatActivity {
+public class MyProjects extends AppCompatActivity {
 
-    private String TAG = MyGeofences.class.getSimpleName();
+    private String TAG = MyProjects.class.getSimpleName();
 
     private ProgressDialog pDialog;
     private ListView lv;
+
     // Jāizmanto statiskās komponentes, kuras tiks ievadītas no lietotāja puses!!!
-    private static final String myurl = "192.168.10.86:5111";
-    private static final String myimei = "359959046287276";
+    public String myurl = " ";
+    private String myimei = " ";
+    private String url;
+    private SharedPreferences prefs;
 
-
-    // URL to get contacts JSON
-    private static String url = "http://"+ myurl +"/api/AndroidDbUpdates";
-
-    ArrayList<HashMap<String, String>> geofencesList;
+    ArrayList<HashMap<String, String>> mProjectList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_list);
-
-        geofencesList = new ArrayList<>();
+        prefs = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
+        myurl = prefs.getString("Server_URL", " ");
+        Log.i("URL: ", myurl);
+        myimei = prefs.getString("User_IMEI", " ");
+        // URL to get contacts JSON
+        url = "http://"+ myurl+ "/api/AndroidDbUpdates";
+        mProjectList = new ArrayList<>();
 
         lv = (ListView) findViewById(R.id.list);
-        new GetGeofences().execute();
+        new GetProjects().execute();
     }
+
+
 
         /**
          * Async task class to get json by making HTTP call
          */
-    private class GetGeofences extends AsyncTask<Void, Void, Void> {
+    private class GetProjects extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             // Showing progress dialog
-            pDialog = new ProgressDialog(MyGeofences.this);
+            pDialog = new ProgressDialog(MyProjects.this);
             pDialog.setMessage("Please wait...");
             //šādi uzstāda atsaukšanu
             pDialog.setCancelable(true);
@@ -96,6 +103,7 @@ public class MyGeofences extends AppCompatActivity {
                         String lat = c.getString("latitude");
                         String lng = c.getString("longitude");
                         String radius = c.getString("radius");
+                        String phoneId = c.getString("phoneID");
                         String imei = c.getString("imei");
                         String employee = c.getString("employeeName");
                         String customer = c.getString("customerName");
@@ -113,6 +121,7 @@ public class MyGeofences extends AppCompatActivity {
                         geofence.put("Latitude", lat);
                         geofence.put("Longitude", lng);
                         geofence.put("Radius", radius);
+                        geofence.put("PhoneId", phoneId);
                         geofence.put("IMEI", imei);
                         geofence.put("EmployeeName", employee);
                         geofence.put("CustomerName", customer);
@@ -121,7 +130,7 @@ public class MyGeofences extends AppCompatActivity {
                         geofence.put("Custodian", custodianSurname);
                         geofence.put("CustodianPhone", custodianPhone);
                         // adding geofences to geofences list
-                        geofencesList.add(geofence);
+                        mProjectList.add(geofence);
                     }
 
                 } catch (final JSONException e) {
@@ -162,7 +171,7 @@ public class MyGeofences extends AppCompatActivity {
              * Updating parsed JSON data into ListView
              * */
             ListAdapter adapter = new SimpleAdapter(
-                    MyGeofences.this, geofencesList,
+                    MyProjects.this, mProjectList,
                     R.layout.list_item, new String[]{"LR", "ProjectName", "Latitude",
                     "Longitude", "IMEI"}, new int[]{R.id.lr,
                     R.id.projectName,
@@ -177,7 +186,7 @@ public class MyGeofences extends AppCompatActivity {
                     //Toast.makeText(getApplicationContext(), "Nospiests: " + position, Toast.LENGTH_LONG).show();
                     /*
                     AlertDialog.Builder adb = new AlertDialog.Builder(
-                            MyGeofences.this);
+                            MyProjects.this);
                     adb.setTitle("LR");
                     adb.setMessage(" selected Item is="
                             +lv.getItemAtPosition(position));

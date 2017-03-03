@@ -11,7 +11,7 @@ public class PhoneInfoActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phone_info);
         addUUID();
-        addEmail();
+        addIMEI();
         addServer();
         addStartTime();
         addStopTime();
@@ -25,11 +25,11 @@ public class PhoneInfoActivity extends Activity {
         loading_UUID.setText(savedUUID);
     }
 
-    public void addEmail() {
+    public void addIMEI() {
         SharedPreferences prefs = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
-        String email = prefs.getString("User_email", " ");
-        TextView loading_email = (TextView)findViewById(R.id.usermail);
-        loading_email.setText(email);
+        String imei = prefs.getString("User_IMEI", " ");
+        TextView loading_imei = (TextView)findViewById(R.id.userimei);
+        loading_imei.setText(imei);
     }
     public void addServer() {
         SharedPreferences prefs = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
@@ -67,5 +67,4 @@ public class PhoneInfoActivity extends Activity {
         TextView loading_StopTime = (TextView)findViewById(R.id.stopTime);
         loading_StopTime.setText(stopTime);
     }
-
 }

@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void buttonResponse_onClick (View view){
-        Intent form = new Intent(this, MyGeofences.class);
+        Intent form = new Intent(this, MyProjects.class);
         startActivity(form);
     }
 
