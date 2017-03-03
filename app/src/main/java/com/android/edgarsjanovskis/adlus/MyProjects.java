@@ -1,11 +1,11 @@
 package com.android.edgarsjanovskis.adlus;
 
-import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -91,11 +91,11 @@ public class MyProjects extends AppCompatActivity {
                     //JSONObject jsonArray = new JSONObject(jsonStr);
 
                     // Getting JSON Array node
-                    JSONArray geofences = new JSONArray(jsonStr);
+                    JSONArray projects = new JSONArray(jsonStr);
                     // looping through All Array
-                    for (int i = 0; i < geofences.length(); i++) {
+                    for (int i = 0; i < projects.length(); i++) {
 
-                        JSONObject c = geofences.getJSONObject(i);
+                        JSONObject c = projects.getJSONObject(i);
 
                         String id = c.getString("$id");
                         String geofenceId = c.getString("geofenceID");
@@ -111,26 +111,27 @@ public class MyProjects extends AppCompatActivity {
                         String ts = c.getString("ts");
                         String custodianSurname = c.getString("custodianSurname");
                         String custodianPhone = c.getString("custodianPhone");
-
-                        // tmp hash map for single contact
-                        HashMap<String, String> geofence = new HashMap<>();
-                        // adding each child node to HashMap key => value
-                        geofence.put("$id", id);
-                        geofence.put("GeofenceID", geofenceId);
-                        geofence.put("LR", lr);
-                        geofence.put("Latitude", lat);
-                        geofence.put("Longitude", lng);
-                        geofence.put("Radius", radius);
-                        geofence.put("PhoneId", phoneId);
-                        geofence.put("IMEI", imei);
-                        geofence.put("EmployeeName", employee);
-                        geofence.put("CustomerName", customer);
-                        geofence.put("ProjectName", projectName);
-                        geofence.put("ts", ts);
-                        geofence.put("Custodian", custodianSurname);
-                        geofence.put("CustodianPhone", custodianPhone);
-                        // adding geofences to geofences list
-                        mProjectList.add(geofence);
+                    if (myimei.equals(imei)) {
+                            // tmp hash map for single contact
+                            HashMap<String, String> project = new HashMap<>();
+                            // adding each child node to HashMap key => value
+                                project.put("$id", id);
+                                project.put("GeofenceID", geofenceId);
+                                project.put("LR", lr);
+                                project.put("Latitude", lat);
+                                project.put("Longitude", lng);
+                                project.put("Radius", radius);
+                                project.put("PhoneId", phoneId);
+                                project.put("IMEI", imei);
+                                project.put("EmployeeName", employee);
+                                project.put("CustomerName", customer);
+                                project.put("ProjectName", projectName);
+                                project.put("ts", ts);
+                                project.put("Custodian", custodianSurname);
+                                project.put("CustodianPhone", custodianPhone);
+                                // adding projects to project list
+                            mProjectList.add(project);
+                        }
                     }
 
                 } catch (final JSONException e) {
@@ -184,18 +185,19 @@ public class MyProjects extends AppCompatActivity {
                 public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
 
                     //Toast.makeText(getApplicationContext(), "Nospiests: " + position, Toast.LENGTH_LONG).show();
-                    /*
+
                     AlertDialog.Builder adb = new AlertDialog.Builder(
                             MyProjects.this);
                     adb.setTitle("LR");
                     adb.setMessage(" selected Item is="
                             +lv.getItemAtPosition(position));
                     adb.setPositiveButton("Ok", null);
-                    adb.show();*/
+                    adb.show();
+                    /*
                     MoreInfoDialog dialog = new MoreInfoDialog();
                     FragmentManager fm = getFragmentManager();
                     dialog.show(fm, "moreInfo");
-
+*/
                 }
             });
         }

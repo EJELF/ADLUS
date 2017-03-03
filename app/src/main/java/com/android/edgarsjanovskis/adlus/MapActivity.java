@@ -65,18 +65,6 @@ public class MapActivity extends AppCompatActivity
     private MapFragment mapFragment;
 
 
-    //
-    private static final LatLng MADONA = new LatLng(56.1111,26.11111);
-
-    private static final StoreLocation[] LRLOCATIONS = new StoreLocation[] {
-            new StoreLocation(new LatLng(56.848029,26.198774), "LR356"),
-            new StoreLocation(new LatLng(56.841325,26.202614), "LR350"),
-            new StoreLocation(new LatLng(56.853471,26.224365), "LR389"),
-            new StoreLocation(new LatLng(56.854354,26.226042), "LR389/1")
-
-    };
-//
-
     private static final String NOTIFICATION_MSG = "NOTIFICATION MSG";
     // Create a Intent send by the notification
     public static Intent makeNotificationIntent(Context context, String msg) {
