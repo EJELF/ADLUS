@@ -1,8 +1,7 @@
 package com.android.edgarsjanovskis.adlus;
 
-/**
- * Created by Edgars on 23.12.16.
- */
+
+ //Created by Edgars on 23.12.16.
 
 import android.util.Log;
 
@@ -20,8 +19,7 @@ class HttpHandler {
 
     private static final String TAG = HttpHandler.class.getSimpleName();
 
-    HttpHandler() {
-    }
+    HttpHandler() {}
 
     String makeServiceCall(String reqUrl) {
         String response = null;

@@ -74,5 +74,15 @@
         android:layout_below="@+id/showVersion"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+    <Button
+        android:id="@+id/showSQLiteData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/show_SQlite"
+        android:onClick="butonShowSQlite_onClick"
+        android:layout_marginTop="16dp"
+        android:layout_below="@+id/showMapButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

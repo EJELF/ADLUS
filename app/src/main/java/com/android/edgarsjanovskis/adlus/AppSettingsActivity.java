@@ -1,6 +1,7 @@
 package com.android.edgarsjanovskis.adlus;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -244,6 +245,8 @@ public class AppSettingsActivity extends AppCompatActivity {
             prefs.edit().putString(SERVER_URL, serverUrl).apply();
         }
 
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
         finish();
     }
 

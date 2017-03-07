@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:paddingBottom="0dip"
         android:paddingTop="0dip"
-        android:textColor="@color/white"
+        android:textColor="@color/lightBlue"
         android:textSize="14sp"
         android:textStyle="normal" />
     <TextView
@@ -23,7 +23,7 @@
         android:textColor="@color/white"
         android:textSize="14sp"
         android:textStyle="bold" />
-
+<!--
     <TextView
         android:id="@+id/lat"
         android:layout_width="fill_parent"
@@ -40,5 +40,5 @@
     <TextView
         android:id="@+id/imei"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content" /-->
 </LinearLayout>

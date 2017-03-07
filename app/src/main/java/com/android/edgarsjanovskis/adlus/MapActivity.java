@@ -219,7 +219,7 @@ public class MapActivity extends AppCompatActivity
     private void permissionsDenied() {
         Log.w(TAG, "permissionsDenied()");
         // close app and warn user was in to-do list
-        Toast toast = Toast.makeText(getApplicationContext(),"Lai ADLUS strādātu, ir nepieciešama Jūsu atļauja piekļūt lokācijai", Toast.LENGTH_LONG);
+        Toast toast = Toast.makeText(getApplicationContext(),"ADLUS ir nepieciešama Jūsu atļauja piekļūt lokācijai", Toast.LENGTH_LONG);
         toast.show();
         setResult(0);
         finish();
@@ -281,6 +281,7 @@ public class MapActivity extends AppCompatActivity
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         Log.i(TAG, "onConnected()");
+
         getLastKnownLocation();
         recoverGeofenceMarker();
     }
@@ -337,6 +338,7 @@ public class MapActivity extends AppCompatActivity
         if ( map!=null ) {
             if ( locationMarker != null )
                 locationMarker.remove();
+
             locationMarker = map.addMarker(markerOptions);
             float zoom = 16f;
             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, zoom);
@@ -344,14 +346,12 @@ public class MapActivity extends AppCompatActivity
         }
     }
 
-
     private Marker geoFenceMarker;
     private void markerForGeofence(LatLng latLng) {
         Log.i(TAG, "markerForGeofence("+latLng+")");
         String title = latLng.latitude + ", " + latLng.longitude;
         // Define marker options
 
-        //for(StoreLocation LRLOCATIONS : LRLOCATIONS) {
             MarkerOptions markerOptions = new MarkerOptions()
                     .position(latLng)
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))

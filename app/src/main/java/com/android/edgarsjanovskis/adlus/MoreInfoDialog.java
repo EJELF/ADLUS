@@ -18,6 +18,7 @@ public class MoreInfoDialog extends DialogFragment{
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(msg)
+
                 .setNegativeButton(string.cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
@@ -33,6 +34,4 @@ public class MoreInfoDialog extends DialogFragment{
 
         return builder.create();
     }
-
-
 }

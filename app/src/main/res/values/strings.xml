@@ -32,7 +32,7 @@
 
     <string name="geofence_transition_notification_text">Click notification to return to app</string>
     <string name="title_activity_maps">Karte</string>
-    <string name="show_map">Rādīt karti</string>
+    <string name="show_map">Rādīt kartē</string>
     <string name="show_geofences"><![CDATA[Show geofences<>]]></string>
     <item name="deviceid" type="id">deviceid</item>
 
@@ -116,4 +116,9 @@
     <string name="Save">Saglabāt iestatījumus</string>
     <string name="aplikcijas_uuid">Aplikācijas UUID:</string>
     <string name="connected">connected</string>
+    <string name="map_activity_title">Kartes aktivitāte</string>
+    <string name="appsettings_activity_title">ADLUS iestatījumi</string>
+    <string name="myprojects_activity_title">Tav ir šādi projekti</string>
+    <string name="projectonmap_activity_title">LR.... atrašanās vieta</string>
+    <string name="show_SQlite">show_SQLite</string>
 </resources>

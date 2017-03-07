@@ -57,7 +57,19 @@
         </activity>
         <activity
             android:name=".MapActivity"
+            android:label="@string/map_activity_title"
             android:parentActivityName=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.QUICK_VIEW" />
+
+                <category android:name="android.intent.category.APP_MAPS" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ProjectOnMapActivity"
+            android:label="@string/projectonmap_activity_title"
+            android:parentActivityName=".MyProjects">
             <intent-filter>
                 <action android:name="android.intent.action.QUICK_VIEW" />
 
@@ -67,28 +79,6 @@
 
         <service android:name=".GeofenceTrasitionService" />
 
-        <activity android:name=".GeofencesList">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-            <!--
- ATTENTION: This intent was auto-generated. Follow instructions at
-  https://g.co/AppIndexing/AndroidStudio to publish your URLs.
-            -->
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <!-- ATTENTION: This data URL was auto-generated. We recommend that you use the HTTP scheme. -->
-                <data
-                    android:host="your url"
-                    android:pathPrefix="/geofenceslist"
-                    android:scheme="http" />
-            </intent-filter>
-        </activity>
         <activity android:name=".PhoneInfoActivity" />
         <activity
             android:name=".SettingsActivity"
@@ -98,7 +88,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.android.edgarsjanovskis.adlus.MainActivity" />
         </activity>
-        <activity android:name=".MyProjects">
+        <activity android:name=".MyProjects"
+            android:label="@string/myprojects_activity_title">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -112,12 +103,18 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".AppSettingsActivity">
+        <activity android:name=".AppSettingsActivity"
+            android:label="@string/appsettings_activity_title" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+        </activity>
+        <activity android:name=".DbList">
+            <action android:name="android.intent.action.QUICK_VIEW" />
+
+            <category android:name="android.intent.category.DEFAULT" />
         </activity>
     </application>
 

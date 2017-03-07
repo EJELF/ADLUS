@@ -7,21 +7,24 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Map;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
 
-    private DatabaseControler dbControler;
     public static String uniqueID;
     public final String PREFS_NAME = "AdlusPrefsFile";
     final String PREF_VERSION_CODE_KEY = "version_code";
     public final String APP_UUID = "app_uuid";
     public final int DOESNT_EXIST = -1;
+    SharedPreferences prefs;
+
 
     EditText etResponse;
     TextView tvIsConnected;
@@ -43,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         checkFirstRun();
 
-        dbControler = new DatabaseControler(this);
         // get reference to the views
         tvIsConnected = (TextView) findViewById(R.id.tvIsConnected);
 
@@ -94,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public void createUUID() {
         uniqueID = UUID.randomUUID().toString();
-        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         prefs.edit().putString(APP_UUID, uniqueID).apply();
 
         Toast.makeText(getApplicationContext(), "UUID izveidots : " + uniqueID, Toast.LENGTH_LONG).show();
@@ -115,6 +117,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void buttonUUID_onClick (View view){
+        prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        try{
+            Map<String,?> keys = prefs.getAll();
+            for(Map.Entry<String,?> entry : keys.entrySet()){
+                Log.d("map values",entry.getKey() + ": " +
+                        entry.getValue());
+            }
+        }catch (Exception e){
+            Log.e("Error: ", e.toString());
+        }
         Intent intent = new Intent(this, PhoneInfoActivity.class);
         startActivity(intent);
     }
@@ -134,5 +146,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
+    public void butonShowSQlite_onClick (View view){
+        Intent intent = new Intent(this, DbList.class);
+        startActivity(intent);
+    }
 }
