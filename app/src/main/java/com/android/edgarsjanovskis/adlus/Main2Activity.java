@@ -3,31 +3,46 @@ package com.android.edgarsjanovskis.adlus;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class MainActivity extends AppCompatActivity {
+
+public class Main2Activity extends AppCompatActivity {
 
     public static String uniqueID;
     public final String PREFS_NAME = "AdlusPrefsFile";
     final String PREF_VERSION_CODE_KEY = "version_code";
+    public static final String LAST_DB_CHANGES = "LastChanges";
+    public static final String LAST_UPDATE = "LastUpdate";
     public final String APP_UUID = "app_uuid";
     public final int DOESNT_EXIST = -1;
     SharedPreferences prefs;
 
 
     EditText etResponse;
-    TextView tvIsConnected;
+    TextView tvIsConnLabel;
+    TextView tvLastChanges;
+    TextView tvLastUpdate;
+    RadioButton btnConnected;
+    Color color = null;
+
 
     //statisko metodi izmanto lai citā aktivitātē iegūtu vērtību
     public static String getUniqueID() {
@@ -47,16 +62,42 @@ public class MainActivity extends AppCompatActivity {
         checkFirstRun();
 
         // get reference to the views
-        tvIsConnected = (TextView) findViewById(R.id.tvIsConnected);
+        tvIsConnLabel = (TextView)findViewById(R.id.tvIsConnLabel);
+        btnConnected = (RadioButton)findViewById(R.id.isConnected);
+        tvLastUpdate = (TextView)findViewById(R.id.tvLastUpdate);
+        tvLastChanges = (TextView)findViewById(R.id.tvLastChanges);
+        prefs = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
+        String lastchanges =  prefs.getString(LAST_DB_CHANGES, " ");
+        tvLastChanges.setText(lastchanges);
+        String lastupdate =  prefs.getString(LAST_UPDATE, " ");
+        tvLastUpdate.setText(lastupdate);
 
         // check if you are connected or not
         if(isConnected()){
-            tvIsConnected.setBackgroundColor(0xFF00CC00);
-            tvIsConnected.setText(R.string.connected);
+            btnConnected.setChecked(true);
+            tvIsConnLabel.setText(R.string.isConnected);
         }
         else{
-            tvIsConnected.setText(R.string.not_connected);
+            btnConnected.setChecked(false);
+            tvIsConnLabel.setText(R.string.no_internet);
         }
+        ImageButton bClock = (ImageButton) findViewById(R.id.btnMfiles);
+        bClock.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Uri webpage = Uri.parse("https://www.mfiles.com");
+                Intent webIntent = new Intent(Intent.ACTION_VIEW, webpage);
+                // Verify it resolves
+                PackageManager packageManager = getPackageManager();
+                List<ResolveInfo> activities = packageManager.queryIntentActivities(webIntent, 0);
+                boolean isIntentSafe = activities.size() > 0;
+
+                // Start an activity if it's safe
+                if (isIntentSafe) {
+                    startActivity(webIntent);
+                }
+            }
+        });
+
     }
 
     public void checkFirstRun(){
@@ -81,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         } else if (savedVersionCode == DOESNT_EXIST){
             //this is a new install (of user cleared the shared prefs)
-            Intent intent = new Intent(MainActivity.this,WelcomeActivity.class);
+            Intent intent = new Intent(Main2Activity.this,WelcomeActivity.class);
             startActivity(intent);
             createUUID();
 
@@ -104,6 +145,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+
     }
 
     public void butonShowMap_onClick(View view){
@@ -138,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void buttonVersion_onClick (View view){
         try{
-         int  currentVersionCode = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
+            int  currentVersionCode = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
             Toast.makeText(this, "Version code: " + currentVersionCode, Toast.LENGTH_LONG).show();
         } catch (android.content.pm.PackageManager.NameNotFoundException e){
             //handle exception
@@ -150,4 +192,6 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, DbList.class);
         startActivity(intent);
     }
+
+
 }

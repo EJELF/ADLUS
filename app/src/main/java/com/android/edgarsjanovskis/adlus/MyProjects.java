@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -55,7 +54,7 @@ public class MyProjects extends AppCompatActivity{
 
         //start new instance of ProjectsHelper and reader
         databaseHelper = new ProjectsHelper(this);
-        Cursor reader = databaseHelper.getTimeRecordList();
+        //Cursor reader = databaseHelper.getTimeRecordList();
 
         prefs = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
         myurl = prefs.getString("Server_URL", " ");
@@ -111,6 +110,9 @@ public class MyProjects extends AppCompatActivity{
 
                     // Getting JSON Array node
                     JSONArray projects = new JSONArray(jsonStr);
+                    SharedPreferences prefs = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
+                    String updateDatetime = String.valueOf(Calendar.getInstance().getTime());
+                    prefs.edit().putString("LastUpdate", updateDatetime).apply();
                     // looping through All Array
                     for (int i = 0; i < projects.length(); i++) {
 
@@ -155,10 +157,11 @@ public class MyProjects extends AppCompatActivity{
 
                         //db storing only if IMEI match
                         databaseHelper.saveProjectsRecord(id, geofenceId, lr, lat, lng, radius, phoneId, imei, employee, customer, projectName, ts, custodianSurname, custodianPhone);
-                        SharedPreferences prefs = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
+
                         prefs.edit().putString(USER_NAME, employee).apply();
                         String changesDatetime = String.valueOf(Calendar.getInstance().getTime());
                         prefs.edit().putString("LastChanges", changesDatetime).apply();
+
                         }
                     }
 
@@ -257,6 +260,8 @@ public class MyProjects extends AppCompatActivity{
             });
 
         }
+
     }
+
 }
 

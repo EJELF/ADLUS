@@ -37,7 +37,7 @@
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="android.support.PARENT_ACTIVITY"
-            android:value=".MainActivity" />
+            android:value=".Main2Activity" />
 
         <activity android:name=".SplashScreen">
             <intent-filter>
@@ -47,8 +47,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name">
+            android:name=".Main2Activity"
+            android:label="ADLUS GALVENĀ IZVĒLNE">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -65,7 +65,6 @@
                 <category android:name="android.intent.category.APP_MAPS" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ProjectOnMapActivity"
             android:label="@string/projectonmap_activity_title"
@@ -88,7 +87,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.android.edgarsjanovskis.adlus.MainActivity" />
         </activity>
-        <activity android:name=".MyProjects"
+        <activity
+            android:name=".MyProjects"
             android:label="@string/myprojects_activity_title">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -103,8 +103,9 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".AppSettingsActivity"
-            android:label="@string/appsettings_activity_title" >
+        <activity
+            android:name=".AppSettingsActivity"
+            android:label="@string/appsettings_activity_title">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -116,6 +117,7 @@
 
             <category android:name="android.intent.category.DEFAULT" />
         </activity>
+
     </application>
 
 </manifest>

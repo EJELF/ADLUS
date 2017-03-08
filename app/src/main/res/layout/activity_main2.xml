@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main2"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+
+    android:paddingBottom="6dp"
+    android:paddingLeft="6dp"
+    android:paddingRight="6dp"
+    android:paddingTop="0dp"
+    tools:context="com.android.edgarsjanovskis.adlus.Main2Activity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/tvIsConnLabel"
+            android:layout_width="match_parent"
+            android:textSize="16sp"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            android:layout_weight="0.1"
+            android:layout_height="25sp"
+            android:text="@string/isConnected" />
+        <RadioButton
+            android:id="@+id/isConnected"
+            android:layout_weight="0.9"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"/>
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:orientation="horizontal">
+        <TextView
+            android:id="@+id/tvLastChangesLabel"
+            android:layout_width="match_parent"
+            android:layout_height="18dp"
+            android:layout_weight="0.5"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:text="PĒDĒJĀS IZMAIŅAS: " />
+        <TextView
+            android:id="@+id/tvLastChanges"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textColor="#FF0000"
+            android:layout_weight="0.3"
+            android:text="@string/app_name" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/tvLastUpdateLabel"
+            android:layout_width="match_parent"
+            android:layout_height="18dp"
+            android:layout_weight="0.5"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:text="DATI ATJAUNOTI: " />
+        <TextView
+            android:id="@+id/tvLastUpdate"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textColor="#FF0F00"
+            android:layout_weight="0.3"
+            android:text="@string/app_name" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.2"
+        android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.33"
+        android:padding="2dp"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/showRest"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:layout_gravity="left"
+            android:background="@color/lightBlue"
+            android:onClick="buttonResponse_onClick"
+            android:textSize="12sp"
+            android:text="MANI OBJEKTI" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.03" />
+        <Button
+            android:id="@+id/showMapButton"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/showVersion"
+            android:layout_gravity="right"
+            android:layout_weight="0.5"
+            android:background="@color/lightBlue"
+            android:onClick="butonShowMap_onClick"
+            android:text="@string/show_map"
+            android:textSize="12sp" />
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.33"
+            android:padding="2dp"
+            android:orientation="horizontal">
+        <Button
+            android:id="@+id/showSettings"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:background="@color/lightBlue"
+            android:textSize="12sp"
+            android:text="IESTATĪJUMI"
+            android:onClick="buttonSettings_onClick" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.03" />
+
+        <Button
+            android:id="@+id/showUUID"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:background="@color/lightBlue"
+            android:onClick="buttonUUID_onClick"
+            android:textSize="12sp"
+            android:text="RĀDĪT PREFERENCES" />
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.33"
+            android:padding="2dp"
+            android:orientation="horizontal">
+        <Button
+            android:id="@+id/showVersion"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:padding="1dp"
+            android:background="@color/lightBlue"
+            android:textSize="12sp"
+            android:text="Show App version"
+            android:onClick="buttonVersion_onClick" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.03" />
+        <Button
+            android:id="@+id/showSQLiteData"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:background="@color/lightBlue"
+            android:text="@string/show_SQlite"
+            android:onClick="butonShowSQlite_onClick"
+            android:textSize="12sp"/>
+        </LinearLayout>
+</LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bottomlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:text="POWERED BY "
+            android:layout_gravity="center"
+            android:textSize="16sp"
+            android:translationX="50dp" />
+
+        <ImageButton
+            android:id="@+id/btnMfiles"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginRight="6dp"
+            android:layout_weight="0.5"
+            android:background="@drawable/mfileslogolarge"
+            android:onClick="btnMfiles_onClick"/>
+    </LinearLayout>
+</LinearLayout>

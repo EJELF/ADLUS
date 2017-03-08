@@ -32,7 +32,7 @@ public class ProjectsHelper{
     public static final String TS_COLUMN = "ts";
     public static final String CUSTODIAN_COLUMN = "CustodianSurname";
     public static final String CUSTODIAN_PHONE_COLUMN = "CustodianPhone";
-    public static final String LAST_DB_CHANGES = "LastChanges";
+
     Projects openHelper;
     private SQLiteDatabase database;
     private SharedPreferences prefs;
@@ -41,6 +41,7 @@ public class ProjectsHelper{
     public ProjectsHelper(Context context){
         openHelper = new Projects(context);
         database = openHelper.getWritableDatabase();
+
     }
 
     public void saveProjectsRecord(String id, String geofenceId, String lr, String lat, String lng, String radius, String phoneId, String imei,
@@ -79,6 +80,7 @@ public class ProjectsHelper{
 
     public Cursor getTimeRecordList(){
         return database.rawQuery("select * from " + TABLE_PROJECTS, null);
+
     }
 
     private class Projects extends SQLiteOpenHelper{
@@ -104,5 +106,6 @@ public class ProjectsHelper{
             // Create tables again
             onCreate(db);
         }
+
     }
 }

@@ -21,7 +21,7 @@ public class SplashScreen extends Activity {
                 }
                 finally {
 
-                    Intent intent = new Intent(SplashScreen.this,MainActivity.class);
+                    Intent intent = new Intent(SplashScreen.this,Main2Activity.class);
                     // Šim jānovērš vairāku launcher ikonu veidošanu
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
