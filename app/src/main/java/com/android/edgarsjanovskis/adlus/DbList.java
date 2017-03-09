@@ -6,8 +6,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.google.android.gms.location.Geofence;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.android.edgarsjanovskis.adlus.ProjectsHelper.CUSTODIAN_COLUMN;
 import static com.android.edgarsjanovskis.adlus.ProjectsHelper.CUSTODIAN_PHONE_COLUMN;
@@ -27,12 +30,26 @@ import static com.android.edgarsjanovskis.adlus.R.id.list;
 
 public class DbList extends AppCompatActivity {
 
+
+    // No Parauga!!!!!!!
+    // Internal List of Geofence objects. In a real app, these might be provided by an API based on
+    // locations within the user's proximity.
+    List<Geofence> mGeofenceList;
+    // Persistent storage for geofences.
+    private SimpleGeofenceStore mGeofenceStorage;
+
+
+    // These will store hard-coded geofences in this sample app.
+    private SimpleGeofence mAndroidBuildingGeofence;
+    private SimpleGeofence mGeofence;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_list);
-
     }
+
 
     @Override
     public void onResume(){
@@ -48,6 +65,7 @@ public class DbList extends AppCompatActivity {
         Cursor reader = mDbHelper.getTimeRecordList();
 
         ArrayList<String> list = new ArrayList<>();
+
 
         // ar if novērš kļūdu, kad android.database.CursorIndexOutOfBoundsException: Index 0 requested, with a size of 0
         if(reader != null)
@@ -68,8 +86,10 @@ public class DbList extends AppCompatActivity {
                 //lastUpdate = Timestamp.valueOf(reader.getString(reader.getColumnIndex(LAST_DB_UPDATE)));
 
 
-                list.add(id + ": Geofence ID: " + geofenceId + " LatLng: " + lat + "/" + lon + " Tālrunis : " + custodianPhone);
+                list.add(id + ":\tGeofence ID: " + geofenceId + "\nLatitude: " + lat + "\nLongitude: " + lon + "\nRadius: " + radius);
+
             }
+
             reader.close();
 
 
@@ -80,6 +100,9 @@ public class DbList extends AppCompatActivity {
             lv.setAdapter(adapter);
         }
 
+
     }
+
+
 
 }

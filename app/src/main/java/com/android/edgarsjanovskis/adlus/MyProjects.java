@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
+import static com.android.edgarsjanovskis.adlus.Main2Activity.LAST_UPDATE;
+
 
 public class MyProjects extends AppCompatActivity{
 
@@ -40,6 +42,7 @@ public class MyProjects extends AppCompatActivity{
     private String url;
     private SharedPreferences prefs;
     public final String USER_NAME = "User_Name";
+    public final String PHONE_ID = "PhoneID";
     ArrayList<HashMap<String, String>> mProjectList;
     // projects JSONArray
     JSONArray projects = null;
@@ -65,6 +68,13 @@ public class MyProjects extends AppCompatActivity{
         mProjectList = new ArrayList<>();
         lv = (ListView) findViewById(R.id.list);
         new GetProjects().execute();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(pDialog.isShowing())
+            pDialog.dismiss();
 
     }
 
@@ -111,8 +121,8 @@ public class MyProjects extends AppCompatActivity{
                     // Getting JSON Array node
                     JSONArray projects = new JSONArray(jsonStr);
                     SharedPreferences prefs = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
-                    String updateDatetime = String.valueOf(Calendar.getInstance().getTime());
-                    prefs.edit().putString("LastUpdate", updateDatetime).apply();
+
+
                     // looping through All Array
                     for (int i = 0; i < projects.length(); i++) {
 
@@ -134,37 +144,45 @@ public class MyProjects extends AppCompatActivity{
                         String custodianPhone = c.getString("custodianPhone");
 
 
-                    if (myimei.equals(imei)) {
+                        if (myimei.equals(imei)) {
                             // tmp hash map for single contact
                             HashMap<String, String> project = new HashMap<>();
                             // adding each child node to HashMap key => value
-                                project.put("$id", id);
-                                project.put("GeofenceID", geofenceId);
-                                project.put("LR", lr);
-                                project.put("Latitude", lat);
-                                project.put("Longitude", lng);
-                                project.put("Radius", radius);
-                                project.put("PhoneId", phoneId);
-                                project.put("IMEI", imei);
-                                project.put("EmployeeName", employee);
-                                project.put("CustomerName", customer);
-                                project.put("ProjectName", projectName);
-                                project.put("ts", ts);
-                                project.put("Custodian", custodianSurname);
-                                project.put("CustodianPhone", custodianPhone);
-                                // adding projects to project list
+                            project.put("$id", id);
+                            project.put("GeofenceID", geofenceId);
+                            project.put("LR", lr);
+                            project.put("Latitude", lat);
+                            project.put("Longitude", lng);
+                            project.put("Radius", radius);
+                            project.put("PhoneId", phoneId);
+                            project.put("IMEI", imei);
+                            project.put("EmployeeName", employee);
+                            project.put("CustomerName", customer);
+                            project.put("ProjectName", projectName);
+                            project.put("ts", ts);
+                            project.put("Custodian", custodianSurname);
+                            project.put("CustodianPhone", custodianPhone);
+                            // adding projects to project list
                             mProjectList.add(project);
 
-                        //db storing only if IMEI match
-                        databaseHelper.saveProjectsRecord(id, geofenceId, lr, lat, lng, radius, phoneId, imei, employee, customer, projectName, ts, custodianSurname, custodianPhone);
+                            //db storing only if IMEI match
+                            databaseHelper.saveProjectsRecord(id, geofenceId, lr, lat, lng, radius, phoneId, imei, employee, customer, projectName, ts, custodianSurname, custodianPhone);
 
-                        prefs.edit().putString(USER_NAME, employee).apply();
-                        String changesDatetime = String.valueOf(Calendar.getInstance().getTime());
-                        prefs.edit().putString("LastChanges", changesDatetime).apply();
-
+                            prefs.edit().putString(USER_NAME, employee).apply();
+                            prefs.edit().putString(PHONE_ID, phoneId).apply();
+                            // place where last update
+                            String updateDatetime = String.valueOf(Calendar.getInstance().getTime());
+                            prefs.edit().putString(LAST_UPDATE, updateDatetime).apply();
+                        /*if (isUpdated){
+                            String updateDatetime = String.valueOf(Calendar.getInstance().getTime());
+                            prefs.edit().putString(LAST_UPDATE, updateDatetime).apply();
+                        }
+                        }else{
+                        // jāieliek kas notiek, ja nav neviena ieraksta šim IMEI
+                        Toast.makeText(getApplicationContext(),"Izskatās, ka uz IMEI " + myimei + " nav reģistrēts neviens objekts!", Toast.LENGTH_LONG).show();
+                        }*/
                         }
                     }
-
 
                 } catch (final JSONException e) {
                     Log.e(TAG, "Json parsing error: " + e.getMessage());
@@ -194,6 +212,9 @@ public class MyProjects extends AppCompatActivity{
             return null;
         }
 
+
+
+
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
@@ -217,6 +238,10 @@ public class MyProjects extends AppCompatActivity{
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, final View view, final int i, long l) {
 
+                    // nezinu ko lai dara!!!
+                    StringBuilder sb = new StringBuilder();
+                    StringBuilder phone = sb.append(mProjectList.get(i).get("CustodianPhone"));
+
                     //Toast.makeText(getApplicationContext(), "Nospiests: " + position, Toast.LENGTH_LONG).show();
                     AlertDialog.Builder adb = new AlertDialog.Builder(MyProjects.this);
                     view.setSelected(true);
@@ -225,7 +250,7 @@ public class MyProjects extends AppCompatActivity{
                             "\n\nObjekta koordinātes: " + mProjectList.get(i).get("Latitude")+
                             "/" + mProjectList.get(i).get("Longitude") +
                             "\n\nBūvuzraugs: " + mProjectList.get(i).get("Custodian") +
-                            "\nTālrunis:  " + mProjectList.get(i).get("CustodianPhone")
+                            "\nTālrunis:  " + phone
                     );
 
 
@@ -262,6 +287,5 @@ public class MyProjects extends AppCompatActivity{
         }
 
     }
-
 }
 

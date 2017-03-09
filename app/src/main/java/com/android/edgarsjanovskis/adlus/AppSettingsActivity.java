@@ -76,14 +76,14 @@ public class AppSettingsActivity extends AppCompatActivity {
 
         if(Build.VERSION.SDK_INT < 23){
             tp1.setCurrentHour(prefs.getInt("startHour", 0));
-            tp1.setCurrentMinute(prefs.getInt("startMinute", 00));
+            tp1.setCurrentMinute(prefs.getInt("startMinute", 0));
             tp2.setCurrentHour(prefs.getInt("stopHour", 0));
-            tp2.setCurrentMinute(prefs.getInt("stopMinute", 00));
+            tp2.setCurrentMinute(prefs.getInt("stopMinute", 0));
         }else {
             tp1.setHour(prefs.getInt("startHour", 0));
-            tp1.setMinute(prefs.getInt("startMinute", 00));
+            tp1.setMinute(prefs.getInt("startMinute", 0));
             tp2.setHour(prefs.getInt("stopHour", 0));
-            tp2.setMinute(prefs.getInt("stopMinute", 00));
+            tp2.setMinute(prefs.getInt("stopMinute", 0));
         }
         //calendar = Calendar.getInstance();
 
@@ -245,7 +245,7 @@ public class AppSettingsActivity extends AppCompatActivity {
             prefs.edit().putString(SERVER_URL, serverUrl).apply();
         }
 
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, Main2Activity.class);
         startActivity(intent);
         finish();
     }

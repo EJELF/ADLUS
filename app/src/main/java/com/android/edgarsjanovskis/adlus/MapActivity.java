@@ -43,6 +43,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import static com.android.edgarsjanovskis.adlus.Constants.GEOFENCE_EXPIRATION_TIME;
+import static com.android.edgarsjanovskis.adlus.ProjectsHelper.KEY_ID;
+
 public class MapActivity extends AppCompatActivity
         implements
         GoogleApiClient.ConnectionCallbacks,
@@ -53,6 +56,7 @@ public class MapActivity extends AppCompatActivity
         GoogleMap.OnMarkerClickListener,
         ResultCallback<Status> {
 
+////
     private static final String TAG = MapActivity.class.getSimpleName();
     private static final boolean DEVELOPER_MODE = true;
 
@@ -113,9 +117,8 @@ public class MapActivity extends AppCompatActivity
 
         // create GoogleApiClient
         createGoogleApi();
-
-
-
+        //šis bija menu sastāvā lai uzsāktu izsekošanu
+        startGeofence();
     }
 
     // Create GoogleApiClient instance
@@ -383,17 +386,22 @@ public class MapActivity extends AppCompatActivity
     private static final String GEOFENCE_REQ_ID = "My Geofence";
     private static final float GEOFENCE_RADIUS = 200.0f; // in meters
 
-    // Create a Geofence
+
+    // Create a Geofence original
     private Geofence createGeofence( LatLng latLng, float radius ) {
         Log.d(TAG, "createGeofence");
         return new Geofence.Builder()
-                .setRequestId(GEOFENCE_REQ_ID)
+                .setRequestId(KEY_ID)
                 .setCircularRegion( latLng.latitude, latLng.longitude, radius)
-                .setExpirationDuration( GEO_DURATION )
-                .setTransitionTypes( Geofence.GEOFENCE_TRANSITION_ENTER
+                .setExpirationDuration( GEOFENCE_EXPIRATION_TIME )
+                .setTransitionTypes( Geofence.GEOFENCE_TRANSITION_DWELL
                         | Geofence.GEOFENCE_TRANSITION_EXIT )
                 .build();
     }
+
+
+
+
 
     // Create a Geofence Request
     private GeofencingRequest createGeofenceRequest( Geofence geofence ) {

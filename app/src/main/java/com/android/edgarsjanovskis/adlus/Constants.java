@@ -43,13 +43,6 @@ public final class Constants {
     public static final double ANDROID_BUILDING_LONGITUDE = -122.083648;
     public static final float ANDROID_BUILDING_RADIUS_METERS = 60.0f;
 
-    // Geofence parameters for the Yerba Buena Gardens near the Moscone Center in San Francisco.
-    public static final String YERBA_BUENA_ID = "2";
-    public static final double YERBA_BUENA_LATITUDE = 37.784886;
-    public static final double YERBA_BUENA_LONGITUDE = -122.402671;
-    public static final float YERBA_BUENA_RADIUS_METERS = 72.0f;
-
-
     // The constants below are less interesting than those above.
 
     // Path for the DataItem containing the last geofence id entered.
@@ -59,15 +52,15 @@ public final class Constants {
     public static final String KEY_GEOFENCE_ID = "geofence_id";
 
     // Keys for flattened geofences stored in SharedPreferences.
-    public static final String KEY_LATITUDE = "com.example.wearable.geofencing.KEY_LATITUDE";
-    public static final String KEY_LONGITUDE = "com.example.wearable.geofencing.KEY_LONGITUDE";
-    public static final String KEY_RADIUS = "com.example.wearable.geofencing.KEY_RADIUS";
+    public static final String KEY_LATITUDE = "com.android.edgarsjanovskis.adlus.KEY_LATITUDE";
+    public static final String KEY_LONGITUDE = "com.android.edgarsjanovskis.adlus.KEY_LONGITUDE";
+    public static final String KEY_RADIUS = "com.android.edgarsjanovskis.adlus.KEY_RADIUS";
     public static final String KEY_EXPIRATION_DURATION =
-            "com.example.wearable.geofencing.KEY_EXPIRATION_DURATION";
+            "com.android.edgarsjanovskis.adlus.KEY_EXPIRATION_DURATION";
     public static final String KEY_TRANSITION_TYPE =
-            "com.example.wearable.geofencing.KEY_TRANSITION_TYPE";
+            "com.android.edgarsjanovskis.adlus.KEY_TRANSITION_TYPE";
     // The prefix for flattened geofence keys.
-    public static final String KEY_PREFIX = "com.example.wearable.geofencing.KEY";
+    public static final String KEY_PREFIX = "com.android.edgarsjanovskis.adlus.KEY";
 
     // Invalid values, used to test geofence storage when retrieving geofences.
     public static final long INVALID_LONG_VALUE = -999l;

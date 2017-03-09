@@ -58,7 +58,7 @@
         <activity
             android:name=".MapActivity"
             android:label="@string/map_activity_title"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".Main2Activity">
             <intent-filter>
                 <action android:name="android.intent.action.QUICK_VIEW" />
 

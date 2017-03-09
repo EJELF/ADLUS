@@ -13,6 +13,8 @@ public class ProjectsHelper{
     // All Static variables
     // Database Version
     private static final int DATABASE_VERSION = 1;
+    public SharedPreferences prefs;
+
     // Database Name
     private static final String DATABASE_NAME = "adlus.db";
     // Contacts table name
@@ -35,13 +37,12 @@ public class ProjectsHelper{
 
     Projects openHelper;
     private SQLiteDatabase database;
-    private SharedPreferences prefs;
+    Context context;
 
 
     public ProjectsHelper(Context context){
         openHelper = new Projects(context);
         database = openHelper.getWritableDatabase();
-
     }
 
     public void saveProjectsRecord(String id, String geofenceId, String lr, String lat, String lng, String radius, String phoneId, String imei,
@@ -74,9 +75,15 @@ public class ProjectsHelper{
         {
             // Inserting record
             database.insert(TABLE_PROJECTS, null, contentValues);
+
+            if(c.isAfterLast()) {
+                c.close();
+            }
         }
-        c.close();
+       //database.close();    met ārā, ka cenšas atvērt aizvērtu db
+        ////////////prefs = context.getApplicationContext().getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
     }
+
 
     public Cursor getTimeRecordList(){
         return database.rawQuery("select * from " + TABLE_PROJECTS, null);

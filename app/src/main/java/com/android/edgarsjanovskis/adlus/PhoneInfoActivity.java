@@ -39,8 +39,8 @@ public class PhoneInfoActivity extends Activity {
     }
     public void addStartTime() {
         SharedPreferences prefs = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
-        Integer hoursStart = prefs.getInt("startHour", 00);
-        Integer minutesStart = prefs.getInt("startMinute", 00);
+        Integer hoursStart = prefs.getInt("startHour", 0);
+        Integer minutesStart = prefs.getInt("startMinute", 0);
         StringBuilder sb = new StringBuilder();
         sb.append(hoursStart).append(":");
         if (minutesStart<10){
@@ -54,8 +54,8 @@ public class PhoneInfoActivity extends Activity {
     }
     public void addStopTime() {
         SharedPreferences prefs = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
-        Integer hoursStop = prefs.getInt("stopHour", 00);
-        Integer minutesStop = prefs.getInt("stopMinute", 00);
+        Integer hoursStop = prefs.getInt("stopHour", 0);
+        Integer minutesStop = prefs.getInt("stopMinute", 0);
         StringBuilder sb = new StringBuilder();
         sb.append(hoursStop).append(":");
         if (minutesStop<10){
