@@ -1,88 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_main"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.android.edgarsjanovskis.adlus.MainActivity">
-
+    android:paddingTop="@dimen/activity_vertical_margin">
 
     <Button
-        android:id="@+id/showRest"
-        android:layout_width="wrap_content"
+        android:id="@+id/add_geofences_button"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Show REST response"
-        android:onClick="buttonResponse_onClick"
-        android:layout_marginTop="55dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_weight="1"
+        android:onClick="addGeofencesButtonHandler"
+        android:text="@string/add_geofences" />
 
     <Button
-           android:id="@+id/showSettings"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:text="Show Settings"
-           android:onClick="buttonSettings_onClick"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:id="@+id/tvIsConnected"
-        android:layout_width="wrap_content"
+        android:id="@+id/remove_geofences_button"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/app_name"
-        android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@+id/showVersion"
-        android:layout_toEndOf="@+id/showVersion"
-        android:layout_marginBottom="110dp" />
-
-    <Button
-        android:id="@+id/showUUID"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Show UUID"
-        android:onClick="buttonUUID_onClick"
-
-        android:layout_below="@+id/showRest"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <Button
-        android:id="@+id/showVersion"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Show App version"
-        android:onClick="buttonVersion_onClick"
-        android:layout_marginTop="14dp"
-        android:layout_below="@+id/showUUID"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <Button
-        android:id="@+id/showMapButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/show_map"
-        android:onClick="butonShowMap_onClick"
-        android:layout_marginTop="16dp"
-        android:layout_below="@+id/showVersion"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-    <Button
-        android:id="@+id/showSQLiteData"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/show_SQlite"
-        android:onClick="butonShowSQlite_onClick"
-        android:layout_marginTop="16dp"
-        android:layout_below="@+id/showMapButton"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-</RelativeLayout>
+        android:layout_weight="1"
+        android:onClick="removeGeofencesButtonHandler"
+        android:text="@string/remove_geofences" />
+</LinearLayout>

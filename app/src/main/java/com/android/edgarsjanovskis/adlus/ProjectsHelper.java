@@ -8,6 +8,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.google.android.gms.location.Geofence;
+
+import java.util.List;
+
 
 public class ProjectsHelper{
     // All Static variables
@@ -34,15 +38,19 @@ public class ProjectsHelper{
     public static final String TS_COLUMN = "ts";
     public static final String CUSTODIAN_COLUMN = "CustodianSurname";
     public static final String CUSTODIAN_PHONE_COLUMN = "CustodianPhone";
+    //šī ideja no DobrinGanev
+    private static final String[] COLUMNS = {KEY_ID, LATITUDE_COLUMN, LONGITUDE_COLUMN, RADIUS_COLUMN};
 
     Projects openHelper;
     private SQLiteDatabase database;
     Context context;
+    List<Geofence> mGeofenceList;
 
 
     public ProjectsHelper(Context context){
         openHelper = new Projects(context);
         database = openHelper.getWritableDatabase();
+        database = openHelper.getReadableDatabase();
     }
 
     public void saveProjectsRecord(String id, String geofenceId, String lr, String lat, String lng, String radius, String phoneId, String imei,
@@ -78,16 +86,15 @@ public class ProjectsHelper{
 
             if(c.isAfterLast()) {
                 c.close();
+                database.close();
             }
         }
        //database.close();    met ārā, ka cenšas atvērt aizvērtu db
         ////////////prefs = context.getApplicationContext().getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
     }
 
-
     public Cursor getTimeRecordList(){
         return database.rawQuery("select * from " + TABLE_PROJECTS, null);
-
     }
 
     private class Projects extends SQLiteOpenHelper{
@@ -113,6 +120,63 @@ public class ProjectsHelper{
             // Create tables again
             onCreate(db);
         }
+
+        //??? Kā dabūt no datubāzes@@@
+/*
+        public void createGeofence(int id){
+            //1. get reference to readable db
+            SQLiteDatabase db = this.getReadableDatabase();
+            //2. buld quiry
+
+            Cursor c = db.query(TABLE_PROJECTS, // a. table
+                    COLUMNS,// b. column names
+                    " id = ?", // c. selections
+                    new String[] {String.valueOf(id)}, // d. selections args
+                    null,// e. group by
+                    null,// f. having
+                    null,// g. order by
+                    null);// h. limit
+            // 3. if we got results get the first one
+            if (c != null)
+                c.moveToFirst();
+            // 4. build book object
+            LatLng latLng = new LatLng((c.getFloat(1)), (c.getFloat(2)));
+            Geofence fence= new Geofence.Builder()
+                    .setRequestId(c.getString(0))
+                    .setCircularRegion( latLng.latitude, latLng.longitude, c.getLong(3))
+                    .setExpirationDuration( GEOFENCE_EXPIRATION_TIME )
+                    .setTransitionTypes( Geofence.GEOFENCE_TRANSITION_DWELL
+                            | Geofence.GEOFENCE_TRANSITION_EXIT )
+                    .build();
+            mGeofenceList.add(fence);
+        }
+        public void createGeofence(){
+            //1. get reference to readable db
+            SQLiteDatabase db = this.getReadableDatabase();
+            //2. buld quiry
+
+            Cursor c = db.query(TABLE_PROJECTS, // a. table
+                    COLUMNS,// b. column names
+                    " id = ?", // c. selections
+                    new String[] {String.valueOf(id)}, // d. selections args
+                    null,// e. group by
+                    null,// f. having
+                    null,// g. order by
+                    null);// h. limit
+            // 3. if we got results get the first one
+            if (c != null)
+                c.moveToFirst();
+            // 4. build book object
+            LatLng latLng = new LatLng((c.getFloat(1)), (c.getFloat(2)));
+            Geofence fence= new Geofence.Builder()
+                    .setRequestId(c.getString(0))
+                    .setCircularRegion( latLng.latitude, latLng.longitude, c.getLong(3))
+                    .setExpirationDuration( GEOFENCE_EXPIRATION_TIME )
+                    .setTransitionTypes( Geofence.GEOFENCE_TRANSITION_DWELL
+                            | Geofence.GEOFENCE_TRANSITION_EXIT )
+                    .build();
+            mGeofenceList.add(fence);
+        }*/
 
     }
 }

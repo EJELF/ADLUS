@@ -68,6 +68,7 @@ public class MyProjects extends AppCompatActivity{
         mProjectList = new ArrayList<>();
         lv = (ListView) findViewById(R.id.list);
         new GetProjects().execute();
+
     }
 
     @Override
@@ -165,6 +166,7 @@ public class MyProjects extends AppCompatActivity{
                             // adding projects to project list
                             mProjectList.add(project);
 
+
                             //db storing only if IMEI match
                             databaseHelper.saveProjectsRecord(id, geofenceId, lr, lat, lng, radius, phoneId, imei, employee, customer, projectName, ts, custodianSurname, custodianPhone);
 
@@ -173,7 +175,11 @@ public class MyProjects extends AppCompatActivity{
                             // place where last update
                             String updateDatetime = String.valueOf(Calendar.getInstance().getTime());
                             prefs.edit().putString(LAST_UPDATE, updateDatetime).apply();
-                        /*if (isUpdated){
+
+                             //public SimpleGeofence(String geofenceId, double latitude, double longitude, float radius, long expiration, int transition)
+
+
+                            /*if (isUpdated){
                             String updateDatetime = String.valueOf(Calendar.getInstance().getTime());
                             prefs.edit().putString(LAST_UPDATE, updateDatetime).apply();
                         }
@@ -285,7 +291,7 @@ public class MyProjects extends AppCompatActivity{
             });
 
         }
-
     }
+
 }
 

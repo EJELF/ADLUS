@@ -82,10 +82,10 @@
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".Main2Activity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.android.edgarsjanovskis.adlus.MainActivity" />
+                android:value="com.android.edgarsjanovskis.adlus.Main2Activity" />
         </activity>
         <activity
             android:name=".MyProjects"

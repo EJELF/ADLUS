@@ -34,7 +34,7 @@ public class Main2Activity extends AppCompatActivity {
     public final String APP_UUID = "app_uuid";
     public final int DOESNT_EXIST = -1;
     SharedPreferences prefs;
-
+    SharedPreferences sharedPref;
 
     EditText etResponse;
     TextView tvIsConnLabel;
@@ -71,6 +71,7 @@ public class Main2Activity extends AppCompatActivity {
         tvLastChanges.setText(lastchanges);
         String lastupdate =  prefs.getString(LAST_UPDATE, " ");
         tvLastUpdate.setText(lastupdate);
+        sharedPref = getSharedPreferences("MapPrefsFile", MODE_PRIVATE );
 
         // check if you are connected or not
         if(isConnected()){
@@ -97,7 +98,6 @@ public class Main2Activity extends AppCompatActivity {
                 }
             }
         });
-
     }
 
     public void checkFirstRun(){
@@ -160,12 +160,18 @@ public class Main2Activity extends AppCompatActivity {
 
     public void buttonUUID_onClick (View view){
         prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+       // sharedPref = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         try{
             Map<String,?> keys = prefs.getAll();
             for(Map.Entry<String,?> entry : keys.entrySet()){
                 Log.d("map values",entry.getKey() + ": " +
                         entry.getValue());
             }
+           /* Map<String,?> keys2 = sharedPref.getAll();
+            for(Map.Entry<String,?> entry : keys2.entrySet()){
+                Log.d("map values sharedPref",entry.getKey() + ": " +
+                        entry.getValue());
+            }*/
         }catch (Exception e){
             Log.e("Error: ", e.toString());
         }

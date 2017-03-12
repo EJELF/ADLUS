@@ -20,6 +20,8 @@ import android.net.Uri;
 
 import com.google.android.gms.location.Geofence;
 
+import static android.provider.ContactsContract.Directory.PACKAGE_NAME;
+
 /** Constants used in companion app. */
 public final class Constants {
 
@@ -61,9 +63,11 @@ public final class Constants {
             "com.android.edgarsjanovskis.adlus.KEY_TRANSITION_TYPE";
     // The prefix for flattened geofence keys.
     public static final String KEY_PREFIX = "com.android.edgarsjanovskis.adlus.KEY";
+    public static final String MAP_PREFS_NAME = "MapPrefsFile";
+    public static final String GEOFENCES_ADDED_KEY = PACKAGE_NAME + ".GEOFENCES_ADDED_KEY";
 
     // Invalid values, used to test geofence storage when retrieving geofences.
-    public static final long INVALID_LONG_VALUE = -999l;
+    public static final long INVALID_LONG_VALUE = -999L;
     public static final float INVALID_FLOAT_VALUE = -999.0f;
     public static final int INVALID_INT_VALUE = -999;
 
