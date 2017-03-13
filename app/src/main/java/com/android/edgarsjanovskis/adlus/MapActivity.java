@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
@@ -95,7 +96,7 @@ public class MapActivity extends AppCompatActivity
     private GeofencingRequest mGeofenceRequest;
 
     public ProjectsHelper mDbHelper;
-    //public SQLiteDatabase db;
+    public SQLiteDatabase db;
 
     private static final String NOTIFICATION_MSG = "NOTIFICATION MSG";
 
@@ -156,7 +157,7 @@ public class MapActivity extends AppCompatActivity
         createGoogleApi();
 
         //šis bija menu sastāvā lai uzsāktu izsekošanu
-       startGeofences();
+        startGeofences();
 
     }
 
@@ -286,13 +287,14 @@ public class MapActivity extends AppCompatActivity
         // map.setOnMapClickListener(this); We dont use clicks on map
         //map.setOnMarkerClickListener(this);
     }
-/*
-    @Override
-    public void onMapClick(LatLng latLng) {
-        Log.d(TAG, "onMapClick(" + latLng + ")");
-        markerForGeofence(latLng);
-    }
-*/
+
+    /*
+        @Override
+        public void onMapClick(LatLng latLng) {
+            Log.d(TAG, "onMapClick(" + latLng + ")");
+            markerForGeofence(latLng);
+        }
+    */
     @Override
     public boolean onMarkerClick(Marker marker) {
         Log.d(TAG, "onMarkerClickListener: " + marker.getPosition());
@@ -301,8 +303,8 @@ public class MapActivity extends AppCompatActivity
 
     private LocationRequest locationRequest;
     // Defined in mili seconds.
-    private final int UPDATE_INTERVAL = 3*60*1000;  //3 min
-    private final int FASTEST_INTERVAL = 30*1000;   //30 sek
+    private final int UPDATE_INTERVAL = 3 * 60 * 1000;  //3 min
+    private final int FASTEST_INTERVAL = 30 * 1000;   //30 sek
 
     // Start location Updates
     private void startLocationUpdates() {
@@ -342,7 +344,7 @@ public class MapActivity extends AppCompatActivity
         }
         mGeofencePendingIntent = createGeofencesPendingIntent();
         mGeofenceRequest = createGeofencesRequest();
-        LocationServices.GeofencingApi.addGeofences(googleApiClient,mGeofenceRequest,mGeofencePendingIntent);
+        LocationServices.GeofencingApi.addGeofences(googleApiClient, mGeofenceRequest, mGeofencePendingIntent);
         Toast.makeText(this, getString(R.string.start_geofence_service), Toast.LENGTH_SHORT).show();
         //finish();
 
@@ -367,9 +369,9 @@ public class MapActivity extends AppCompatActivity
     // Get last known location
     private void getLastKnownLocation() {
         Log.d(TAG, "getLastKnownLocation()");
-        if ( checkPermission() ) {
+        if (checkPermission()) {
             lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-            if ( lastLocation != null ) {
+            if (lastLocation != null) {
                 Log.i(TAG, "LasKnown location. " +
                         "Long: " + lastLocation.getLongitude() +
                         " | Lat: " + lastLocation.getLatitude());
@@ -379,13 +381,12 @@ public class MapActivity extends AppCompatActivity
                 Log.w(TAG, "No location retrieved yet");
                 startLocationUpdates();
             }
-        }
-        else askPermission();
+        } else askPermission();
     }
 
     private void writeActualLocation(Location location) {
-        textLat.setText( "Lat: " + location.getLatitude() );
-        textLong.setText( "Long: " + location.getLongitude() );
+        textLat.setText("Lat: " + location.getLatitude());
+        textLong.setText("Long: " + location.getLongitude());
 
         markerLocation(new LatLng(location.getLatitude(), location.getLongitude()));
     }
@@ -395,14 +396,15 @@ public class MapActivity extends AppCompatActivity
     }
 
     private Marker locationMarker;
+
     private void markerLocation(LatLng latLng) {
-        Log.i(TAG, "markerLocation("+latLng+")");
+        Log.i(TAG, "markerLocation(" + latLng + ")");
         String title = latLng.latitude + ", " + latLng.longitude;
         MarkerOptions markerOptions = new MarkerOptions()
                 .position(latLng)
                 .title(title);
-        if ( map!=null ) {
-            if ( locationMarker != null )
+        if (map != null) {
+            if (locationMarker != null)
                 locationMarker.remove();
 
             locationMarker = map.addMarker(markerOptions);
@@ -413,6 +415,7 @@ public class MapActivity extends AppCompatActivity
     }
 
     private Marker geoFenceMarker;
+
     private void markerForGeofence(List<LatLng> mLatLngList) {
 
 
@@ -431,8 +434,8 @@ public class MapActivity extends AppCompatActivity
             if (map != null) {
                 // Remove last geoFenceMarker
                 //if (geoFenceMarker != null)
-                    //geoFenceMarker.remove();
-                    geoFenceMarker = map.addMarker(markerOptions);
+                //geoFenceMarker.remove();
+                geoFenceMarker = map.addMarker(markerOptions);
             }
         }
     }
@@ -442,13 +445,13 @@ public class MapActivity extends AppCompatActivity
     private void startGeofences() {
 
         Log.i(TAG, "startGeofences()");
-        if( geoFenceMarker != null ) {
+        if (geoFenceMarker != null) {
 
-                GeofencingRequest geofenceRequest = createGeofencesRequest();
-                addGeofences(geofenceRequest);
+            GeofencingRequest geofenceRequest = createGeofencesRequest();
+            addGeofences(geofenceRequest);
             Log.e(TAG, "Geofence marker is NOT null");
 
-        //} else {
+            //} else {
             Log.e(TAG, "Geofence marker is null");
         }
     }
@@ -457,21 +460,22 @@ public class MapActivity extends AppCompatActivity
     private GeofencingRequest createGeofencesRequest() {
         Log.d(TAG, "createGeofenceRequest");
         return new GeofencingRequest.Builder()
-                .setInitialTrigger( GeofencingRequest.INITIAL_TRIGGER_DWELL )
+                .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_DWELL)
                 .addGeofences(mGeofenceList)   // List
                 .build();
     }
 
     private PendingIntent geoFencePendingIntent;
     private final int GEOFENCE_REQ_CODE = 0;
+
     private PendingIntent createGeofencesPendingIntent() {
         Log.d(TAG, "createGeofencePendingIntent");
-        if ( geoFencePendingIntent != null )
+        if (geoFencePendingIntent != null)
             return geoFencePendingIntent;
 
-        Intent intent = new Intent( this, GeofenceTrasitionService.class);
+        Intent intent = new Intent(this, GeofenceTrasitionService.class);
         return PendingIntent.getService(
-                this, GEOFENCE_REQ_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT );
+                this, GEOFENCE_REQ_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     // Add the created GeofenceRequest to the device's monitoring list
@@ -489,18 +493,19 @@ public class MapActivity extends AppCompatActivity
     public void onResult(@NonNull Status status) {
         Log.i(TAG, "onResult: " + status);
 
-        if ( status.isSuccess() ) {
-                //saveGeofence();
-                //drawGeofence(mLatLngList);
-            } else{
-                Log.i(TAG, "nav ko uzzīmēt!!!" + status);
-            }
+        if (status.isSuccess()) {
+            //saveGeofence();
+            //drawGeofence(mLatLngList);
+        } else {
+            Log.i(TAG, "nav ko uzzīmēt!!!" + status);
+        }
     }
 
     // Draw Geofence circle on GoogleMap
     private Circle geoFenceLimits;
+
     private void drawGeofence(List<LatLng> mLatLngList) {
-        for (LatLng latLng: mLatLngList) {
+        for (LatLng latLng : mLatLngList) {
             Log.d(TAG, "drawGeofence()");
 
             if (geoFenceLimits != null)
@@ -531,7 +536,7 @@ public class MapActivity extends AppCompatActivity
         ).setResultCallback(new ResultCallback<Status>() {
             @Override
             public void onResult(@NonNull Status status) {
-                if ( status.isSuccess() ) {
+                if (status.isSuccess()) {
                     // remove drawing
                     removeGeofenceDraw();
                 }
@@ -541,13 +546,14 @@ public class MapActivity extends AppCompatActivity
 
     private void removeGeofenceDraw() {
         Log.d(TAG, "removeGeofenceDraw()");
-        if ( geoFenceMarker != null)
+        if (geoFenceMarker != null)
             geoFenceMarker.remove();
-         if ( geoFenceLimits != null )
-           geoFenceLimits.remove();
+        if (geoFenceLimits != null)
+            geoFenceLimits.remove();
     }
+
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
 
         int id, phoneId;
@@ -557,15 +563,16 @@ public class MapActivity extends AppCompatActivity
         double lon;
         Timestamp lastUpdate;
         String projectLr, timestamp, employee, customer, project, imei, custodian, custodianPhone;
-        ListView lv = (ListView)findViewById(list);
+        ListView lv = (ListView) findViewById(list);
         //start new instance of ProjectsHelper and reader
 
         mDbHelper = new ProjectsHelper(this);
-        Cursor reader = mDbHelper.getTimeRecordList();
+        Cursor reader = mDbHelper.getAllRecordList();
+
 
         // ar if novērš kļūdu, kad android.database.CursorIndexOutOfBoundsException: Index 0 requested, with a size of 0
-        if(reader != null)
-            for( reader.moveToFirst(); !reader.isAfterLast(); reader.moveToNext() ) {
+        if (reader != null)
+            for (reader.moveToFirst(); !reader.isAfterLast(); reader.moveToNext()) {
                 id = reader.getInt(reader.getColumnIndex(KEY_ID));
                 geofenceId = reader.getInt(reader.getColumnIndex(GEOFENCE_ID_COLUMN));
                 projectLr = reader.getString(reader.getColumnIndex(PROJECT_LR_COLUMN));
@@ -577,30 +584,31 @@ public class MapActivity extends AppCompatActivity
                 employee = reader.getString(reader.getColumnIndex(EMPLOYEE_COLUMN));
                 customer = reader.getString(reader.getColumnIndex(PROJECT_COLUMN));
                 timestamp = reader.getString(reader.getColumnIndex(TS_COLUMN));
-                custodian =reader.getString(reader.getColumnIndex(CUSTODIAN_COLUMN));
-                custodianPhone=reader.getString(reader.getColumnIndex(CUSTODIAN_PHONE_COLUMN));
+                custodian = reader.getString(reader.getColumnIndex(CUSTODIAN_COLUMN));
+                custodianPhone = reader.getString(reader.getColumnIndex(CUSTODIAN_PHONE_COLUMN));
                 //lastUpdate = Timestamp.valueOf(reader.getString(reader.getColumnIndex(LAST_DB_UPDATE)));
 
                 ////////////////////////////////////////////////////////////// pamēģināšu šeit
                 LatLng latLng = new LatLng(lat, lon);
-                Geofence fence= new Geofence.Builder()
+                Geofence fence = new Geofence.Builder()
                         .setRequestId(String.valueOf(geofenceId))
-                        .setCircularRegion( latLng.latitude, latLng.longitude, radius)
-                        .setExpirationDuration( GEOFENCE_EXPIRATION_TIME )
-                        .setTransitionTypes( Geofence.GEOFENCE_TRANSITION_ENTER
-                                | Geofence.GEOFENCE_TRANSITION_EXIT )
+                        .setCircularRegion(latLng.latitude, latLng.longitude, radius)
+                        .setExpirationDuration(GEOFENCE_EXPIRATION_TIME)
+                        .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER
+                                | Geofence.GEOFENCE_TRANSITION_EXIT)
                         .build();
                 mGeofenceList.add(fence);
                 mLatLngList.add(latLng);
                 Log.e("izveidots ", fence.toString());
 
-
-
-                //////////////////////////////////////////////////////////////
             }
-
+        if (reader.isAfterLast()) {
             reader.close();
+
+            //////////////////////////////////////////////////////////////
+        }
     }
+
 
 /*
     @Override

@@ -111,6 +111,7 @@ public class MyProjects extends AppCompatActivity{
             JsonParser jsonParser = new JsonParser();
 
 
+
             // Making a request to url and getting response
             String jsonStr = sh.makeServiceCall(url);
             Log.e(TAG, "Response from url: " + jsonStr);
@@ -176,8 +177,6 @@ public class MyProjects extends AppCompatActivity{
                             String updateDatetime = String.valueOf(Calendar.getInstance().getTime());
                             prefs.edit().putString(LAST_UPDATE, updateDatetime).apply();
 
-                             //public SimpleGeofence(String geofenceId, double latitude, double longitude, float radius, long expiration, int transition)
-
 
                             /*if (isUpdated){
                             String updateDatetime = String.valueOf(Calendar.getInstance().getTime());
@@ -187,6 +186,7 @@ public class MyProjects extends AppCompatActivity{
                         // jāieliek kas notiek, ja nav neviena ieraksta šim IMEI
                         Toast.makeText(getApplicationContext(),"Izskatās, ka uz IMEI " + myimei + " nav reģistrēts neviens objekts!", Toast.LENGTH_LONG).show();
                         }*/
+
                         }
                     }
 

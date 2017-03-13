@@ -51,6 +51,7 @@ public class ProjectsHelper{
         openHelper = new Projects(context);
         database = openHelper.getWritableDatabase();
         database = openHelper.getReadableDatabase();
+
     }
 
     public void saveProjectsRecord(String id, String geofenceId, String lr, String lat, String lng, String radius, String phoneId, String imei,
@@ -78,22 +79,28 @@ public class ProjectsHelper{
         {
             //showMessage("Error", "Record exist");
             Log.e("record exist id: ", id + " GeofenceId: " + geofenceId);
-        }
-        else
-        {
-            // Inserting record
-            database.insert(TABLE_PROJECTS, null, contentValues);
-
+            database.update(TABLE_PROJECTS, contentValues, "id = " + id, null);
             if(c.isAfterLast()) {
                 c.close();
                 database.close();
             }
+
         }
-       //database.close();    met ārā, ka cenšas atvērt aizvērtu db
-        ////////////prefs = context.getApplicationContext().getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
+        else
+        {
+            // Inserting record
+            Log.e("Inserted record: id ", id + "GeofenceId: " +geofenceId);
+            database.insert(TABLE_PROJECTS, null, contentValues);
+            if(c.isAfterLast()) {
+                c.close();
+                database.close();
+            }
+
+        }
+       //database.close();    //met ārā, ka cenšas atvērt aizvērtu db
     }
 
-    public Cursor getTimeRecordList(){
+    public Cursor getAllRecordList(){
         return database.rawQuery("select * from " + TABLE_PROJECTS, null);
     }
 

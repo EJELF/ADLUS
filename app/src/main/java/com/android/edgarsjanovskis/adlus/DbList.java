@@ -3,6 +3,7 @@ package com.android.edgarsjanovskis.adlus;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -63,28 +64,29 @@ public class DbList extends AppCompatActivity {
         ListView lv = (ListView)findViewById(list);
 
         ProjectsHelper mDbHelper = new ProjectsHelper(this);
-        Cursor reader = mDbHelper.getTimeRecordList();
+        Cursor reader = mDbHelper.getAllRecordList();
 
         ArrayList<String> list = new ArrayList<>();
 
 
         // ar if novērš kļūdu, kad android.database.CursorIndexOutOfBoundsException: Index 0 requested, with a size of 0
         if(reader != null)
+            try{
         for( reader.moveToFirst(); !reader.isAfterLast(); reader.moveToNext() ) {
-                id = reader.getInt(reader.getColumnIndex(KEY_ID));
-                geofenceId = reader.getInt(reader.getColumnIndex(GEOFENCE_ID_COLUMN));
-                projectLr = reader.getString(reader.getColumnIndex(PROJECT_LR_COLUMN));
-                lat = reader.getDouble(reader.getColumnIndex(LATITUDE_COLUMN));
-                lon = reader.getDouble(reader.getColumnIndex(LONGITUDE_COLUMN));
-                radius = reader.getFloat(reader.getColumnIndex(RADIUS_COLUMN));
-                phoneId = reader.getInt(reader.getColumnIndex(PHONE_ID_COLUMN));
-                imei = reader.getString(reader.getColumnIndex(IMEI_COLUMN));
-                employee = reader.getString(reader.getColumnIndex(EMPLOYEE_COLUMN));
-                customer = reader.getString(reader.getColumnIndex(PROJECT_COLUMN));
-                timestamp = reader.getString(reader.getColumnIndex(TS_COLUMN));
-                custodian =reader.getString(reader.getColumnIndex(CUSTODIAN_COLUMN));
-                custodianPhone=reader.getString(reader.getColumnIndex(CUSTODIAN_PHONE_COLUMN));
-                //lastUpdate = Timestamp.valueOf(reader.getString(reader.getColumnIndex(LAST_DB_UPDATE)));
+            id = reader.getInt(reader.getColumnIndex(KEY_ID));
+            geofenceId = reader.getInt(reader.getColumnIndex(GEOFENCE_ID_COLUMN));
+            projectLr = reader.getString(reader.getColumnIndex(PROJECT_LR_COLUMN));
+            lat = reader.getDouble(reader.getColumnIndex(LATITUDE_COLUMN));
+            lon = reader.getDouble(reader.getColumnIndex(LONGITUDE_COLUMN));
+            radius = reader.getFloat(reader.getColumnIndex(RADIUS_COLUMN));
+            phoneId = reader.getInt(reader.getColumnIndex(PHONE_ID_COLUMN));
+            imei = reader.getString(reader.getColumnIndex(IMEI_COLUMN));
+            employee = reader.getString(reader.getColumnIndex(EMPLOYEE_COLUMN));
+            customer = reader.getString(reader.getColumnIndex(PROJECT_COLUMN));
+            timestamp = reader.getString(reader.getColumnIndex(TS_COLUMN));
+            custodian = reader.getString(reader.getColumnIndex(CUSTODIAN_COLUMN));
+            custodianPhone = reader.getString(reader.getColumnIndex(CUSTODIAN_PHONE_COLUMN));
+            //lastUpdate = Timestamp.valueOf(reader.getString(reader.getColumnIndex(LAST_DB_UPDATE)));
 
             /*///////////////////////////////////////////////////////////// pamēģināšu šeit
             LatLng latLng = new LatLng(lat, lon);
@@ -101,7 +103,19 @@ public class DbList extends AppCompatActivity {
             /////////////////////////////////////////////////////////////*/
 
             list.add(id + ":\tGeofence ID: " + geofenceId + "\nLatitude: " + lat + "\nLongitude: " + lon + "\nRadius: " + radius);
+            }
+        }catch (Exception e) {
+                Log.e("Error: ", e.toString());
+
+            }finally {
+
+            if (reader.isAfterLast()){
+                reader.close();
+
+            }
+
         }
+
 
         String[] data = new String[list.size()];
         for (int i = 0; i<list.size(); i++){
@@ -109,6 +123,11 @@ public class DbList extends AppCompatActivity {
             ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_activated_1, data);
             lv.setAdapter(adapter);
         }
+
+    }
+    @Override
+    public void onPause(){
+        super.onPause();
 
     }
 
