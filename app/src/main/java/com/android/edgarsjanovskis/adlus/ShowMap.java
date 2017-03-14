@@ -50,6 +50,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.android.edgarsjanovskis.adlus.Constants.GEOFENCE_EXPIRATION_TIME;
+import static com.android.edgarsjanovskis.adlus.Constants.MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION;
 import static com.android.edgarsjanovskis.adlus.ProjectsHelper.CUSTODIAN_COLUMN;
 import static com.android.edgarsjanovskis.adlus.ProjectsHelper.CUSTODIAN_PHONE_COLUMN;
 import static com.android.edgarsjanovskis.adlus.ProjectsHelper.EMPLOYEE_COLUMN;
@@ -66,7 +67,7 @@ import static com.android.edgarsjanovskis.adlus.ProjectsHelper.TS_COLUMN;
 import static com.android.edgarsjanovskis.adlus.R.id.list;
 
 
-public class MapActivity extends AppCompatActivity
+public class ShowMap extends AppCompatActivity
         implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
@@ -77,7 +78,7 @@ public class MapActivity extends AppCompatActivity
         ResultCallback<Status> {
 
     ////
-    private static final String TAG = MapActivity.class.getSimpleName();
+    private static final String TAG = com.android.edgarsjanovskis.adlus.GeofencingActivity.class.getSimpleName();
     private static final boolean DEVELOPER_MODE = true;
 
     private GoogleMap map;
@@ -102,7 +103,7 @@ public class MapActivity extends AppCompatActivity
 
     // Create a Intent send by the notification
     public static Intent makeNotificationIntent(Context context, String msg) {
-        Intent intent = new Intent(context, MapActivity.class);
+        Intent intent = new Intent(context, com.android.edgarsjanovskis.adlus.GeofencingActivity.class);
         intent.putExtra(NOTIFICATION_MSG, msg);
         return intent;
     }
@@ -329,25 +330,47 @@ public class MapActivity extends AppCompatActivity
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         Log.i(TAG, "onConnected()");
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
+
         if (!googleApiClient.isConnected()) {
             Toast.makeText(this, getString(R.string.not_connected), Toast.LENGTH_SHORT).show();
             return;
         }
         mGeofencePendingIntent = createGeofencesPendingIntent();
         mGeofenceRequest = createGeofencesRequest();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+
+            } else {
+
+                // No explanation needed, we can request the permission.
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+            return;
+        }
         LocationServices.GeofencingApi.addGeofences(googleApiClient, mGeofenceRequest, mGeofencePendingIntent);
         Toast.makeText(this, getString(R.string.start_geofence_service), Toast.LENGTH_SHORT).show();
         //finish();
-
+        //startLocationUpdates();
+        //startGeofences();
         getLastKnownLocation();
         recoverGeofenceMarker();
     }
@@ -423,7 +446,7 @@ public class MapActivity extends AppCompatActivity
 
             LatLng latLng = new LatLng(position.latitude, position.longitude);
             Log.i(TAG, "markerForGeofence(" + latLng + ")");
-            String title = position.latitude + "," + position.latitude;
+            String title = position.latitude + "," + position.longitude;
             // Define marker options
 
             MarkerOptions markerOptions = new MarkerOptions()
@@ -494,6 +517,7 @@ public class MapActivity extends AppCompatActivity
         Log.i(TAG, "onResult: " + status);
 
         if (status.isSuccess()) {
+            markerForGeofence(mLatLngList); //????????
             //saveGeofence();
             //drawGeofence(mLatLngList);
         } else {
@@ -569,54 +593,57 @@ public class MapActivity extends AppCompatActivity
         mDbHelper = new ProjectsHelper(this);
         Cursor reader = mDbHelper.getAllRecordList();
 
-
         // ar if novērš kļūdu, kad android.database.CursorIndexOutOfBoundsException: Index 0 requested, with a size of 0
-        if (reader != null)
-            for (reader.moveToFirst(); !reader.isAfterLast(); reader.moveToNext()) {
-                id = reader.getInt(reader.getColumnIndex(KEY_ID));
-                geofenceId = reader.getInt(reader.getColumnIndex(GEOFENCE_ID_COLUMN));
-                projectLr = reader.getString(reader.getColumnIndex(PROJECT_LR_COLUMN));
-                lat = reader.getDouble(reader.getColumnIndex(LATITUDE_COLUMN));
-                lon = reader.getDouble(reader.getColumnIndex(LONGITUDE_COLUMN));
-                radius = reader.getFloat(reader.getColumnIndex(RADIUS_COLUMN));
-                phoneId = reader.getInt(reader.getColumnIndex(PHONE_ID_COLUMN));
-                imei = reader.getString(reader.getColumnIndex(IMEI_COLUMN));
-                employee = reader.getString(reader.getColumnIndex(EMPLOYEE_COLUMN));
-                customer = reader.getString(reader.getColumnIndex(PROJECT_COLUMN));
-                timestamp = reader.getString(reader.getColumnIndex(TS_COLUMN));
-                custodian = reader.getString(reader.getColumnIndex(CUSTODIAN_COLUMN));
-                custodianPhone = reader.getString(reader.getColumnIndex(CUSTODIAN_PHONE_COLUMN));
-                //lastUpdate = Timestamp.valueOf(reader.getString(reader.getColumnIndex(LAST_DB_UPDATE)));
+        //if (reader != null)
+        for (reader.moveToFirst(); !reader.isAfterLast(); reader.moveToNext()) {
+            id = reader.getInt(reader.getColumnIndex(KEY_ID));
+            geofenceId = reader.getInt(reader.getColumnIndex(GEOFENCE_ID_COLUMN));
+            projectLr = reader.getString(reader.getColumnIndex(PROJECT_LR_COLUMN));
+            lat = reader.getDouble(reader.getColumnIndex(LATITUDE_COLUMN));
+            lon = reader.getDouble(reader.getColumnIndex(LONGITUDE_COLUMN));
+            radius = reader.getFloat(reader.getColumnIndex(RADIUS_COLUMN));
+            phoneId = reader.getInt(reader.getColumnIndex(PHONE_ID_COLUMN));
+            imei = reader.getString(reader.getColumnIndex(IMEI_COLUMN));
+            employee = reader.getString(reader.getColumnIndex(EMPLOYEE_COLUMN));
+            customer = reader.getString(reader.getColumnIndex(PROJECT_COLUMN));
+            timestamp = reader.getString(reader.getColumnIndex(TS_COLUMN));
+            custodian = reader.getString(reader.getColumnIndex(CUSTODIAN_COLUMN));
+            custodianPhone = reader.getString(reader.getColumnIndex(CUSTODIAN_PHONE_COLUMN));
+            //lastUpdate = Timestamp.valueOf(reader.getString(reader.getColumnIndex(LAST_DB_UPDATE)));
 
-                ////////////////////////////////////////////////////////////// pamēģināšu šeit
-                LatLng latLng = new LatLng(lat, lon);
-                Geofence fence = new Geofence.Builder()
-                        .setRequestId(String.valueOf(geofenceId))
-                        .setCircularRegion(latLng.latitude, latLng.longitude, radius)
-                        .setExpirationDuration(GEOFENCE_EXPIRATION_TIME)
-                        .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER
-                                | Geofence.GEOFENCE_TRANSITION_EXIT)
-                        .build();
-                mGeofenceList.add(fence);
-                mLatLngList.add(latLng);
-                Log.e("izveidots ", fence.toString());
+            ////////////////////////////////////////////////////////////// pamēģināšu šeit
+            LatLng latLng = new LatLng(lat, lon);
+            Geofence fence = new Geofence.Builder()
+                    .setRequestId(String.valueOf(geofenceId))
+                    .setCircularRegion(latLng.latitude, latLng.longitude, radius)
+                    .setExpirationDuration(GEOFENCE_EXPIRATION_TIME)
+                    .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER
+                            | Geofence.GEOFENCE_TRANSITION_EXIT)
+                    .build();
+            mGeofenceList.add(fence);
+            mLatLngList.add(latLng);
+            Log.e("izveidots ", fence.toString());
 
-            }
-        if (reader.isAfterLast()) {
-            reader.close();
-
-            //////////////////////////////////////////////////////////////
         }
+        if (reader.isAfterLast())
+            reader.close();
+        //////////////////////////////////////////////////////////////
     }
 
-
-/*
     @Override
     public void onPause(){
         super.onPause();
-        if(db.isOpen()){
+        if(db != null){
             db.close();
         }
-    }*/
+    }
+
+    @Override
+    protected void onDestroy() {
+        if(db != null) {
+            db.close();
+        }
+        super.onDestroy();
+    }
 
 }

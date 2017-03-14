@@ -45,6 +45,8 @@ public class ProjectsHelper{
     private SQLiteDatabase database;
     Context context;
     List<Geofence> mGeofenceList;
+    //int oldVersion = DATABASE_VERSION;
+    //int newVersion = oldVersion;
 
 
     public ProjectsHelper(Context context){
@@ -55,8 +57,8 @@ public class ProjectsHelper{
     }
 
     public void saveProjectsRecord(String id, String geofenceId, String lr, String lat, String lng, String radius, String phoneId, String imei,
-                                   String empl, String cust, String projname, String ts, String custod, String phone){
-        ContentValues contentValues =new ContentValues();
+                                   String empl, String cust, String projname, String ts, String custod, String phone) {
+        ContentValues contentValues = new ContentValues();
         contentValues.put(KEY_ID, id);
         contentValues.put(GEOFENCE_ID_COLUMN, geofenceId);
         contentValues.put(PROJECT_LR_COLUMN, lr);
@@ -73,52 +75,50 @@ public class ProjectsHelper{
         contentValues.put(CUSTODIAN_PHONE_COLUMN, phone);
         //contentValues.put(LAST_DB_UPDATE, " time('now') ");
 
+        database = openHelper.getWritableDatabase();
+        Cursor c = database.rawQuery("SELECT * FROM projects WHERE GeofenceId=" + geofenceId, null);
 
-        Cursor c = database.rawQuery("SELECT * FROM projects WHERE GeofenceId='" + geofenceId +"'", null);
-        if(c.moveToFirst())
-        {
-            //showMessage("Error", "Record exist");
+        if (c.moveToFirst()) {
+            //database.update(TABLE_PROJECTS, contentValues, "id=? ", null );
             Log.e("record exist id: ", id + " GeofenceId: " + geofenceId);
-            database.update(TABLE_PROJECTS, contentValues, "id = " + id, null);
-            if(c.isAfterLast()) {
-                c.close();
-                database.close();
-            }
-
         }
-        else
-        {
-            // Inserting record
-            Log.e("Inserted record: id ", id + "GeofenceId: " +geofenceId);
+        else {
+            //newVersion =+1 ;
+            //database.setVersion(newVersion);
             database.insert(TABLE_PROJECTS, null, contentValues);
-            if(c.isAfterLast()) {
-                c.close();
-                database.close();
-            }
+            //Log.e("DB upgraded to ver.: ", String.valueOf(newVersion));
 
         }
-       //database.close();    //met ārā, ka cenšas atvērt aizvērtu db
+        if (c.isAfterLast()) {
+            c.close();
+            database.close();
+        }
     }
+            //database.close();    //met ārā, ka cenšas atvērt aizvērtu db
+
+
 
     public Cursor getAllRecordList(){
         return database.rawQuery("select * from " + TABLE_PROJECTS, null);
     }
 
-    private class Projects extends SQLiteOpenHelper{
-        public Projects(Context context){
+    private class Projects extends SQLiteOpenHelper {
+        public Projects(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
         }
+
         @Override
-        public void onCreate(SQLiteDatabase db){
+        public void onCreate(SQLiteDatabase db) {
             db.execSQL("CREATE TABLE " + TABLE_PROJECTS + "("
                     + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                     + GEOFENCE_ID_COLUMN + " Integer, " + PROJECT_LR_COLUMN + " Text, " + LATITUDE_COLUMN + " Float, "
                     + LONGITUDE_COLUMN + " Float, " + RADIUS_COLUMN + " Integer, " + PHONE_ID_COLUMN + " Integer, "
                     + IMEI_COLUMN + " Text, " + EMPLOYEE_COLUMN + " Text, " + CUSTOMER_COLUMN + " Text, " + PROJECT_COLUMN + " Text, "
                     + TS_COLUMN + " Integer, " + CUSTODIAN_COLUMN + " Text, "
-                    + CUSTODIAN_PHONE_COLUMN + " Text" +")");
+                    + CUSTODIAN_PHONE_COLUMN + " Text" + ")");
             Log.e("Tabula - ", TABLE_PROJECTS + " - izveidota");
         }
+
         // Upgrading database
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -127,6 +127,15 @@ public class ProjectsHelper{
             // Create tables again
             onCreate(db);
         }
+        /*
+        @Override
+        public void onDowngrade (SQLiteDatabase db, int oldVersion, int newVersion){
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_PROJECTS);
+            // Create tables again
+            onCreate(db);
+        }
+        */
+
 
         //??? Kā dabūt no datubāzes@@@
 /*
@@ -185,5 +194,7 @@ public class ProjectsHelper{
             mGeofenceList.add(fence);
         }*/
 
+
     }
+
 }

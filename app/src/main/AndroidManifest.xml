@@ -56,7 +56,16 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MapActivity"
+            android:name=".GeofencingActivity"
+            android:label="@string/map_activity_title">
+            <intent-filter>
+                <action android:name="android.intent.action.QUICK_VIEW" />
+
+                <category android:name="android.intent.category.APP_MAPS" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ShowMap"
             android:label="@string/map_activity_title"
             android:parentActivityName=".Main2Activity">
             <intent-filter>

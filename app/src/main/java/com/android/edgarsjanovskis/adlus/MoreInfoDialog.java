@@ -28,7 +28,7 @@ public class MoreInfoDialog extends DialogFragment{
                 .setPositiveButton(string.show_map, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         MoreInfoDialog.this.getActivity().finish();
-                        startActivity(new Intent(getActivity(),MapActivity.class));
+                        startActivity(new Intent(getActivity(),GeofencingActivity.class));
                     }
                 });
 

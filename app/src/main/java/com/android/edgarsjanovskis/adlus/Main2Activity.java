@@ -60,10 +60,14 @@ public class Main2Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
         checkFirstRun();
+        checkConnection();
+        //Intent intent = new Intent(this, GeofencingActivity.class);
+        //startActivity(intent);
+
 
         // get reference to the views
-        tvIsConnLabel = (TextView)findViewById(R.id.tvIsConnLabel);
-        btnConnected = (RadioButton)findViewById(R.id.isConnected);
+
+
         tvLastUpdate = (TextView)findViewById(R.id.tvLastUpdate);
         tvLastChanges = (TextView)findViewById(R.id.tvLastChanges);
         prefs = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
@@ -73,15 +77,7 @@ public class Main2Activity extends AppCompatActivity {
         tvLastUpdate.setText(lastupdate);
         sharedPref = getSharedPreferences("MapPrefsFile", MODE_PRIVATE );
 
-        // check if you are connected or not
-        if(isConnected()){
-            btnConnected.setChecked(true);
-            tvIsConnLabel.setText(R.string.isConnected);
-        }
-        else{
-            btnConnected.setChecked(false);
-            tvIsConnLabel.setText(R.string.no_internet);
-        }
+
         ImageButton bClock = (ImageButton) findViewById(R.id.btnMfiles);
         bClock.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -98,6 +94,21 @@ public class Main2Activity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public void checkConnection(){
+        tvIsConnLabel = (TextView)findViewById(R.id.tvIsConnLabel);
+        btnConnected = (RadioButton)findViewById(R.id.isConnected);
+
+        // check if you are connected or not
+        if(isConnected()){
+            btnConnected.setChecked(true);
+            tvIsConnLabel.setText(R.string.isConnected);
+        }
+        else{
+            btnConnected.setChecked(false);
+            tvIsConnLabel.setText(R.string.no_internet);
+        }
     }
 
     public void checkFirstRun(){
@@ -145,11 +156,16 @@ public class Main2Activity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+    }
 
+    @Override
+    protected void onResume(){
+        super.onResume();
+        checkConnection();
     }
 
     public void butonShowMap_onClick(View view){
-        Intent intent = new Intent(this, MapActivity.class);
+        Intent intent = new Intent(this, ShowMap.class);
         startActivity(intent);
     }
 

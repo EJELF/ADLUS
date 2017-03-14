@@ -28,7 +28,6 @@ import static com.android.edgarsjanovskis.adlus.R.id.list;
 
 public class DbList extends AppCompatActivity {
 
-
     // No Parauga!!!!!!!
     // Internal List of Geofence objects. In a real app, these might be provided by an API based on
     // locations within the user's proximity.
@@ -38,7 +37,8 @@ public class DbList extends AppCompatActivity {
 
 
     // These will store hard-coded geofences in this sample app.
-
+    Cursor reader;
+    ProjectsHelper mDbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,10 +46,9 @@ public class DbList extends AppCompatActivity {
         setContentView(R.layout.activity_main_list);
         //mGeofenceList1 = new ArrayList<>();
         //mLatLonList1 = new ArrayList<>();
-        //Intent intent = new Intent(this, MapActivity.class);
+        //Intent intent = new Intent(this, GeofencingActivity.class);
         //startActivity(intent);
     }
-
 
     @Override
     public void onResume(){
@@ -63,8 +62,8 @@ public class DbList extends AppCompatActivity {
         String projectLr, timestamp, employee, customer, project, imei, custodian, custodianPhone;
         ListView lv = (ListView)findViewById(list);
 
-        ProjectsHelper mDbHelper = new ProjectsHelper(this);
-        Cursor reader = mDbHelper.getAllRecordList();
+        mDbHelper = new ProjectsHelper(this);
+        reader = mDbHelper.getAllRecordList();
 
         ArrayList<String> list = new ArrayList<>();
 
@@ -108,14 +107,10 @@ public class DbList extends AppCompatActivity {
                 Log.e("Error: ", e.toString());
 
             }finally {
-
             if (reader.isAfterLast()){
                 reader.close();
-
             }
-
         }
-
 
         String[] data = new String[list.size()];
         for (int i = 0; i<list.size(); i++){
@@ -123,12 +118,13 @@ public class DbList extends AppCompatActivity {
             ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_activated_1, data);
             lv.setAdapter(adapter);
         }
-
     }
+
     @Override
     public void onPause(){
         super.onPause();
-
+        if(reader != null)
+            reader.close();
     }
 
 
