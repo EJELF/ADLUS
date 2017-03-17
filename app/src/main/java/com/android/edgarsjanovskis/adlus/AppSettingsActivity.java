@@ -178,7 +178,7 @@ public class AppSettingsActivity extends AppCompatActivity {
             }
         });
 
-        userImei = et1.getText().toString();
+        userImei = et1.getText().toString().trim();
         if(userImei.equals(" ")) {
             AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
             builder1.setMessage("Lūdzu ievadiet tālruņa IMEI!");
@@ -212,7 +212,7 @@ public class AppSettingsActivity extends AppCompatActivity {
             prefs.edit().putString(USER_IMEI, userImei).apply();
         }
 
-        serverUrl = et2.getText().toString();
+        serverUrl = et2.getText().toString().trim();
 
         if(serverUrl.equals(" ")) {
             AlertDialog.Builder builder1 = new AlertDialog.Builder(this);

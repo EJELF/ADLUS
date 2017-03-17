@@ -2,29 +2,23 @@ package com.android.edgarsjanovskis.adlus;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-
-import com.google.android.gms.location.Geofence;
-
-import java.util.List;
 
 
 public class ProjectsHelper{
     // All Static variables
     // Database Version
     private static final int DATABASE_VERSION = 1;
-    public SharedPreferences prefs;
 
     // Database Name
     private static final String DATABASE_NAME = "adlus.db";
     // Contacts table name
     public static final String TABLE_PROJECTS = "projects";
     // Projects Table Columns names
-    public static final String KEY_ID = "id";
+    //public static final String KEY_ID = "id";
     public static final String GEOFENCE_ID_COLUMN = "GeofenceId";
     public static final String PROJECT_LR_COLUMN = "ProjectLr";
     public static final String LATITUDE_COLUMN = "Latitude";
@@ -39,27 +33,25 @@ public class ProjectsHelper{
     public static final String CUSTODIAN_COLUMN = "CustodianSurname";
     public static final String CUSTODIAN_PHONE_COLUMN = "CustodianPhone";
     //šī ideja no DobrinGanev
-    private static final String[] COLUMNS = {KEY_ID, LATITUDE_COLUMN, LONGITUDE_COLUMN, RADIUS_COLUMN};
+    //private static final String[] COLUMNS = {KEY_ID, LATITUDE_COLUMN, LONGITUDE_COLUMN, RADIUS_COLUMN};
 
     Projects openHelper;
     private SQLiteDatabase database;
-    Context context;
-    List<Geofence> mGeofenceList;
+    //Context context;
+    //List<Geofence> mGeofenceList;
+
     //int oldVersion = DATABASE_VERSION;
     //int newVersion = oldVersion;
-
 
     public ProjectsHelper(Context context){
         openHelper = new Projects(context);
         database = openHelper.getWritableDatabase();
-        database = openHelper.getReadableDatabase();
-
     }
 
-    public void saveProjectsRecord(String id, String geofenceId, String lr, String lat, String lng, String radius, String phoneId, String imei,
+    public void saveProjectsRecord(String geofenceId, String lr, String lat, String lng, String radius, String phoneId, String imei,
                                    String empl, String cust, String projname, String ts, String custod, String phone) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(KEY_ID, id);
+        //contentValues.put(KEY_ID, id);
         contentValues.put(GEOFENCE_ID_COLUMN, geofenceId);
         contentValues.put(PROJECT_LR_COLUMN, lr);
         contentValues.put(LATITUDE_COLUMN, lat);
@@ -76,26 +68,30 @@ public class ProjectsHelper{
         //contentValues.put(LAST_DB_UPDATE, " time('now') ");
 
         database = openHelper.getWritableDatabase();
-        Cursor c = database.rawQuery("SELECT * FROM projects WHERE GeofenceId=" + geofenceId, null);
+        Cursor c = database.rawQuery("SELECT * FROM projects WHERE GeofenceId= " +geofenceId, null);
 
         if (c.moveToFirst()) {
-            //database.update(TABLE_PROJECTS, contentValues, "id=? ", null );
-            Log.e("record exist id: ", id + " GeofenceId: " + geofenceId);
+            database.update(TABLE_PROJECTS,contentValues," GeofenceId = " + geofenceId, null);
+            Log.e("Updated GeofenceId:", geofenceId);
+            } else {
+            database.insertOrThrow(TABLE_PROJECTS, null, contentValues);
+            Log.e("Inserted GeofenceId: ", geofenceId);
         }
-        else {
-            //newVersion =+1 ;
-            //database.setVersion(newVersion);
-            database.insert(TABLE_PROJECTS, null, contentValues);
-            //Log.e("DB upgraded to ver.: ", String.valueOf(newVersion));
-
+        // jānodrošina izdzēšana, ja geofenceId vairāk nav json masīvā!!!
+        for (c.moveToFirst();c.isAfterLast();c.moveToNext()) {
+            if (!getAllRecordList().getString(0).equals(geofenceId))
+                database.delete(TABLE_PROJECTS," GeofenceId = ?", new String[]{getAllRecordList().getString(0)});
+            Log.e("Deleted GeofenceId: ", geofenceId);
         }
         if (c.isAfterLast()) {
             c.close();
             database.close();
         }
     }
-            //database.close();    //met ārā, ka cenšas atvērt aizvērtu db
 
+    public void deleteOldRecords(){
+
+    }
 
 
     public Cursor getAllRecordList(){
@@ -110,7 +106,7 @@ public class ProjectsHelper{
         @Override
         public void onCreate(SQLiteDatabase db) {
             db.execSQL("CREATE TABLE " + TABLE_PROJECTS + "("
-                    + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                    //+ KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                     + GEOFENCE_ID_COLUMN + " Integer, " + PROJECT_LR_COLUMN + " Text, " + LATITUDE_COLUMN + " Float, "
                     + LONGITUDE_COLUMN + " Float, " + RADIUS_COLUMN + " Integer, " + PHONE_ID_COLUMN + " Integer, "
                     + IMEI_COLUMN + " Text, " + EMPLOYEE_COLUMN + " Text, " + CUSTOMER_COLUMN + " Text, " + PROJECT_COLUMN + " Text, "

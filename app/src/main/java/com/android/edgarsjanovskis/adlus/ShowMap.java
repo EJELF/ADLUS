@@ -56,7 +56,7 @@ import static com.android.edgarsjanovskis.adlus.ProjectsHelper.CUSTODIAN_PHONE_C
 import static com.android.edgarsjanovskis.adlus.ProjectsHelper.EMPLOYEE_COLUMN;
 import static com.android.edgarsjanovskis.adlus.ProjectsHelper.GEOFENCE_ID_COLUMN;
 import static com.android.edgarsjanovskis.adlus.ProjectsHelper.IMEI_COLUMN;
-import static com.android.edgarsjanovskis.adlus.ProjectsHelper.KEY_ID;
+//import static com.android.edgarsjanovskis.adlus.ProjectsHelper.KEY_ID;
 import static com.android.edgarsjanovskis.adlus.ProjectsHelper.LATITUDE_COLUMN;
 import static com.android.edgarsjanovskis.adlus.ProjectsHelper.LONGITUDE_COLUMN;
 import static com.android.edgarsjanovskis.adlus.ProjectsHelper.PHONE_ID_COLUMN;
@@ -459,6 +459,7 @@ public class ShowMap extends AppCompatActivity
                 //if (geoFenceMarker != null)
                 //geoFenceMarker.remove();
                 geoFenceMarker = map.addMarker(markerOptions);
+
             }
         }
     }
@@ -596,7 +597,7 @@ public class ShowMap extends AppCompatActivity
         // ar if novērš kļūdu, kad android.database.CursorIndexOutOfBoundsException: Index 0 requested, with a size of 0
         //if (reader != null)
         for (reader.moveToFirst(); !reader.isAfterLast(); reader.moveToNext()) {
-            id = reader.getInt(reader.getColumnIndex(KEY_ID));
+            //id = reader.getInt(reader.getColumnIndex(KEY_ID));
             geofenceId = reader.getInt(reader.getColumnIndex(GEOFENCE_ID_COLUMN));
             projectLr = reader.getString(reader.getColumnIndex(PROJECT_LR_COLUMN));
             lat = reader.getDouble(reader.getColumnIndex(LATITUDE_COLUMN));

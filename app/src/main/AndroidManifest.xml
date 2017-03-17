@@ -77,7 +77,7 @@
         <activity
             android:name=".ProjectOnMapActivity"
             android:label="@string/projectonmap_activity_title"
-            android:parentActivityName=".MyProjects">
+            android:parentActivityName=".GetMyProjects">
             <intent-filter>
                 <action android:name="android.intent.action.QUICK_VIEW" />
 
@@ -97,7 +97,7 @@
                 android:value="com.android.edgarsjanovskis.adlus.Main2Activity" />
         </activity>
         <activity
-            android:name=".MyProjects"
+            android:name=".GetMyProjects"
             android:label="@string/myprojects_activity_title">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

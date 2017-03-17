@@ -61,13 +61,8 @@ public class Main2Activity extends AppCompatActivity {
         setContentView(R.layout.activity_main2);
         checkFirstRun();
         checkConnection();
-        //Intent intent = new Intent(this, GeofencingActivity.class);
-        //startActivity(intent);
-
 
         // get reference to the views
-
-
         tvLastUpdate = (TextView)findViewById(R.id.tvLastUpdate);
         tvLastChanges = (TextView)findViewById(R.id.tvLastChanges);
         prefs = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
@@ -170,7 +165,7 @@ public class Main2Activity extends AppCompatActivity {
     }
 
     public void buttonResponse_onClick (View view){
-        Intent form = new Intent(this, MyProjects.class);
+        Intent form = new Intent(this, GetMyProjects.class);
         startActivity(form);
     }
 
@@ -200,7 +195,9 @@ public class Main2Activity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void buttonVersion_onClick (View view){
+    public void buttonStartGeofencing_onClick (View view){
+        // rāda versiju
+        /*
         try{
             int  currentVersionCode = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
             Toast.makeText(this, "Version code: " + currentVersionCode, Toast.LENGTH_LONG).show();
@@ -208,11 +205,15 @@ public class Main2Activity extends AppCompatActivity {
             //handle exception
             e.printStackTrace();
         }
+        */
+        Intent toNextActivity = new Intent(Main2Activity.this, GeofencingActivity.class);
+        startActivity(toNextActivity);
     }
 
     public void butonShowSQlite_onClick (View view){
         Intent intent = new Intent(this, DbList.class);
         startActivity(intent);
+
     }
 
 

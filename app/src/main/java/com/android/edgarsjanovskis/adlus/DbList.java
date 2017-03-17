@@ -15,7 +15,6 @@ import static com.android.edgarsjanovskis.adlus.ProjectsHelper.CUSTODIAN_PHONE_C
 import static com.android.edgarsjanovskis.adlus.ProjectsHelper.EMPLOYEE_COLUMN;
 import static com.android.edgarsjanovskis.adlus.ProjectsHelper.GEOFENCE_ID_COLUMN;
 import static com.android.edgarsjanovskis.adlus.ProjectsHelper.IMEI_COLUMN;
-import static com.android.edgarsjanovskis.adlus.ProjectsHelper.KEY_ID;
 import static com.android.edgarsjanovskis.adlus.ProjectsHelper.LATITUDE_COLUMN;
 import static com.android.edgarsjanovskis.adlus.ProjectsHelper.LONGITUDE_COLUMN;
 import static com.android.edgarsjanovskis.adlus.ProjectsHelper.PHONE_ID_COLUMN;
@@ -24,6 +23,8 @@ import static com.android.edgarsjanovskis.adlus.ProjectsHelper.PROJECT_LR_COLUMN
 import static com.android.edgarsjanovskis.adlus.ProjectsHelper.RADIUS_COLUMN;
 import static com.android.edgarsjanovskis.adlus.ProjectsHelper.TS_COLUMN;
 import static com.android.edgarsjanovskis.adlus.R.id.list;
+
+//import static com.android.edgarsjanovskis.adlus.ProjectsHelper.KEY_ID;
 
 
 public class DbList extends AppCompatActivity {
@@ -39,6 +40,7 @@ public class DbList extends AppCompatActivity {
     // These will store hard-coded geofences in this sample app.
     Cursor reader;
     ProjectsHelper mDbHelper;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,14 +67,14 @@ public class DbList extends AppCompatActivity {
         mDbHelper = new ProjectsHelper(this);
         reader = mDbHelper.getAllRecordList();
 
-        ArrayList<String> list = new ArrayList<>();
+        ArrayList<String> sqlList = new ArrayList<>();
 
 
         // ar if novērš kļūdu, kad android.database.CursorIndexOutOfBoundsException: Index 0 requested, with a size of 0
         if(reader != null)
             try{
         for( reader.moveToFirst(); !reader.isAfterLast(); reader.moveToNext() ) {
-            id = reader.getInt(reader.getColumnIndex(KEY_ID));
+            //id = reader.getInt(reader.getColumnIndex(KEY_ID));
             geofenceId = reader.getInt(reader.getColumnIndex(GEOFENCE_ID_COLUMN));
             projectLr = reader.getString(reader.getColumnIndex(PROJECT_LR_COLUMN));
             lat = reader.getDouble(reader.getColumnIndex(LATITUDE_COLUMN));
@@ -101,7 +103,7 @@ public class DbList extends AppCompatActivity {
             Log.e("izveidots ", fence.toString());
             /////////////////////////////////////////////////////////////*/
 
-            list.add(id + ":\tGeofence ID: " + geofenceId + "\nLatitude: " + lat + "\nLongitude: " + lon + "\nRadius: " + radius);
+            sqlList.add("Geofence ID: " + geofenceId + "\nLatitude: " + lat + "\nLongitude: " + lon + "\nRadius: " + radius);
             }
         }catch (Exception e) {
                 Log.e("Error: ", e.toString());
@@ -112,9 +114,9 @@ public class DbList extends AppCompatActivity {
             }
         }
 
-        String[] data = new String[list.size()];
-        for (int i = 0; i<list.size(); i++){
-            data[i] = list.get(i);
+        String[] data = new String[sqlList.size()];
+        for (int i = 0; i< sqlList.size(); i++){
+            data[i] = sqlList.get(i);
             ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_activated_1, data);
             lv.setAdapter(adapter);
         }

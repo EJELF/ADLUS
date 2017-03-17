@@ -29,9 +29,9 @@ import java.util.HashMap;
 import static com.android.edgarsjanovskis.adlus.Main2Activity.LAST_UPDATE;
 
 
-public class MyProjects extends AppCompatActivity{
+public class GetMyProjects extends AppCompatActivity{
 
-    private String TAG = MyProjects.class.getSimpleName();
+    private String TAG = GetMyProjects.class.getSimpleName();
     private ProgressDialog pDialog;
     private ListView lv;
 
@@ -88,7 +88,7 @@ public class MyProjects extends AppCompatActivity{
         protected void onPreExecute() {
             super.onPreExecute();
             // Showing progress dialog
-            pDialog = new ProgressDialog(MyProjects.this);
+            pDialog = new ProgressDialog(GetMyProjects.this);
             pDialog.setMessage("Lūdzu uzgaidi! ADLUS saņem datus no servera...");
             //šādi uzstāda atsaukšanu
             pDialog.setCancelable(true);
@@ -109,8 +109,6 @@ public class MyProjects extends AppCompatActivity{
 
             //Create JSONParser instance
             JsonParser jsonParser = new JsonParser();
-
-
 
             // Making a request to url and getting response
             String jsonStr = sh.makeServiceCall(url);
@@ -169,7 +167,7 @@ public class MyProjects extends AppCompatActivity{
 
 
                             //db storing only if IMEI match
-                            databaseHelper.saveProjectsRecord(id, geofenceId, lr, lat, lng, radius, phoneId, imei, employee, customer, projectName, ts, custodianSurname, custodianPhone);
+                            databaseHelper.saveProjectsRecord(geofenceId, lr, lat, lng, radius, phoneId, imei, employee, customer, projectName, ts, custodianSurname, custodianPhone);
 
                             prefs.edit().putString(USER_NAME, employee).apply();
                             prefs.edit().putString(PHONE_ID, phoneId).apply();
@@ -231,7 +229,7 @@ public class MyProjects extends AppCompatActivity{
              //Updating parsed JSON data into ListView
 
             ListAdapter adapter = new SimpleAdapter(
-                    MyProjects.this, mProjectList,
+                    GetMyProjects.this, mProjectList,
                     R.layout.list_item, new String[]{"LR", "ProjectName"
             }, new int[]{R.id.lr,
                     R.id.projectName
@@ -249,7 +247,7 @@ public class MyProjects extends AppCompatActivity{
                     StringBuilder phone = sb.append(mProjectList.get(i).get("CustodianPhone"));
 
                     //Toast.makeText(getApplicationContext(), "Nospiests: " + position, Toast.LENGTH_LONG).show();
-                    AlertDialog.Builder adb = new AlertDialog.Builder(MyProjects.this);
+                    AlertDialog.Builder adb = new AlertDialog.Builder(GetMyProjects.this);
                     view.setSelected(true);
                     adb.setTitle("Objekta ID:  " + mProjectList.get(i).get("LR"));
                     adb.setMessage("Objekta nosaukums:  "+ '"'   + mProjectList.get(i).get("ProjectName") + '"' +

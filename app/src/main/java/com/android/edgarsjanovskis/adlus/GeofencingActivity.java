@@ -9,24 +9,16 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.multidex.MultiDex;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.MenuItem;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationListener;
@@ -45,7 +37,7 @@ import static com.android.edgarsjanovskis.adlus.ProjectsHelper.CUSTODIAN_PHONE_C
 import static com.android.edgarsjanovskis.adlus.ProjectsHelper.EMPLOYEE_COLUMN;
 import static com.android.edgarsjanovskis.adlus.ProjectsHelper.GEOFENCE_ID_COLUMN;
 import static com.android.edgarsjanovskis.adlus.ProjectsHelper.IMEI_COLUMN;
-import static com.android.edgarsjanovskis.adlus.ProjectsHelper.KEY_ID;
+//import static com.android.edgarsjanovskis.adlus.ProjectsHelper.KEY_ID;
 import static com.android.edgarsjanovskis.adlus.ProjectsHelper.LATITUDE_COLUMN;
 import static com.android.edgarsjanovskis.adlus.ProjectsHelper.LONGITUDE_COLUMN;
 import static com.android.edgarsjanovskis.adlus.ProjectsHelper.PHONE_ID_COLUMN;
@@ -53,33 +45,20 @@ import static com.android.edgarsjanovskis.adlus.ProjectsHelper.PROJECT_COLUMN;
 import static com.android.edgarsjanovskis.adlus.ProjectsHelper.PROJECT_LR_COLUMN;
 import static com.android.edgarsjanovskis.adlus.ProjectsHelper.RADIUS_COLUMN;
 import static com.android.edgarsjanovskis.adlus.ProjectsHelper.TS_COLUMN;
-import static com.android.edgarsjanovskis.adlus.R.id.list;
 
 
 public class GeofencingActivity extends AppCompatActivity
         implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener
-        //OnMapReadyCallback,
-        //GoogleMap.OnMapClickListener,
-        //GoogleMap.OnMarkerClickListener,
-        //ResultCallback<Status>
-{
+        LocationListener {
 
-    ////
     private static final String TAG = GeofencingActivity.class.getSimpleName();
-    private static final boolean DEVELOPER_MODE = true;
 
     //private GoogleMap map;
     private GoogleApiClient googleApiClient;
     private Location lastLocation;
 
-    private TextView textLat, textLong;
-
-    //private MapFragment mapFragment;
-    // Internal List of Geofence objects. In a real app, these might be provided by an API based on
-    // locations within the user's proximity.
     List<Geofence> mGeofenceList;
     List<LatLng> mLatLngList;
 
@@ -91,6 +70,7 @@ public class GeofencingActivity extends AppCompatActivity
 
     private static final String NOTIFICATION_MSG = "NOTIFICATION MSG";
 
+
     // Create a Intent send by the notification
     public static Intent makeNotificationIntent(Context context, String msg) {
         Intent intent = new Intent(context, GeofencingActivity.class);
@@ -98,63 +78,27 @@ public class GeofencingActivity extends AppCompatActivity
         return intent;
     }
 
-    // tomēr nenovērsa Unable to get provider com.google.firebase.provider.FirebaseInitProvider kļūdu
-    @Override
-    protected void attachBaseContext(Context context) {
-        super.attachBaseContext(context);
-        MultiDex.install(this);
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-        actionBar.setHomeButtonEnabled(true);
-        actionBar.setDisplayHomeAsUpEnabled(true);
-
-        if (DEVELOPER_MODE) {
-            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-                    .detectDiskReads()
-                    .detectDiskWrites()
-                    .detectNetwork()   // or .detectAll() for all detectable problems
-                    .penaltyLog()
-                    .build());
-            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-                    .detectLeakedSqlLiteObjects()
-                    .detectLeakedClosableObjects()
-                    .penaltyLog()
-                    .penaltyDeath()
-                    .build());
-        }
-
         super.onCreate(savedInstanceState);
-        //Realm.init(this); //initialize other plugins
-        setContentView(R.layout.activity_map);
-
-        // !!!!! šie rādīs patreizējo atrašanos
-        //textLat = (TextView) findViewById(R.id.lat);
-        //textLong = (TextView) findViewById(R.id.lon);
-
-        //start new instance of ProjectsHelper and reader
-        //databaseHelper = new ProjectsHelper(this);
+        //setContentView(R.layout.activity_main2);
 
         // Instantiate the current List of geofences.
         mGeofenceList = new ArrayList<>();
         mLatLngList = new ArrayList<>();
 
-        // initialize GoogleMaps
-        //initGMaps();
+        int id, phoneId;
+        int geofenceId;
+        float radius;
+        double lat;
+        double lon;
+        Timestamp lastUpdate;
+        String projectLr, timestamp, employee, customer, project, imei, custodian, custodianPhone;
+        //start new instance of ProjectsHelper and reader
 
-        // create GoogleApiClient
-        createGoogleApi();
+        mDbHelper = new ProjectsHelper(this);
+        Cursor reader = mDbHelper.getAllRecordList();
 
-        //šis bija menu sastāvā lai uzsāktu izsekošanu
-        onResume();
-        startGeofences();
-
-    }
-
-    // Create GoogleApiClient instance
-    private void createGoogleApi() {
         Log.d(TAG, "createGoogleApi()");
         if (googleApiClient == null) {
             googleApiClient = new GoogleApiClient.Builder(this)
@@ -162,6 +106,44 @@ public class GeofencingActivity extends AppCompatActivity
                     .addOnConnectionFailedListener(this)
                     .addApi(LocationServices.API)
                     .build();
+        }
+        if (!googleApiClient.isConnecting() || !googleApiClient.isConnected()) {
+            googleApiClient.connect();
+        }
+
+        // ar if novērš kļūdu, kad android.database.CursorIndexOutOfBoundsException: Index 0 requested, with a size of 0
+        if (reader != null)
+        for (reader.moveToFirst(); !reader.isAfterLast(); reader.moveToNext()) {
+            //id = reader.getInt(reader.getColumnIndex(KEY_ID));
+            geofenceId = reader.getInt(reader.getColumnIndex(GEOFENCE_ID_COLUMN));
+            projectLr = reader.getString(reader.getColumnIndex(PROJECT_LR_COLUMN));
+            lat = reader.getDouble(reader.getColumnIndex(LATITUDE_COLUMN));
+            lon = reader.getDouble(reader.getColumnIndex(LONGITUDE_COLUMN));
+            radius = reader.getFloat(reader.getColumnIndex(RADIUS_COLUMN));
+            phoneId = reader.getInt(reader.getColumnIndex(PHONE_ID_COLUMN));
+            imei = reader.getString(reader.getColumnIndex(IMEI_COLUMN));
+            employee = reader.getString(reader.getColumnIndex(EMPLOYEE_COLUMN));
+            customer = reader.getString(reader.getColumnIndex(PROJECT_COLUMN));
+            timestamp = reader.getString(reader.getColumnIndex(TS_COLUMN));
+            custodian = reader.getString(reader.getColumnIndex(CUSTODIAN_COLUMN));
+            custodianPhone = reader.getString(reader.getColumnIndex(CUSTODIAN_PHONE_COLUMN));
+            //lastUpdate = Timestamp.valueOf(reader.getString(reader.getColumnIndex(LAST_DB_UPDATE)));
+
+            ////////////////////////////////////////////////////////////// pamēģināšu šeit
+            LatLng latLng = new LatLng(lat, lon);
+            Geofence fence = new Geofence.Builder()
+                    .setRequestId(String.valueOf(geofenceId))
+                    .setCircularRegion(latLng.latitude, latLng.longitude, radius)
+                    .setExpirationDuration(GEOFENCE_EXPIRATION_TIME)
+                    .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER
+                            | Geofence.GEOFENCE_TRANSITION_EXIT)
+                    .build();
+            mGeofenceList.add(fence);
+            mLatLngList.add(latLng);
+            Log.e("izveidots ", fence.toString());
+            if (reader.isAfterLast())
+                reader.close();
+
         }
     }
 
@@ -182,35 +164,6 @@ public class GeofencingActivity extends AppCompatActivity
         // Disconnect GoogleApiClient when stopping Activity // if pieliku es
         if (!googleApiClient.isConnecting() || !googleApiClient.isConnected()) {
             googleApiClient.disconnect();
-        }
-    }
-
-    /*
-        @Override
-        public boolean onCreateOptionsMenu(Menu menu) {
-            MenuInflater inflater = getMenuInflater();
-            inflater.inflate( R.menu.main_menu, menu );
-            return true;
-        }
-    */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        /*switch ( item.getItemId() ) {
-            case R.id.geofence: {
-                startGeofence();
-                return true;
-            }
-            case R.id.clear: {
-                clearGeofence();
-                return true;
-            }*/
-        switch (item.getItemId()) {
-            // Respond to the action bar's Up/Home button
-            case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
         }
     }
 
@@ -264,36 +217,7 @@ public class GeofencingActivity extends AppCompatActivity
         setResult(0);
         finish();
     }
-/*
-    // Initialize GoogleMaps
-    private void initGMaps() {
-        mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-    }
-*/
-/*
-    // Callback called when Map is ready
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        Log.d(TAG, "onMapReady()");
-        map = googleMap;
-        // map.setOnMapClickListener(this); We dont use clicks on map
-        //map.setOnMarkerClickListener(this);
-    }
-*/
-    /*
-        @Override
-        public void onMapClick(LatLng latLng) {
-            Log.d(TAG, "onMapClick(" + latLng + ")");
-            markerForGeofence(latLng);
-        }
 
-    @Override
-    public boolean onMarkerClick(Marker marker) {
-        Log.d(TAG, "onMarkerClickListener: " + marker.getPosition());
-        return false;
-    }
-*/
     private LocationRequest locationRequest;
     // Defined in mili seconds.
     private final int UPDATE_INTERVAL = 3 * 60 * 1000;  //3 min
@@ -330,19 +254,9 @@ public class GeofencingActivity extends AppCompatActivity
         mGeofencePendingIntent = createGeofencesPendingIntent();
         mGeofenceRequest = createGeofencesRequest();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.ACCESS_FINE_LOCATION)) {
-
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
 
             } else {
 
@@ -351,22 +265,16 @@ public class GeofencingActivity extends AppCompatActivity
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                         MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
             }
             return;
         }
         LocationServices.GeofencingApi.addGeofences(googleApiClient, mGeofenceRequest, mGeofencePendingIntent);
         Toast.makeText(this, getString(R.string.start_geofence_service), Toast.LENGTH_SHORT).show();
         //finish();
-        //startLocationUpdates();
-        //startGeofences();
+        startLocationUpdates();
+        startGeofences();
         getLastKnownLocation();
-        //recoverGeofenceMarker();
     }
-
 
     // GoogleApiClient.ConnectionCallbacks suspended
     @Override
@@ -398,79 +306,15 @@ public class GeofencingActivity extends AppCompatActivity
             }
         } else askPermission();
     }
-/*
-    private void writeActualLocation(Location location) {
-        textLat.setText("Lat: " + location.getLatitude());
-        textLong.setText("Long: " + location.getLongitude());
-
-        markerLocation(new LatLng(location.getLatitude(), location.getLongitude()));
-    }
-
-    private void writeLastLocation() {
-        writeActualLocation(lastLocation);
-    }
-
-    private Marker locationMarker;
-
-    private void markerLocation(LatLng latLng) {
-        Log.i(TAG, "markerLocation(" + latLng + ")");
-        String title = latLng.latitude + ", " + latLng.longitude;
-        MarkerOptions markerOptions = new MarkerOptions()
-                .position(latLng)
-                .title(title);
-        if (map != null) {
-            if (locationMarker != null)
-                locationMarker.remove();
-
-            locationMarker = map.addMarker(markerOptions);
-            float zoom = 9f;
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, zoom);
-            map.animateCamera(cameraUpdate);
-        }
-    }
-*/
-/*
-    private Marker geoFenceMarker;
-
-    private void markerForGeofence(List<LatLng> mLatLngList) {
-
-
-        for (LatLng position : mLatLngList) {
-
-            LatLng latLng = new LatLng(position.latitude, position.longitude);
-            Log.i(TAG, "markerForGeofence(" + latLng + ")");
-            String title = position.latitude + "," + position.longitude;
-            // Define marker options
-
-            MarkerOptions markerOptions = new MarkerOptions()
-                    .position(latLng)
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
-                    .title(title);
-
-            if (map != null) {
-                // Remove last geoFenceMarker
-                //if (geoFenceMarker != null)
-                //geoFenceMarker.remove();
-                geoFenceMarker = map.addMarker(markerOptions);
-            }
-        }
-    }
-*/
 
     // Start Geofence creation process //Pārsaucu uz StartGeofences , jo ir saraksts
     private void startGeofences() {
 
         Log.i(TAG, "startGeofences()");
-        //if (geoFenceMarker != null) {
-
             GeofencingRequest geofenceRequest = createGeofencesRequest();
             addGeofences(geofenceRequest);
             Log.e(TAG, "Geofence marker is NOT null");
-
-            //} else {
-            Log.e(TAG, "Geofence marker is null");
         }
-    //}
 
     // Create a Geofence Request
     private GeofencingRequest createGeofencesRequest() {
@@ -496,136 +340,19 @@ public class GeofencingActivity extends AppCompatActivity
 
     // Add the created GeofenceRequest to the device's monitoring list
     private void addGeofences(GeofencingRequest request) {
+
         Log.d(TAG, "addGeofence");
         if (checkPermission())
             LocationServices.GeofencingApi.addGeofences(
                     googleApiClient,
                     mGeofenceRequest,
-                    createGeofencesPendingIntent()
-            ).setResultCallback((ResultCallback<? super Status>) this);
+                    createGeofencesPendingIntent());
     }
-/*
-    @Override
-    public void onResult(@NonNull Status status) {
-        Log.i(TAG, "onResult: " + status);
 
-        if (status.isSuccess()) {
-            markerForGeofence(mLatLngList); //????????
-            //saveGeofence();
-            //drawGeofence(mLatLngList);
-        } else {
-            Log.i(TAG, "nav ko uzzīmēt!!!" + status);
-        }
-    }
-*/
-/*
-    // Draw Geofence circle on GoogleMap
-    private Circle geoFenceLimits;
-
-    private void drawGeofence(List<LatLng> mLatLngList) {
-        for (LatLng latLng : mLatLngList) {
-            Log.d(TAG, "drawGeofence()");
-
-            if (geoFenceLimits != null)
-                geoFenceLimits.remove();
-
-            CircleOptions circleOptions = new CircleOptions()
-                    .center(geoFenceMarker.getPosition())
-                    .strokeColor(Color.argb(50, 70, 70, 70))
-                    .fillColor(Color.argb(100, 150, 150, 150))
-                    .radius(100);
-            //geoFenceLimits = map.addCircle(circleOptions);
-        }
-    }
-*/
-/*
-    // Recovering last Geofence marker
-    private void recoverGeofenceMarker() {
-        Log.d(TAG, "recoverGeofenceMarker");
-        markerForGeofence(mLatLngList);
-        //drawGeofence(mLatLngList);
-    }
-*/
-/*
-    // Clear Geofence
-    private void clearGeofences() {
-        Log.d(TAG, "clearGeofences()");
-        LocationServices.GeofencingApi.removeGeofences(
-                googleApiClient,
-                geoFencePendingIntent
-        ).setResultCallback(new ResultCallback<Status>() {
-            @Override
-            public void onResult(@NonNull Status status) {
-                if (status.isSuccess()) {
-                    // remove drawing
-                    removeGeofenceDraw();
-                }
-            }
-        });
-    }
-    */
-/*
-    private void removeGeofenceDraw() {
-        Log.d(TAG, "removeGeofenceDraw()");
-        if (geoFenceMarker != null)
-            geoFenceMarker.remove();
-        if (geoFenceLimits != null)
-            geoFenceLimits.remove();
-    }
-*/
     @Override
     public void onResume() {
         super.onResume();
-
-        int id, phoneId;
-        int geofenceId;
-        float radius;
-        double lat;
-        double lon;
-        Timestamp lastUpdate;
-        String projectLr, timestamp, employee, customer, project, imei, custodian, custodianPhone;
-        ListView lv = (ListView) findViewById(list);
-        //start new instance of ProjectsHelper and reader
-
-        mDbHelper = new ProjectsHelper(this);
-        Cursor reader = mDbHelper.getAllRecordList();
-
-        // ar if novērš kļūdu, kad android.database.CursorIndexOutOfBoundsException: Index 0 requested, with a size of 0
-        //if (reader != null)
-            for (reader.moveToFirst(); !reader.isAfterLast(); reader.moveToNext()) {
-                id = reader.getInt(reader.getColumnIndex(KEY_ID));
-                geofenceId = reader.getInt(reader.getColumnIndex(GEOFENCE_ID_COLUMN));
-                projectLr = reader.getString(reader.getColumnIndex(PROJECT_LR_COLUMN));
-                lat = reader.getDouble(reader.getColumnIndex(LATITUDE_COLUMN));
-                lon = reader.getDouble(reader.getColumnIndex(LONGITUDE_COLUMN));
-                radius = reader.getFloat(reader.getColumnIndex(RADIUS_COLUMN));
-                phoneId = reader.getInt(reader.getColumnIndex(PHONE_ID_COLUMN));
-                imei = reader.getString(reader.getColumnIndex(IMEI_COLUMN));
-                employee = reader.getString(reader.getColumnIndex(EMPLOYEE_COLUMN));
-                customer = reader.getString(reader.getColumnIndex(PROJECT_COLUMN));
-                timestamp = reader.getString(reader.getColumnIndex(TS_COLUMN));
-                custodian = reader.getString(reader.getColumnIndex(CUSTODIAN_COLUMN));
-                custodianPhone = reader.getString(reader.getColumnIndex(CUSTODIAN_PHONE_COLUMN));
-                //lastUpdate = Timestamp.valueOf(reader.getString(reader.getColumnIndex(LAST_DB_UPDATE)));
-
-                ////////////////////////////////////////////////////////////// pamēģināšu šeit
-                LatLng latLng = new LatLng(lat, lon);
-                Geofence fence = new Geofence.Builder()
-                        .setRequestId(String.valueOf(geofenceId))
-                        .setCircularRegion(latLng.latitude, latLng.longitude, radius)
-                        .setExpirationDuration(GEOFENCE_EXPIRATION_TIME)
-                        .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER
-                                | Geofence.GEOFENCE_TRANSITION_EXIT)
-                        .build();
-                mGeofenceList.add(fence);
-                mLatLngList.add(latLng);
-                Log.e("izveidots ", fence.toString());
-
-            }
-        if (reader.isAfterLast())
-            reader.close();
-            //////////////////////////////////////////////////////////////
-        }
+    }
 
     @Override
     public void onPause(){
@@ -642,5 +369,6 @@ public class GeofencingActivity extends AppCompatActivity
         }
         super.onDestroy();
     }
+
 
 }
