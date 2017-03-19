@@ -22,6 +22,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -29,7 +30,8 @@ import java.util.HashMap;
 import static com.android.edgarsjanovskis.adlus.Main2Activity.LAST_UPDATE;
 
 
-public class GetMyProjects extends AppCompatActivity{
+public class GetMyProjects extends AppCompatActivity
+implements Serializable{  //for serialization of Array, but not in use
 
     private String TAG = GetMyProjects.class.getSimpleName();
     private ProgressDialog pDialog;
@@ -48,12 +50,15 @@ public class GetMyProjects extends AppCompatActivity{
     JSONArray projects = null;
     // add a ProjectHelper to Activity (protected???)
     protected ProjectsHelper databaseHelper;
+    ArrayList<Integer> newRecords;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_list);
+
+
 
         //start new instance of ProjectsHelper and reader
         databaseHelper = new ProjectsHelper(this);
@@ -105,7 +110,7 @@ public class GetMyProjects extends AppCompatActivity{
 
         @Override
         protected Void doInBackground(Void... arg0) {
-            HttpHandler sh = new HttpHandler();
+            HttpGetHandler sh = new HttpGetHandler();
 
             //Create JSONParser instance
             JsonParser jsonParser = new JsonParser();
@@ -122,19 +127,18 @@ public class GetMyProjects extends AppCompatActivity{
                     JSONArray projects = new JSONArray(jsonStr);
                     SharedPreferences prefs = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
 
-
                     // looping through All Array
                     for (int i = 0; i < projects.length(); i++) {
 
                         JSONObject c = projects.getJSONObject(i);
 
                         String id = c.getString("$id");
-                        String geofenceId = c.getString("geofenceID");
+                        Integer geofenceId = c.getInt("geofenceID");
                         String lr = c.getString("lr");
-                        String lat = c.getString("latitude");
-                        String lng = c.getString("longitude");
-                        String radius = c.getString("radius");
-                        String phoneId = c.getString("phoneID");
+                        Double lat = c.getDouble("latitude");
+                        Double lng = c.getDouble("longitude");
+                        Integer radius = c.getInt("radius");
+                        Integer phoneId = c.getInt("phoneID");
                         String imei = c.getString("imei");
                         String employee = c.getString("employeeName");
                         String customer = c.getString("customerName");
@@ -149,12 +153,12 @@ public class GetMyProjects extends AppCompatActivity{
                             HashMap<String, String> project = new HashMap<>();
                             // adding each child node to HashMap key => value
                             project.put("$id", id);
-                            project.put("GeofenceID", geofenceId);
+                            project.put("GeofenceID", String.valueOf(geofenceId));
                             project.put("LR", lr);
-                            project.put("Latitude", lat);
-                            project.put("Longitude", lng);
-                            project.put("Radius", radius);
-                            project.put("PhoneId", phoneId);
+                            project.put("Latitude", String.valueOf(lat));
+                            project.put("Longitude", String.valueOf(lng));
+                            project.put("Radius", String.valueOf(radius));
+                            project.put("PhoneId", String.valueOf(phoneId));
                             project.put("IMEI", imei);
                             project.put("EmployeeName", employee);
                             project.put("CustomerName", customer);
@@ -169,8 +173,10 @@ public class GetMyProjects extends AppCompatActivity{
                             //db storing only if IMEI match
                             databaseHelper.saveProjectsRecord(geofenceId, lr, lat, lng, radius, phoneId, imei, employee, customer, projectName, ts, custodianSurname, custodianPhone);
 
+                            databaseHelper.deleteOldRecord(geofenceId);
+
                             prefs.edit().putString(USER_NAME, employee).apply();
-                            prefs.edit().putString(PHONE_ID, phoneId).apply();
+                            prefs.edit().putInt(PHONE_ID, phoneId).apply();
                             // place where last update
                             String updateDatetime = String.valueOf(Calendar.getInstance().getTime());
                             prefs.edit().putString(LAST_UPDATE, updateDatetime).apply();
@@ -225,6 +231,7 @@ public class GetMyProjects extends AppCompatActivity{
             // Dismiss the progress dialog
             if (pDialog.isShowing())
                 pDialog.dismiss();
+
 
              //Updating parsed JSON data into ListView
 

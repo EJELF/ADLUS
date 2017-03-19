@@ -15,11 +15,11 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 
-class HttpHandler {
+class HttpGetHandler {
 
-    private static final String TAG = HttpHandler.class.getSimpleName();
+    private static final String TAG = HttpGetHandler.class.getSimpleName();
 
-    HttpHandler() {}
+    HttpGetHandler() {}
 
     String makeServiceCall(String reqUrl) {
         String response = null;

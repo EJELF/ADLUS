@@ -88,7 +88,7 @@ public class GeofencingActivity extends AppCompatActivity
         mLatLngList = new ArrayList<>();
 
         int id, phoneId;
-        int geofenceId;
+        int geofenceId =0;
         float radius;
         double lat;
         double lon;
@@ -220,8 +220,8 @@ public class GeofencingActivity extends AppCompatActivity
 
     private LocationRequest locationRequest;
     // Defined in mili seconds.
-    private final int UPDATE_INTERVAL = 3 * 60 * 1000;  //3 min
-    private final int FASTEST_INTERVAL = 30 * 1000;   //30 sek
+    private final int UPDATE_INTERVAL = 1000;  //3 min 3*60*100
+    private final int FASTEST_INTERVAL = 1000;   //30 sek 30*1000
 
     // Start location Updates
     private void startLocationUpdates() {

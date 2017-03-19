@@ -304,8 +304,8 @@ public class ShowMap extends AppCompatActivity
 
     private LocationRequest locationRequest;
     // Defined in mili seconds.
-    private final int UPDATE_INTERVAL = 3 * 60 * 1000;  //3 min
-    private final int FASTEST_INTERVAL = 30 * 1000;   //30 sek
+    private final int UPDATE_INTERVAL =  10000;  //3 min
+    private final int FASTEST_INTERVAL = 1000;   //30 sek
 
     // Start location Updates
     private void startLocationUpdates() {

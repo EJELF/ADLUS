@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/tvIsConnected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="#FF0000"
+        android:textColor="#FFF"
+        android:textSize="18dp"
+        android:layout_marginBottom="5dp"
+        android:text="is connected?" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tvGeofence"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:text="Geofence"
+            android:layout_alignBaseline="@+id/etGeofence"/>
+        <EditText
+            android:id="@+id/etGeofence"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/tvGeofence"/>
+        <TextView
+            android:id="@+id/tvPhone"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvGeofence"
+            android:text="Phone ID"
+            android:layout_alignBaseline="@+id/etPhone"/>
+        <EditText
+            android:id="@+id/etPhone"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/tvPhone"
+            android:layout_below="@+id/etGeofence"/>
+        <TextView
+            android:id="@+id/tvTransition"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvPhone"
+            android:text="Transition"
+            android:layout_alignBaseline="@+id/etTransition"/>
+        <EditText
+            android:id="@+id/etTransition"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/tvTransition"
+            android:layout_below="@+id/etPhone"/>
+        <TextView
+            android:id="@+id/tvDateTime"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvPhone"
+            android:text="DateTime"
+            android:layout_alignBaseline="@+id/etDateTime"/>
+        <EditText
+            android:id="@+id/etDateTime"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/tvDateTime"
+            android:layout_below="@+id/etTransition"/>
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/btnPost"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="POST"/>
+
+</LinearLayout>

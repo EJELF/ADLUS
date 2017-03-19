@@ -191,7 +191,7 @@ public class Main2Activity extends AppCompatActivity {
     }
 
     public void buttonSettings_onClick (View view){
-        Intent intent = new Intent(this, AppSettingsActivity.class);
+        Intent intent = new Intent(this, PostActivity.class);
         startActivity(intent);
     }
 

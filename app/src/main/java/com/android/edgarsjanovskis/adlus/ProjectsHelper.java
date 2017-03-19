@@ -4,8 +4,11 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
+import java.util.ArrayList;
 
 
 public class ProjectsHelper{
@@ -39,6 +42,7 @@ public class ProjectsHelper{
     private SQLiteDatabase database;
     //Context context;
     //List<Geofence> mGeofenceList;
+    ArrayList<Integer> newRecords;
 
     //int oldVersion = DATABASE_VERSION;
     //int newVersion = oldVersion;
@@ -48,7 +52,7 @@ public class ProjectsHelper{
         database = openHelper.getWritableDatabase();
     }
 
-    public void saveProjectsRecord(String geofenceId, String lr, String lat, String lng, String radius, String phoneId, String imei,
+    public void saveProjectsRecord(Integer geofenceId, String lr, Double lat, Double lng, Integer radius, Integer phoneId, String imei,
                                    String empl, String cust, String projname, String ts, String custod, String phone) {
         ContentValues contentValues = new ContentValues();
         //contentValues.put(KEY_ID, id);
@@ -69,30 +73,54 @@ public class ProjectsHelper{
 
         database = openHelper.getWritableDatabase();
         Cursor c = database.rawQuery("SELECT * FROM projects WHERE GeofenceId= " +geofenceId, null);
+        newRecords = new ArrayList<>();
 
         if (c.moveToFirst()) {
             database.update(TABLE_PROJECTS,contentValues," GeofenceId = " + geofenceId, null);
-            Log.e("Updated GeofenceId:", geofenceId);
+            Log.e("Updated GeofenceId:", String.valueOf(geofenceId));
+            newRecords.add(geofenceId);
             } else {
-            database.insertOrThrow(TABLE_PROJECTS, null, contentValues);
-            Log.e("Inserted GeofenceId: ", geofenceId);
+            database.insert(TABLE_PROJECTS, null, contentValues);
+            Log.e("Inserted GeofenceId: ", String.valueOf(geofenceId));
+            newRecords.add(geofenceId);
         }
         // jānodrošina izdzēšana, ja geofenceId vairāk nav json masīvā!!!
-        for (c.moveToFirst();c.isAfterLast();c.moveToNext()) {
-            if (!getAllRecordList().getString(0).equals(geofenceId))
-                database.delete(TABLE_PROJECTS," GeofenceId = ?", new String[]{getAllRecordList().getString(0)});
-            Log.e("Deleted GeofenceId: ", geofenceId);
-        }
+        //to nevar izdarīt šeit, jo cikls darbojas tikai uz json esošajiem objektiem
         if (c.isAfterLast()) {
             c.close();
             database.close();
         }
+        //Log.println(Log.ERROR, "New records are: " , String.valueOf(newRecords));
     }
 
-    public void deleteOldRecords(){
-
+    public void deleteOldRecord(Integer geofenceId) throws SQLiteException {
+        database = openHelper.getWritableDatabase();
+        Cursor c = database.rawQuery("Select * from projects", null);
+        if(c.moveToFirst()) {
+            if (!newRecords.contains(geofenceId)) {
+                database.delete(TABLE_PROJECTS, GEOFENCE_ID_COLUMN + " =? ", new String[]{String.valueOf(geofenceId)});
+                Log.e("Deleted GeofenceId: ", String.valueOf(geofenceId));
+            }
+        }
+        database.close();
     }
 
+/*
+    public boolean checkProjects(int id){
+        database = openHelper.getReadableDatabase();
+
+        Cursor c = database.query(TABLE_PROJECTS, new String[]{GEOFENCE_ID_COLUMN}, GEOFENCE_ID_COLUMN + " = ? ",
+                new String[] {String.valueOf(id)},
+                null, null, null, null);
+
+        if (c.moveToFirst()) {
+            return true;
+        } // row exist
+            else{
+            return false;
+        }
+    }
+*/
 
     public Cursor getAllRecordList(){
         return database.rawQuery("select * from " + TABLE_PROJECTS, null);
@@ -110,7 +138,7 @@ public class ProjectsHelper{
                     + GEOFENCE_ID_COLUMN + " Integer, " + PROJECT_LR_COLUMN + " Text, " + LATITUDE_COLUMN + " Float, "
                     + LONGITUDE_COLUMN + " Float, " + RADIUS_COLUMN + " Integer, " + PHONE_ID_COLUMN + " Integer, "
                     + IMEI_COLUMN + " Text, " + EMPLOYEE_COLUMN + " Text, " + CUSTOMER_COLUMN + " Text, " + PROJECT_COLUMN + " Text, "
-                    + TS_COLUMN + " Integer, " + CUSTODIAN_COLUMN + " Text, "
+                    + TS_COLUMN + " Text, " + CUSTODIAN_COLUMN + " Text, "
                     + CUSTODIAN_PHONE_COLUMN + " Text" + ")");
             Log.e("Tabula - ", TABLE_PROJECTS + " - izveidota");
         }

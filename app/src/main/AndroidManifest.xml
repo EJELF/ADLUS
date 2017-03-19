@@ -85,7 +85,8 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".GeofenceTrasitionService" />
+        <service android:name=".GeofenceTrasitionService"
+            android:exported="true"/>
 
         <activity android:name=".PhoneInfoActivity" />
         <activity
@@ -122,6 +123,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".DbList">
+            <action android:name="android.intent.action.QUICK_VIEW" />
+
+            <category android:name="android.intent.category.DEFAULT" />
+        </activity>
+        <activity android:name=".PostActivity">
             <action android:name="android.intent.action.QUICK_VIEW" />
 
             <category android:name="android.intent.category.DEFAULT" />
