@@ -5,10 +5,17 @@ import com.google.maps.android.clustering.ClusterItem;
 
 public class MyGeofences implements ClusterItem {
     private final LatLng mPosition;
+    private Integer mGeofenceId;
     private String mTitle;
     private String mSnippet;
 
-    public MyGeofences(double lat, double lng) {
+    public MyGeofences(int id, double lat, double lng) {
+        mGeofenceId = id;
+        mPosition = new LatLng(lat, lng);
+        mTitle = null;
+        mSnippet = null;
+    }
+    public MyGeofences( double lat, double lng) {
         mPosition = new LatLng(lat, lng);
         mTitle = null;
         mSnippet = null;
@@ -20,6 +27,15 @@ public class MyGeofences implements ClusterItem {
         mSnippet = snippet;
     }
 
+
+    public void setmGeofenceId(Integer mGeofenceId) {
+        this.mGeofenceId = mGeofenceId;
+    }
+
+    public Integer getmGeofenceId() {
+        return mGeofenceId;
+    }
+
     @Override
     public LatLng getPosition() {
         return mPosition;
@@ -29,7 +45,10 @@ public class MyGeofences implements ClusterItem {
     public String getTitle() { return mTitle; }
 
     @Override
-    public String getSnippet() { return mSnippet; }
+    public String getSnippet() {
+        return mSnippet;
+    }
+
 
     /**
      * Set the title of the marker

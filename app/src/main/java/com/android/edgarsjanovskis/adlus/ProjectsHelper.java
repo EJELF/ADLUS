@@ -8,6 +8,9 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.android.edgarsjanovskis.adlus.model.MyGeofences;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 
@@ -40,12 +43,10 @@ public class ProjectsHelper{
 
     Projects openHelper;
     private SQLiteDatabase database;
-    //Context context;
+    Context context;
     //List<Geofence> mGeofenceList;
-    ArrayList<Integer> newRecords;
+    ArrayList<Integer> newGeofenceIdList;
 
-    //int oldVersion = DATABASE_VERSION;
-    //int newVersion = oldVersion;
 
     public ProjectsHelper(Context context){
         openHelper = new Projects(context);
@@ -72,18 +73,20 @@ public class ProjectsHelper{
         //contentValues.put(LAST_DB_UPDATE, " time('now') ");
 
         database = openHelper.getWritableDatabase();
-        Cursor c = database.rawQuery("SELECT * FROM projects WHERE GeofenceId= " +geofenceId, null);
-        newRecords = new ArrayList<>();
+        Cursor c = database.rawQuery("SELECT * FROM projects WHERE GeofenceId = " + geofenceId, null);
+
+        newGeofenceIdList = new ArrayList<>();
 
         if (c.moveToFirst()) {
-            database.update(TABLE_PROJECTS,contentValues," GeofenceId = " + geofenceId, null);
-            Log.e("Updated GeofenceId:", String.valueOf(geofenceId));
-            newRecords.add(geofenceId);
-            } else {
-            database.insert(TABLE_PROJECTS, null, contentValues);
-            Log.e("Inserted GeofenceId: ", String.valueOf(geofenceId));
-            newRecords.add(geofenceId);
+                database.update(TABLE_PROJECTS, contentValues, " GeofenceId = " + geofenceId, null);
+                Log.e("Updated GeofenceId:", String.valueOf(geofenceId));
+                newGeofenceIdList.add(geofenceId);
+        } else {
+                database.insert(TABLE_PROJECTS, null, contentValues);
+                Log.e("Inserted GeofenceId: ", String.valueOf(geofenceId));
+                newGeofenceIdList.add(geofenceId);
         }
+
         // jānodrošina izdzēšana, ja geofenceId vairāk nav json masīvā!!!
         //to nevar izdarīt šeit, jo cikls darbojas tikai uz json esošajiem objektiem
         if (c.isAfterLast()) {
@@ -91,17 +94,72 @@ public class ProjectsHelper{
             database.close();
         }
         //Log.println(Log.ERROR, "New records are: " , String.valueOf(newRecords));
+        //getAllData();
     }
 
-    public void deleteOldRecord(Integer geofenceId) throws SQLiteException {
+
+
+
+    public ArrayList<MyGeofences> getAllData(){
+
+        ArrayList<MyGeofences> arrayList = new ArrayList<MyGeofences>();
+
         database = openHelper.getWritableDatabase();
-        Cursor c = database.rawQuery("Select * from projects", null);
-        if(c.moveToFirst()) {
-            if (!newRecords.contains(geofenceId)) {
-                database.delete(TABLE_PROJECTS, GEOFENCE_ID_COLUMN + " =? ", new String[]{String.valueOf(geofenceId)});
-                Log.e("Deleted GeofenceId: ", String.valueOf(geofenceId));
-            }
+
+        Cursor cc = database.rawQuery("SELECT *" + " FROM " + TABLE_PROJECTS, null);
+
+        cc.moveToFirst();
+        while(cc.isAfterLast() == false){
+
+            MyGeofences geofenece = new MyGeofences(cc.getInt(cc.getColumnIndex(GEOFENCE_ID_COLUMN)),cc.getDouble(cc.getColumnIndex(LATITUDE_COLUMN)),cc.getDouble(cc.getColumnIndex(LONGITUDE_COLUMN)));
+
+            geofenece.setTitle(cc.getString(cc.getColumnIndex(PROJECT_LR_COLUMN)));
+            geofenece.setSnippet(cc.getString(cc.getColumnIndex(PROJECT_COLUMN)));
+            geofenece.setmGeofenceId(Integer.parseInt(cc.getString(cc.getColumnIndex(GEOFENCE_ID_COLUMN))));
+            arrayList.add(geofenece);
+
+            cc.moveToNext();
         }
+        database.close();
+     return arrayList ;
+    }
+
+    public void showNewRecArray(){
+        
+            Integer[] arr = convert(newGeofenceIdList, Integer.class);
+
+            for(int i=0; i<arr.length; i++) {
+                Log.e("List items: ", String.valueOf(arr[i]));
+            }
+    }
+
+
+    public static <T> T[] convert(ArrayList<T> newGeofenceIdList, Class clazz){
+        return (T[]) newGeofenceIdList.toArray((T[]) Array.newInstance(clazz, newGeofenceIdList.size()));
+    }
+
+    public void deleteOldRecords() throws SQLiteException {
+        Log.i("Executing delete", "Delete Started");
+            database = openHelper.getWritableDatabase();
+            //Cursor c = getAllRecordList();
+            showNewRecArray();
+            Cursor c = database.rawQuery("Select * from projects", null);
+
+        if(c.moveToFirst())
+
+                            while (!c.isAfterLast()) {
+                                if (!newGeofenceIdList.contains(c.getInt(0))) {
+                                Log.e("Current id", String.valueOf(c.getInt(0)));
+                                database.delete(TABLE_PROJECTS, GEOFENCE_ID_COLUMN + " =? ", new String[]{String.valueOf(c.getInt(0))});
+                                Log.e("Deleted GeofenceId: ", String.valueOf(c.getInt(0)));
+                                c.moveToNext();
+                            }
+
+            }
+            if (c.isAfterLast()){
+                c.close();
+                //newGeofenceIdList = null;
+            }
         database.close();
     }
 
@@ -135,7 +193,7 @@ public class ProjectsHelper{
         public void onCreate(SQLiteDatabase db) {
             db.execSQL("CREATE TABLE " + TABLE_PROJECTS + "("
                     //+ KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                    + GEOFENCE_ID_COLUMN + " Integer, " + PROJECT_LR_COLUMN + " Text, " + LATITUDE_COLUMN + " Float, "
+                    + GEOFENCE_ID_COLUMN + " INTEGER PRIMARY KEY, " + PROJECT_LR_COLUMN + " Text, " + LATITUDE_COLUMN + " Float, "
                     + LONGITUDE_COLUMN + " Float, " + RADIUS_COLUMN + " Integer, " + PHONE_ID_COLUMN + " Integer, "
                     + IMEI_COLUMN + " Text, " + EMPLOYEE_COLUMN + " Text, " + CUSTOMER_COLUMN + " Text, " + PROJECT_COLUMN + " Text, "
                     + TS_COLUMN + " Text, " + CUSTODIAN_COLUMN + " Text, "

@@ -10,18 +10,10 @@ import android.widget.ListView;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
-import static com.android.edgarsjanovskis.adlus.ProjectsHelper.CUSTODIAN_COLUMN;
-import static com.android.edgarsjanovskis.adlus.ProjectsHelper.CUSTODIAN_PHONE_COLUMN;
-import static com.android.edgarsjanovskis.adlus.ProjectsHelper.EMPLOYEE_COLUMN;
 import static com.android.edgarsjanovskis.adlus.ProjectsHelper.GEOFENCE_ID_COLUMN;
-import static com.android.edgarsjanovskis.adlus.ProjectsHelper.IMEI_COLUMN;
 import static com.android.edgarsjanovskis.adlus.ProjectsHelper.LATITUDE_COLUMN;
 import static com.android.edgarsjanovskis.adlus.ProjectsHelper.LONGITUDE_COLUMN;
-import static com.android.edgarsjanovskis.adlus.ProjectsHelper.PHONE_ID_COLUMN;
-import static com.android.edgarsjanovskis.adlus.ProjectsHelper.PROJECT_COLUMN;
-import static com.android.edgarsjanovskis.adlus.ProjectsHelper.PROJECT_LR_COLUMN;
 import static com.android.edgarsjanovskis.adlus.ProjectsHelper.RADIUS_COLUMN;
-import static com.android.edgarsjanovskis.adlus.ProjectsHelper.TS_COLUMN;
 import static com.android.edgarsjanovskis.adlus.R.id.list;
 
 //import static com.android.edgarsjanovskis.adlus.ProjectsHelper.KEY_ID;
@@ -36,11 +28,9 @@ public class DbList extends AppCompatActivity {
     //public static List<LatLng> mLatLonList1;
     // Persistent storage for geofences.
 
-
     // These will store hard-coded geofences in this sample app.
     Cursor reader;
     ProjectsHelper mDbHelper;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +41,6 @@ public class DbList extends AppCompatActivity {
         //Intent intent = new Intent(this, GeofencingActivity.class);
         //startActivity(intent);
     }
-
     @Override
     public void onResume(){
         super.onResume();
@@ -63,11 +52,15 @@ public class DbList extends AppCompatActivity {
         Timestamp lastUpdate;
         String projectLr, timestamp, employee, customer, project, imei, custodian, custodianPhone;
         ListView lv = (ListView)findViewById(list);
+        ArrayList<String> sqlList = new ArrayList<>();
 
         mDbHelper = new ProjectsHelper(this);
         reader = mDbHelper.getAllRecordList();
-
-        ArrayList<String> sqlList = new ArrayList<>();
+        //Integer newRecordId = -1;
+        //Bundle getNewRecords = getIntent().getExtras();
+        //if (getNewRecords != null){
+        //    newRecordId = getNewRecords.getInt("newRecords");
+        //}
 
 
         // ar if novērš kļūdu, kad android.database.CursorIndexOutOfBoundsException: Index 0 requested, with a size of 0
@@ -76,17 +69,17 @@ public class DbList extends AppCompatActivity {
         for( reader.moveToFirst(); !reader.isAfterLast(); reader.moveToNext() ) {
             //id = reader.getInt(reader.getColumnIndex(KEY_ID));
             geofenceId = reader.getInt(reader.getColumnIndex(GEOFENCE_ID_COLUMN));
-            projectLr = reader.getString(reader.getColumnIndex(PROJECT_LR_COLUMN));
+            //projectLr = reader.getString(reader.getColumnIndex(PROJECT_LR_COLUMN));
             lat = reader.getDouble(reader.getColumnIndex(LATITUDE_COLUMN));
             lon = reader.getDouble(reader.getColumnIndex(LONGITUDE_COLUMN));
             radius = reader.getFloat(reader.getColumnIndex(RADIUS_COLUMN));
-            phoneId = reader.getInt(reader.getColumnIndex(PHONE_ID_COLUMN));
-            imei = reader.getString(reader.getColumnIndex(IMEI_COLUMN));
-            employee = reader.getString(reader.getColumnIndex(EMPLOYEE_COLUMN));
-            customer = reader.getString(reader.getColumnIndex(PROJECT_COLUMN));
-            timestamp = reader.getString(reader.getColumnIndex(TS_COLUMN));
-            custodian = reader.getString(reader.getColumnIndex(CUSTODIAN_COLUMN));
-            custodianPhone = reader.getString(reader.getColumnIndex(CUSTODIAN_PHONE_COLUMN));
+            //phoneId = reader.getInt(reader.getColumnIndex(PHONE_ID_COLUMN));
+            //imei = reader.getString(reader.getColumnIndex(IMEI_COLUMN));
+            //employee = reader.getString(reader.getColumnIndex(EMPLOYEE_COLUMN));
+            //customer = reader.getString(reader.getColumnIndex(PROJECT_COLUMN));
+            //timestamp = reader.getString(reader.getColumnIndex(TS_COLUMN));
+            //custodian = reader.getString(reader.getColumnIndex(CUSTODIAN_COLUMN));
+            //custodianPhone = reader.getString(reader.getColumnIndex(CUSTODIAN_PHONE_COLUMN));
             //lastUpdate = Timestamp.valueOf(reader.getString(reader.getColumnIndex(LAST_DB_UPDATE)));
 
             /*///////////////////////////////////////////////////////////// pamēģināšu šeit

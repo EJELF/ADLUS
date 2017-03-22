@@ -1,10 +1,15 @@
 package com.android.edgarsjanovskis.adlus;
 
 import android.app.Activity;
+import android.app.Service;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -26,6 +31,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by Edgars on 19.03.17.
@@ -36,8 +43,14 @@ public class PostActivity extends AppCompatActivity{
     TextView tvIsConnected;
     EditText etGeofence,etPhone,etTransition, etDateTime;
     Button btnPost;
+    public String myurl = "";
+    private String myimei = "";
+    private Integer phoneId = 0;
+    private String url;
+    private SharedPreferences prefs;
 
     MyActivities activity;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,10 +59,16 @@ public class PostActivity extends AppCompatActivity{
         // get reference to the views
         tvIsConnected = (TextView) findViewById(R.id.tvIsConnected);
         etGeofence = (EditText) findViewById(R.id.etGeofence);
-        etPhone = (EditText) findViewById(R.id.etPhone);
+        //etPhone = (EditText) findViewById(R.id.etPhone);
         etTransition = (EditText) findViewById(R.id.etTransition);
-        etDateTime = (EditText) findViewById(R.id.etDateTime);
+        //etDateTime = (EditText) findViewById(R.id.etDateTime);
         btnPost = (Button) findViewById(R.id.btnPost);
+        prefs = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
+        myurl = prefs.getString("Server_URL", " ");
+        Log.i("URL: ", myurl);
+        phoneId = prefs.getInt("PhoneID", 0);
+        // URL to get contacts JSON
+        //url = "http://"+myurl+"/api/Activities";
 
         // check if you are connected or not
         if(isConnected()){
@@ -61,11 +80,11 @@ public class PostActivity extends AppCompatActivity{
         }
 
         // add click listener to Button "POST"
-        btnPost.setOnClickListener((View.OnClickListener) this);
+       // btnPost.setOnClickListener((View.OnClickListener) this);
 
     }
 
-    public static String POST(String url, MyActivities actitity){
+    public String POST(String url, MyActivities actitity){
         InputStream inputStream = null;
         String result = "";
         try {
@@ -80,10 +99,10 @@ public class PostActivity extends AppCompatActivity{
 
             // 3. build jsonObject
             JSONObject jsonObject = new JSONObject();
-            jsonObject.accumulate("geofenceId", actitity.getmGeofence());
-            jsonObject.accumulate("phoneId", actitity.getmPhoneId());
-            jsonObject.accumulate("transition", actitity.getmTransition());
-            jsonObject.accumulate("datetime", actitity.getmActivityTimestamp());
+            jsonObject.accumulate("geofenceID", actitity.getmGeofence());
+            jsonObject.accumulate("phoneID", phoneId);
+            jsonObject.accumulate("transitionStateID", actitity.getmTransition());
+            jsonObject.accumulate("dateTime", actitity.getmActivityTimestamp());
 
             // 4. convert JSONObject to JSON to String
             json = jsonObject.toString();
@@ -109,8 +128,12 @@ public class PostActivity extends AppCompatActivity{
             inputStream = httpResponse.getEntity().getContent();
 
             // 10. convert inputstream to string
-            if(inputStream != null)
+            if(inputStream != null) {
                 result = convertInputStreamToString(inputStream);
+                Log.i("InputStream", result);
+                Integer statusCode = httpResponse.getStatusLine().getStatusCode();
+                Log.i("Statuscode = ", statusCode.toString());
+            }
             else
                 result = "Did not work!";
 
@@ -131,27 +154,27 @@ public class PostActivity extends AppCompatActivity{
             return false;
     }
 
-    public void onClick(View view) {
+    public void buttonPost_onClick(View view) {
 
         switch(view.getId()){
             case R.id.btnPost:
                 if(!validate())
                     Toast.makeText(getBaseContext(), "Enter some data!", Toast.LENGTH_LONG).show();
                 // call AsynTask to perform network operation on separate thread
-                new HttpAsyncTask().execute("http://192.168.10.86:5111/api/Activities");
+                new HttpAsyncTask().execute("http://"+myurl+"/api/Activities");
                 break;
         }
-
     }
+
     private class HttpAsyncTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... urls) {
 
             activity = new MyActivities();
             activity.setmGeofence(etGeofence.getText().toString());
-            activity.setmPhoneId(etPhone.getText().toString());
+            activity.setmPhoneId(phoneId.toString());
             activity.setmTransition(etTransition.getText().toString());
-            activity.setmActivityTimestamp(etDateTime.getText().toString());
+            activity.setmActivityTimestamp(new Date().toString());
 
             return POST(urls[0],activity);
         }
@@ -165,12 +188,12 @@ public class PostActivity extends AppCompatActivity{
     private boolean validate(){
         if(etGeofence.getText().toString().trim().equals(""))
             return false;
-        else if(etPhone.getText().toString().trim().equals(""))
-            return false;
+        //else if(etPhone.getText().toString().trim().equals(""))
+        //    return false;
         else if(etTransition.getText().toString().trim().equals(""))
             return false;
-        else if(etDateTime.getText().toString().trim().equals(""))
-            return false;
+       // else if(etDateTime.getText().toString().trim().equals(""))
+        //    return false;
         else
             return true;
     }
@@ -180,7 +203,6 @@ public class PostActivity extends AppCompatActivity{
         String result = "";
         while((line = bufferedReader.readLine()) != null)
             result += line;
-
         inputStream.close();
         return result;
 

@@ -27,7 +27,6 @@ class HttpGetHandler {
             URL url = new URL(reqUrl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
-            //conn.setRequestMethod("POST");
 
             int status = conn.getResponseCode();
 

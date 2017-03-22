@@ -14,7 +14,7 @@ import java.net.ProtocolException;
 import java.net.URL;
 
 public class HttpPostHandler {
-    private static final String TAG = HttpGetHandler.class.getSimpleName();
+    private static final String TAG = HttpPostHandler.class.getSimpleName();
 
     HttpPostHandler() {}
 
@@ -41,27 +41,4 @@ public class HttpPostHandler {
         }
         return message;
     }
-
-/*
-    private String convertStreamToString(OutputStream outputStream) {
-        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream));
-        StringBuilder sb = new StringBuilder();
-
-        String line;
-        try {
-            while ((line = writer.write(line);) != null) {
-                sb.append(line).append('\n');
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                outputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return sb.toString();
-    }
-    */
 }

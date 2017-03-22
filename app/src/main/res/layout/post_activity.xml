@@ -30,24 +30,12 @@
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/tvGeofence"/>
-        <TextView
-            android:id="@+id/tvPhone"
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tvGeofence"
-            android:text="Phone ID"
-            android:layout_alignBaseline="@+id/etPhone"/>
-        <EditText
-            android:id="@+id/etPhone"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/tvPhone"
-            android:layout_below="@+id/etGeofence"/>
+
         <TextView
             android:id="@+id/tvTransition"
             android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tvPhone"
+            android:layout_below="@+id/tvGeofence"
             android:text="Transition"
             android:layout_alignBaseline="@+id/etTransition"/>
         <EditText
@@ -55,20 +43,7 @@
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/tvTransition"
-            android:layout_below="@+id/etPhone"/>
-        <TextView
-            android:id="@+id/tvDateTime"
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tvPhone"
-            android:text="DateTime"
-            android:layout_alignBaseline="@+id/etDateTime"/>
-        <EditText
-            android:id="@+id/etDateTime"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/tvDateTime"
-            android:layout_below="@+id/etTransition"/>
+            android:layout_below="@+id/etGeofence"/>
 
     </RelativeLayout>
 
@@ -77,6 +52,7 @@
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:onClick="buttonPost_onClick"
         android:text="POST"/>
 
 </LinearLayout>

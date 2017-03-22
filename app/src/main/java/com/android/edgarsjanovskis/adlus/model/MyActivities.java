@@ -1,5 +1,8 @@
 package com.android.edgarsjanovskis.adlus.model;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by Edgars on 15.03.17.
  */
@@ -37,11 +40,13 @@ public class MyActivities {
     }
 
     public String getmActivityTimestamp() {
-        return mActivityTimestamp;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        String currentDateTime = sdf.format(new Date());
+        return currentDateTime;
     }
 
     public void setmActivityTimestamp(String mActivityTimestamp) {
-        this.mActivityTimestamp = mActivityTimestamp;
+
     }
 }
 

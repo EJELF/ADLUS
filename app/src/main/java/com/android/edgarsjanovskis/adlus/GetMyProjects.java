@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
+import com.android.edgarsjanovskis.adlus.model.MyGeofences;
 import com.google.gson.JsonParser;
 
 import org.json.JSONArray;
@@ -51,7 +52,7 @@ implements Serializable{  //for serialization of Array, but not in use
     // add a ProjectHelper to Activity (protected???)
     protected ProjectsHelper databaseHelper;
     ArrayList<Integer> newRecords;
-
+    MyGeofences geofence;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +73,12 @@ implements Serializable{  //for serialization of Array, but not in use
         url = "http://"+myurl+"/api/AndroidDbUpdates";
         mProjectList = new ArrayList<>();
         lv = (ListView) findViewById(R.id.list);
+        newRecords = new ArrayList<>();
         new GetProjects().execute();
+
+        //Intent myintent = new Intent(this, ProjectsHelper.class);
+        //myintent.putIntegerArrayListExtra("newRecords", newRecords);
+        //startActivity(myintent);
 
     }
 
@@ -168,19 +174,18 @@ implements Serializable{  //for serialization of Array, but not in use
                             project.put("CustodianPhone", custodianPhone);
                             // adding projects to project list
                             mProjectList.add(project);
-
+                            geofence = new MyGeofences(lat, lng, geofenceId.toString(), lr);
+                            geofence.setSnippet(lr);
+                            newRecords.add(geofenceId);
 
                             //db storing only if IMEI match
                             databaseHelper.saveProjectsRecord(geofenceId, lr, lat, lng, radius, phoneId, imei, employee, customer, projectName, ts, custodianSurname, custodianPhone);
-
-                            databaseHelper.deleteOldRecord(geofenceId);
 
                             prefs.edit().putString(USER_NAME, employee).apply();
                             prefs.edit().putInt(PHONE_ID, phoneId).apply();
                             // place where last update
                             String updateDatetime = String.valueOf(Calendar.getInstance().getTime());
                             prefs.edit().putString(LAST_UPDATE, updateDatetime).apply();
-
 
                             /*if (isUpdated){
                             String updateDatetime = String.valueOf(Calendar.getInstance().getTime());
@@ -192,7 +197,9 @@ implements Serializable{  //for serialization of Array, but not in use
                         }*/
 
                         }
+
                     }
+                    //databaseHelper.deleteOldRecords();
 
                 } catch (final JSONException e) {
                     Log.e(TAG, "Json parsing error: " + e.getMessage());
@@ -224,14 +231,12 @@ implements Serializable{  //for serialization of Array, but not in use
 
 
 
-
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
             // Dismiss the progress dialog
             if (pDialog.isShowing())
                 pDialog.dismiss();
-
 
              //Updating parsed JSON data into ListView
 
@@ -296,6 +301,7 @@ implements Serializable{  //for serialization of Array, but not in use
             });
 
         }
+
     }
 
 }

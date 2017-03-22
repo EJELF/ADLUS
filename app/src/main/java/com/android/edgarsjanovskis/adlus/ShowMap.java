@@ -24,6 +24,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.edgarsjanovskis.adlus.model.MyGeofences;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
@@ -56,7 +57,6 @@ import static com.android.edgarsjanovskis.adlus.ProjectsHelper.CUSTODIAN_PHONE_C
 import static com.android.edgarsjanovskis.adlus.ProjectsHelper.EMPLOYEE_COLUMN;
 import static com.android.edgarsjanovskis.adlus.ProjectsHelper.GEOFENCE_ID_COLUMN;
 import static com.android.edgarsjanovskis.adlus.ProjectsHelper.IMEI_COLUMN;
-//import static com.android.edgarsjanovskis.adlus.ProjectsHelper.KEY_ID;
 import static com.android.edgarsjanovskis.adlus.ProjectsHelper.LATITUDE_COLUMN;
 import static com.android.edgarsjanovskis.adlus.ProjectsHelper.LONGITUDE_COLUMN;
 import static com.android.edgarsjanovskis.adlus.ProjectsHelper.PHONE_ID_COLUMN;
@@ -65,6 +65,8 @@ import static com.android.edgarsjanovskis.adlus.ProjectsHelper.PROJECT_LR_COLUMN
 import static com.android.edgarsjanovskis.adlus.ProjectsHelper.RADIUS_COLUMN;
 import static com.android.edgarsjanovskis.adlus.ProjectsHelper.TS_COLUMN;
 import static com.android.edgarsjanovskis.adlus.R.id.list;
+
+//import static com.android.edgarsjanovskis.adlus.ProjectsHelper.KEY_ID;
 
 
 public class ShowMap extends AppCompatActivity
@@ -92,6 +94,7 @@ public class ShowMap extends AppCompatActivity
     // locations within the user's proximity.
     List<Geofence> mGeofenceList;
     List<LatLng> mLatLngList;
+    MyGeofences geofence;
 
     private PendingIntent mGeofencePendingIntent;  // nezinu vai vajadzēs
     private GeofencingRequest mGeofenceRequest;
@@ -422,6 +425,7 @@ public class ShowMap extends AppCompatActivity
 
     private void markerLocation(LatLng latLng) {
         Log.i(TAG, "markerLocation(" + latLng + ")");
+
         String title = latLng.latitude + ", " + latLng.longitude;
         MarkerOptions markerOptions = new MarkerOptions()
                 .position(latLng)
