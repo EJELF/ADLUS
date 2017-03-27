@@ -424,21 +424,21 @@ public class ShowMap extends AppCompatActivity
     private Marker locationMarker;
 
     private void markerLocation(LatLng latLng) {
-        Log.i(TAG, "markerLocation(" + latLng + ")");
+            Log.i(TAG, "markerLocation(" + latLng + ")");
 
-        String title = latLng.latitude + ", " + latLng.longitude;
-        MarkerOptions markerOptions = new MarkerOptions()
-                .position(latLng)
-                .title(title);
-        if (map != null) {
-            if (locationMarker != null)
-                locationMarker.remove();
+            String title = latLng.latitude + ", " + latLng.longitude;
+            MarkerOptions markerOptions = new MarkerOptions()
+                    .position(latLng)
+                    .title(title);
+            if (map != null) {
+                if (locationMarker != null)
+                    locationMarker.remove();
 
-            locationMarker = map.addMarker(markerOptions);
-            float zoom = 9f;
-            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, zoom);
-            map.animateCamera(cameraUpdate);
-        }
+                locationMarker = map.addMarker(markerOptions);
+                float zoom = 9f;
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, zoom);
+                map.animateCamera(cameraUpdate);
+            }
     }
 
     private Marker geoFenceMarker;

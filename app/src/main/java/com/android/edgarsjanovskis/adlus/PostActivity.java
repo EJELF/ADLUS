@@ -181,7 +181,7 @@ public class PostActivity extends AppCompatActivity{
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
-            Toast.makeText(getBaseContext(), "Data Sent!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getBaseContext(), "New data sent!", Toast.LENGTH_LONG).show();
         }
     }
 

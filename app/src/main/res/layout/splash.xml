@@ -15,7 +15,12 @@
         android:layout_height="match_parent"
         android:src="@drawable/adlus_splash_1080x1920"
         android:adjustViewBounds="true"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtVersion"
+        android:text="v.1.0.0"/>
 
 
 </LinearLayout>

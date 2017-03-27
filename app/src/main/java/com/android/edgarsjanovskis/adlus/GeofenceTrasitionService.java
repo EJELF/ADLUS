@@ -19,12 +19,12 @@ import com.google.android.gms.location.GeofencingEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class GeofenceTrasitionService extends IntentService {
 
     private static final String TAG = GeofenceTrasitionService.class.getSimpleName();
 
     public static final int GEOFENCE_NOTIFICATION_ID = 0;
+    private PendingIntent mPostPendingIntent;
 
     public GeofenceTrasitionService() {
         super(TAG);
@@ -56,7 +56,6 @@ public class GeofenceTrasitionService extends IntentService {
         }
     }
 
-
     private String getGeofenceTrasitionDetails(int geoFenceTransition, List<Geofence> triggeringGeofences) {
         // get the ID of each geofence triggered
         ArrayList<String> triggeringGeofencesList = new ArrayList<>();
@@ -85,14 +84,12 @@ public class GeofenceTrasitionService extends IntentService {
         stackBuilder.addNextIntent(notificationIntent);
         PendingIntent notificationPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
-
         // Creating and sending Notification
         NotificationManager notificatioMng =
                 (NotificationManager) getSystemService( Context.NOTIFICATION_SERVICE );
         notificatioMng.notify(
                 GEOFENCE_NOTIFICATION_ID,
                 createNotification(msg, notificationPendingIntent));
-
     }
 
     // Create notification
@@ -108,6 +105,9 @@ public class GeofenceTrasitionService extends IntentService {
                 .setAutoCancel(true);
         return notificationBuilder.build();
     }
+
+
+
 
 
     private static String getErrorString(int errorCode) {

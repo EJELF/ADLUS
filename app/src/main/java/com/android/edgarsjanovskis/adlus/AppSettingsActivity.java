@@ -16,8 +16,6 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-//import java.util.Calendar;
-
 public class AppSettingsActivity extends AppCompatActivity {
 
 
@@ -28,7 +26,6 @@ public class AppSettingsActivity extends AppCompatActivity {
     public final String APP_STOP_TIME_HOUR = "stopHour";
     public final String APP_STOP_TIME_MINUTE= "stopMinute";
     public final String TIME_SELECTED = "timeSelected";
-    //private Calendar calendar;
     private TextView tv1;
     private TextView tv2;
     private TimePicker tp1;
@@ -44,9 +41,7 @@ public class AppSettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_settings);
-        //Toast.makeText(this, "Šeit ievadīs iestatījumus", Toast.LENGTH_LONG).show();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        //setupUI(findViewById(R.id.parent));
         SharedPreferences prefs = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
         String imei = prefs.getString("User_IMEI", " ");
         final String server = prefs.getString("Server_URL", " ");

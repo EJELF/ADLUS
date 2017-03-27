@@ -85,18 +85,11 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".GeofenceTrasitionService"
-            android:exported="true"/>
+        <service
+            android:name=".GeofenceTrasitionService"
+            android:exported="true" />
 
         <activity android:name=".PhoneInfoActivity" />
-        <activity
-            android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings"
-            android:parentActivityName=".Main2Activity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.android.edgarsjanovskis.adlus.Main2Activity" />
-        </activity>
         <activity
             android:name=".GetMyProjects"
             android:label="@string/myprojects_activity_title">

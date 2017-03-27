@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -22,7 +21,6 @@ import android.widget.Toast;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
 
 public class Main2Activity extends AppCompatActivity {
 
@@ -36,7 +34,6 @@ public class Main2Activity extends AppCompatActivity {
     SharedPreferences prefs;
     SharedPreferences sharedPref;
 
-    EditText etResponse;
     TextView tvIsConnLabel;
     TextView tvLastChanges;
     TextView tvLastUpdate;
@@ -137,7 +134,6 @@ public class Main2Activity extends AppCompatActivity {
             return;
         }
         // Update the shared prefs with the current version code
-
         prefs.edit().putInt(PREF_VERSION_CODE_KEY, currentVersionCode).apply();
         prefs.edit().putString(APP_UUID, uniqueID).apply();
     }
@@ -171,18 +167,13 @@ public class Main2Activity extends AppCompatActivity {
 
     public void buttonUUID_onClick (View view){
         prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-       // sharedPref = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         try{
             Map<String,?> keys = prefs.getAll();
             for(Map.Entry<String,?> entry : keys.entrySet()){
                 Log.d("map values",entry.getKey() + ": " +
                         entry.getValue());
             }
-           /* Map<String,?> keys2 = sharedPref.getAll();
-            for(Map.Entry<String,?> entry : keys2.entrySet()){
-                Log.d("map values sharedPref",entry.getKey() + ": " +
-                        entry.getValue());
-            }*/
+
         }catch (Exception e){
             Log.e("Error: ", e.toString());
         }
@@ -197,15 +188,6 @@ public class Main2Activity extends AppCompatActivity {
 
     public void buttonStartGeofencing_onClick (View view){
         // rāda versiju
-        /*
-        try{
-            int  currentVersionCode = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
-            Toast.makeText(this, "Version code: " + currentVersionCode, Toast.LENGTH_LONG).show();
-        } catch (android.content.pm.PackageManager.NameNotFoundException e){
-            //handle exception
-            e.printStackTrace();
-        }
-        */
         Intent toNextActivity = new Intent(Main2Activity.this, GeofencingActivity.class);
         startActivity(toNextActivity);
     }
@@ -213,8 +195,5 @@ public class Main2Activity extends AppCompatActivity {
     public void butonShowSQlite_onClick (View view){
         Intent intent = new Intent(this, DbList.class);
         startActivity(intent);
-
     }
-
-
 }

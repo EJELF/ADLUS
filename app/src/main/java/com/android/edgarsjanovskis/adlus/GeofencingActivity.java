@@ -26,26 +26,17 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 
-import java.security.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.android.edgarsjanovskis.adlus.Constants.GEOFENCE_EXPIRATION_TIME;
 import static com.android.edgarsjanovskis.adlus.Constants.MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION;
-import static com.android.edgarsjanovskis.adlus.ProjectsHelper.CUSTODIAN_COLUMN;
-import static com.android.edgarsjanovskis.adlus.ProjectsHelper.CUSTODIAN_PHONE_COLUMN;
-import static com.android.edgarsjanovskis.adlus.ProjectsHelper.EMPLOYEE_COLUMN;
 import static com.android.edgarsjanovskis.adlus.ProjectsHelper.GEOFENCE_ID_COLUMN;
-import static com.android.edgarsjanovskis.adlus.ProjectsHelper.IMEI_COLUMN;
-//import static com.android.edgarsjanovskis.adlus.ProjectsHelper.KEY_ID;
 import static com.android.edgarsjanovskis.adlus.ProjectsHelper.LATITUDE_COLUMN;
 import static com.android.edgarsjanovskis.adlus.ProjectsHelper.LONGITUDE_COLUMN;
-import static com.android.edgarsjanovskis.adlus.ProjectsHelper.PHONE_ID_COLUMN;
-import static com.android.edgarsjanovskis.adlus.ProjectsHelper.PROJECT_COLUMN;
-import static com.android.edgarsjanovskis.adlus.ProjectsHelper.PROJECT_LR_COLUMN;
 import static com.android.edgarsjanovskis.adlus.ProjectsHelper.RADIUS_COLUMN;
-import static com.android.edgarsjanovskis.adlus.ProjectsHelper.TS_COLUMN;
 
+//import static com.android.edgarsjanovskis.adlus.ProjectsHelper.KEY_ID;
 
 public class GeofencingActivity extends AppCompatActivity
         implements
@@ -81,20 +72,15 @@ public class GeofencingActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_main2);
 
         // Instantiate the current List of geofences.
         mGeofenceList = new ArrayList<>();
         mLatLngList = new ArrayList<>();
 
-        int id, phoneId;
         int geofenceId =0;
         float radius;
         double lat;
         double lon;
-        Timestamp lastUpdate;
-        String projectLr, timestamp, employee, customer, project, imei, custodian, custodianPhone;
-        //start new instance of ProjectsHelper and reader
 
         mDbHelper = new ProjectsHelper(this);
         Cursor reader = mDbHelper.getAllRecordList();
@@ -111,23 +97,12 @@ public class GeofencingActivity extends AppCompatActivity
             googleApiClient.connect();
         }
 
-        // ar if novērš kļūdu, kad android.database.CursorIndexOutOfBoundsException: Index 0 requested, with a size of 0
         if (reader != null)
         for (reader.moveToFirst(); !reader.isAfterLast(); reader.moveToNext()) {
-            //id = reader.getInt(reader.getColumnIndex(KEY_ID));
             geofenceId = reader.getInt(reader.getColumnIndex(GEOFENCE_ID_COLUMN));
-            projectLr = reader.getString(reader.getColumnIndex(PROJECT_LR_COLUMN));
             lat = reader.getDouble(reader.getColumnIndex(LATITUDE_COLUMN));
             lon = reader.getDouble(reader.getColumnIndex(LONGITUDE_COLUMN));
             radius = reader.getFloat(reader.getColumnIndex(RADIUS_COLUMN));
-            phoneId = reader.getInt(reader.getColumnIndex(PHONE_ID_COLUMN));
-            imei = reader.getString(reader.getColumnIndex(IMEI_COLUMN));
-            employee = reader.getString(reader.getColumnIndex(EMPLOYEE_COLUMN));
-            customer = reader.getString(reader.getColumnIndex(PROJECT_COLUMN));
-            timestamp = reader.getString(reader.getColumnIndex(TS_COLUMN));
-            custodian = reader.getString(reader.getColumnIndex(CUSTODIAN_COLUMN));
-            custodianPhone = reader.getString(reader.getColumnIndex(CUSTODIAN_PHONE_COLUMN));
-            //lastUpdate = Timestamp.valueOf(reader.getString(reader.getColumnIndex(LAST_DB_UPDATE)));
 
             ////////////////////////////////////////////////////////////// pamēģināšu šeit
             LatLng latLng = new LatLng(lat, lon);
@@ -143,7 +118,6 @@ public class GeofencingActivity extends AppCompatActivity
             Log.e("izveidots ", fence.toString());
             if (reader.isAfterLast())
                 reader.close();
-
         }
     }
 
@@ -214,7 +188,6 @@ public class GeofencingActivity extends AppCompatActivity
         // close app and warn user was in to-do list
         Toast toast = Toast.makeText(getApplicationContext(), "ADLUS ir nepieciešama Jūsu atļauja piekļūt lokācijai", Toast.LENGTH_LONG);
         toast.show();
-        setResult(0);
         finish();
     }
 
@@ -325,13 +298,13 @@ public class GeofencingActivity extends AppCompatActivity
                 .build();
     }
 
-    private PendingIntent geoFencePendingIntent;
+   // private PendingIntent geoFencePendingIntent;
     private final int GEOFENCE_REQ_CODE = 0;
 
     private PendingIntent createGeofencesPendingIntent() {
         Log.d(TAG, "createGeofencePendingIntent");
-        if (geoFencePendingIntent != null)
-            return geoFencePendingIntent;
+        if (mGeofencePendingIntent != null)
+            return mGeofencePendingIntent;
 
         Intent intent = new Intent(this, GeofenceTrasitionService.class);
         return PendingIntent.getService(

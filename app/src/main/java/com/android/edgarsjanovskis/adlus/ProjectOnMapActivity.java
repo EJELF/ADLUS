@@ -53,7 +53,6 @@ public class ProjectOnMapActivity extends AppCompatActivity
         textLat = (TextView) findViewById(R.id.lat);
         textLong = (TextView) findViewById(R.id.lon);
         this.setTitle(String.format("your_format_string, your_personal_text_to_display"));
-
         // initialize GoogleMaps
         initGMaps();
         // create GoogleApiClient
@@ -75,7 +74,6 @@ public class ProjectOnMapActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
-
         // Call GoogleApiClient connection when starting the Activity
         googleApiClient.connect();
     }
@@ -83,7 +81,6 @@ public class ProjectOnMapActivity extends AppCompatActivity
     @Override
     protected void onStop() {
         super.onStop();
-
         // Disconnect GoogleApiClient when stopping Activity
         googleApiClient.disconnect();
     }

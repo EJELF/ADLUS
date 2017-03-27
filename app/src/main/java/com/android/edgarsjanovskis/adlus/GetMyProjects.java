@@ -23,7 +23,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -31,15 +30,13 @@ import java.util.HashMap;
 import static com.android.edgarsjanovskis.adlus.Main2Activity.LAST_UPDATE;
 
 
-public class GetMyProjects extends AppCompatActivity
-implements Serializable{  //for serialization of Array, but not in use
+public class GetMyProjects extends AppCompatActivity {
 
     private String TAG = GetMyProjects.class.getSimpleName();
     private ProgressDialog pDialog;
     private ListView lv;
 
-
-    // Jāizmanto komponentes, kuras tiks ievadītas no lietotāja puses!!!
+    // User entered components as IMEI and URL!!!
     public String myurl = " ";
     private String myimei = " ";
     private String url;
@@ -59,12 +56,9 @@ implements Serializable{  //for serialization of Array, but not in use
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_list);
 
-
-
         //start new instance of ProjectsHelper and reader
         databaseHelper = new ProjectsHelper(this);
         //Cursor reader = databaseHelper.getTimeRecordList();
-
         prefs = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
         myurl = prefs.getString("Server_URL", " ");
         Log.i("URL: ", myurl);
@@ -75,11 +69,9 @@ implements Serializable{  //for serialization of Array, but not in use
         lv = (ListView) findViewById(R.id.list);
         newRecords = new ArrayList<>();
         new GetProjects().execute();
-
         //Intent myintent = new Intent(this, ProjectsHelper.class);
         //myintent.putIntegerArrayListExtra("newRecords", newRecords);
         //startActivity(myintent);
-
     }
 
     @Override
@@ -197,7 +189,6 @@ implements Serializable{  //for serialization of Array, but not in use
                         }*/
 
                         }
-
                     }
                     //databaseHelper.deleteOldRecords();
 
@@ -228,9 +219,6 @@ implements Serializable{  //for serialization of Array, but not in use
             }
             return null;
         }
-
-
-
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
@@ -269,16 +257,13 @@ implements Serializable{  //for serialization of Array, but not in use
                             "\nTālrunis:  " + phone
                     );
 
-
                     adb.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             dialog.cancel();
                         }
                     });
-
                     adb.setPositiveButton(R.string.show_map, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-
                             Intent intent = new Intent(getBaseContext(),ProjectOnMapActivity.class);
                             String lat = mProjectList.get(i).get("Latitude");
                             String lng = mProjectList.get(i).get("Longitude");
@@ -288,20 +273,12 @@ implements Serializable{  //for serialization of Array, but not in use
                             intent.putExtra("lr", lr);
                             startActivity(intent);
                             dialog.cancel();
-
                         }
                     });
                     adb.show();
-                    /*
-                    MoreInfoDialog dialog = new MoreInfoDialog();
-                    FragmentManager fm = getFragmentManager();
-                    dialog.show(fm, "moreInfo");
-                    */
                 }
             });
-
         }
-
     }
 
 }
