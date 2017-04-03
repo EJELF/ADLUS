@@ -6,6 +6,9 @@ import android.os.IBinder;
 
 public class LocationService extends Service {
     public LocationService() {
+
+        
+
     }
 
     @Override
