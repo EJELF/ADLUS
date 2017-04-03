@@ -187,7 +187,7 @@ public class Main2Activity extends AppCompatActivity {
     }
 
     public void buttonStartGeofencing_onClick (View view){
-        // rāda versiju
+        // sāk GeofencingActivity
         Intent toNextActivity = new Intent(Main2Activity.this, GeofencingActivity.class);
         startActivity(toNextActivity);
     }

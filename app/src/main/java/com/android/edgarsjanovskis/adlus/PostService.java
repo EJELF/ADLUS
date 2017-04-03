@@ -23,7 +23,6 @@ public class PostService extends IntentService {
         super.onCreate();// if you override onCreate(), make sure to call super().
         // If a Context object is needed, call getApplicationContext() here.
 
-
     }
 
     @Override

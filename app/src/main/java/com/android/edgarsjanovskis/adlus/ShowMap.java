@@ -637,10 +637,11 @@ public class ShowMap extends AppCompatActivity
 
     @Override
     public void onPause(){
-        super.onPause();
+        Log.e(TAG, "On pause!!!");
         if(db != null){
             db.close();
         }
+        super.onPause();
     }
 
     @Override
@@ -648,6 +649,7 @@ public class ShowMap extends AppCompatActivity
         if(db != null) {
             db.close();
         }
+        Log.e(TAG, "On destroy!!!");
         super.onDestroy();
     }
 

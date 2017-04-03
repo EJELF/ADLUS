@@ -1,15 +1,12 @@
 package com.android.edgarsjanovskis.adlus;
 
 import android.app.Activity;
-import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -31,7 +28,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -41,27 +37,27 @@ import java.util.Date;
 public class PostActivity extends AppCompatActivity{
 
     TextView tvIsConnected;
-    EditText etGeofence,etPhone,etTransition, etDateTime;
+    EditText etGeofence,etTransition;
     Button btnPost;
     public String myurl = "";
-    private String myimei = "";
     private Integer phoneId = 0;
-    private String url;
     private SharedPreferences prefs;
+    String mGeofence;
+    String mTrigger;
 
     MyActivities activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // JUST DO IN BACKGROUND
+        Toast.makeText(getBaseContext(), "Post Activity started!", Toast.LENGTH_LONG).show();
         setContentView(R.layout.post_activity);
 
         // get reference to the views
         tvIsConnected = (TextView) findViewById(R.id.tvIsConnected);
         etGeofence = (EditText) findViewById(R.id.etGeofence);
-        //etPhone = (EditText) findViewById(R.id.etPhone);
         etTransition = (EditText) findViewById(R.id.etTransition);
-        //etDateTime = (EditText) findViewById(R.id.etDateTime);
         btnPost = (Button) findViewById(R.id.btnPost);
         prefs = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
         myurl = prefs.getString("Server_URL", " ");
@@ -78,6 +74,15 @@ public class PostActivity extends AppCompatActivity{
         else{
             tvIsConnected.setText("You are NOT conncted");
         }
+
+        Intent intent = getIntent();
+        if (intent.hasExtra("Triggering geofence Id")) {
+            mGeofence = intent.getStringExtra("Triggering geofence Id");
+            mTrigger = intent.getStringExtra("Triggering geofence transition");
+        }else {
+            Toast.makeText(getBaseContext(), "No extras from GTS!", Toast.LENGTH_LONG).show();
+        }
+
 
         // add click listener to Button "POST"
        // btnPost.setOnClickListener((View.OnClickListener) this);
@@ -99,8 +104,10 @@ public class PostActivity extends AppCompatActivity{
 
             // 3. build jsonObject
             JSONObject jsonObject = new JSONObject();
+            //jsonObject.accumulate("geofenceID", mGeofence);
             jsonObject.accumulate("geofenceID", actitity.getmGeofence());
             jsonObject.accumulate("phoneID", phoneId);
+            //jsonObject.accumulate("transitionStateID", mTrigger);
             jsonObject.accumulate("transitionStateID", actitity.getmTransition());
             jsonObject.accumulate("dateTime", actitity.getmActivityTimestamp());
 
@@ -171,8 +178,10 @@ public class PostActivity extends AppCompatActivity{
         protected String doInBackground(String... urls) {
 
             activity = new MyActivities();
+            //activity.setmGeofence(mGeofence);
             activity.setmGeofence(etGeofence.getText().toString());
             activity.setmPhoneId(phoneId.toString());
+            //activity.setmTransition(mTrigger);
             activity.setmTransition(etTransition.getText().toString());
             activity.setmActivityTimestamp(new Date().toString());
 
@@ -197,6 +206,7 @@ public class PostActivity extends AppCompatActivity{
         else
             return true;
     }
+
     private static String convertInputStreamToString(InputStream inputStream) throws IOException {
         BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
         String line = "";

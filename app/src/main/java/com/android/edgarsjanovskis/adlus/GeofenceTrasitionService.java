@@ -52,6 +52,7 @@ public class GeofenceTrasitionService extends IntentService {
 
             // Send notification details as a String
             sendNotification( geofenceTransitionDetails );
+            createPostIntent(geoFenceTransition, triggeringGeofences); // THIS SHOULD SEND EXTRAS TO POST ACTIVITY
             Log.e("t=Transistion", geofenceTransitionDetails);
         }
     }
@@ -106,9 +107,15 @@ public class GeofenceTrasitionService extends IntentService {
         return notificationBuilder.build();
     }
 
-
-
-
+    //Create POST intent when Transition heappens
+    private void createPostIntent(int geoFenceTransition ,List<Geofence> triggeringGeofences){
+        for (Geofence geofence : triggeringGeofences) {
+            Intent intent = new Intent(this, PostActivity.class);
+            intent.putExtra("Triggering geofence Id", geofence.getRequestId());
+            intent.putExtra("Triggering geofence transition", geoFenceTransition);
+            startActivity(intent);
+        }
+    }
 
     private static String getErrorString(int errorCode) {
         switch (errorCode) {
