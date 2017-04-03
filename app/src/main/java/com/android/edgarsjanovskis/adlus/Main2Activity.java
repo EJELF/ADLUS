@@ -188,12 +188,12 @@ public class Main2Activity extends AppCompatActivity {
 
     public void buttonStartGeofencing_onClick (View view){
         // sāk GeofencingActivity
-        Intent toNextActivity = new Intent(Main2Activity.this, GeofencingActivity.class);
-        startActivity(toNextActivity);
+        Intent intent = new Intent(this, GeofencingService.class);
+        startService(intent);
     }
 
     public void butonShowSQlite_onClick (View view){
-        Intent intent = new Intent(this, DbList.class);
-        startActivity(intent);
+        Intent intent = new Intent(this, GeofencingService.class);
+        stopService(intent);
     }
 }
