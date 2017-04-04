@@ -29,6 +29,10 @@ class HttpGetHandler {
             conn.setRequestMethod("GET");
 
             int status = conn.getResponseCode();
+            Log.e("Status code: ", String.valueOf(status));
+            if (status != 200){
+                makeServiceCall(reqUrl);
+            }
 
             // read the response
             InputStream in = new BufferedInputStream(conn.getInputStream());

@@ -17,7 +17,6 @@ import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import com.android.edgarsjanovskis.adlus.model.MyGeofences;
-import com.google.gson.JsonParser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -109,9 +108,6 @@ public class GetMyProjects extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... arg0) {
             HttpGetHandler sh = new HttpGetHandler();
-
-            //Create JSONParser instance
-            JsonParser jsonParser = new JsonParser();
 
             // Making a request to url and getting response
             String jsonStr = sh.makeServiceCall(url);

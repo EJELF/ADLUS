@@ -1,6 +1,7 @@
 package com.android.edgarsjanovskis.adlus;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -24,6 +25,7 @@ import java.util.UUID;
 
 public class Main2Activity extends AppCompatActivity {
 
+    Context context;
     public static String uniqueID;
     public final String PREFS_NAME = "AdlusPrefsFile";
     final String PREF_VERSION_CODE_KEY = "version_code";
@@ -106,7 +108,7 @@ public class Main2Activity extends AppCompatActivity {
     public void checkFirstRun(){
 
         //Get current version code
-        int currentVersionCode = 0;
+        int currentVersionCode;
 
         try{
             currentVersionCode = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;

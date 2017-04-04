@@ -30,9 +30,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Date;
 
-/**
- * Created by Edgars on 19.03.17.
- */
 
 public class PostActivity extends AppCompatActivity{
 
@@ -40,6 +37,7 @@ public class PostActivity extends AppCompatActivity{
     EditText etGeofence,etTransition;
     Button btnPost;
     public String myurl = "";
+    private String url;
     private Integer phoneId = 0;
     private SharedPreferences prefs;
     String mGeofence;
@@ -64,7 +62,7 @@ public class PostActivity extends AppCompatActivity{
         Log.i("URL: ", myurl);
         phoneId = prefs.getInt("PhoneID", 0);
         // URL to get contacts JSON
-        //url = "http://"+myurl+"/api/Activities";
+        url = "http://"+myurl+"/api/Activities";
 
         // check if you are connected or not
         if(isConnected()){
@@ -90,7 +88,7 @@ public class PostActivity extends AppCompatActivity{
     }
 
     public String POST(String url, MyActivities actitity){
-        InputStream inputStream = null;
+        InputStream inputStream;
         String result = "";
         try {
 

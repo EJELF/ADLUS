@@ -42,6 +42,7 @@ public class GeofenceTrasitionService extends IntentService {
         }
 
         int geoFenceTransition = geofencingEvent.getGeofenceTransition();
+        String geofenceName = geofencingEvent.getTriggeringGeofences().get(2).toString();
         // Check if the transition type is of interest
         if ( geoFenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER ||
                 geoFenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT ) {
@@ -52,8 +53,11 @@ public class GeofenceTrasitionService extends IntentService {
 
             // Send notification details as a String
             sendNotification( geofenceTransitionDetails );
-            createPostIntent(geoFenceTransition, triggeringGeofences); // THIS SHOULD SEND EXTRAS TO POST ACTIVITY
-            Log.e("t=Transistion", geofenceTransitionDetails);
+
+
+            //createPostIntent(geoFenceTransition, triggeringGeofences); // THIS SHOULD SEND EXTRAS TO POST ACTIVITY
+            createPostPendingIntent(geoFenceTransition, triggeringGeofences.get(0));
+            Log.e("LOG Transistion", geofenceTransitionDetails + geofenceName);
         }
     }
 
@@ -107,15 +111,19 @@ public class GeofenceTrasitionService extends IntentService {
         return notificationBuilder.build();
     }
 
-    //Create POST intent when Transition heappens
-    private void createPostIntent(int geoFenceTransition ,List<Geofence> triggeringGeofences){
-        for (Geofence geofence : triggeringGeofences) {
-            Intent intent = new Intent(this, PostActivity.class);
-            intent.putExtra("Triggering geofence Id", geofence.getRequestId());
-            intent.putExtra("Triggering geofence transition", geoFenceTransition);
-            startActivity(intent);
-        }
+     private final int POST_REQ_CODE = 0;
+
+     private PendingIntent createPostPendingIntent(int geoFenceTransition, Geofence geofence) {
+        Log.d(TAG, "createPostPendingIntent");
+        if (mPostPendingIntent != null)
+            return mPostPendingIntent;
+
+        Intent intent = new Intent(this, PostIntentService.class);
+         intent.putExtra("mGeofence", geofence.getRequestId());
+         intent.putExtra("mTrigger", geoFenceTransition);
+        return PendingIntent.getService(this, POST_REQ_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
+
 
     private static String getErrorString(int errorCode) {
         switch (errorCode) {

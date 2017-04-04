@@ -38,8 +38,7 @@ import static com.android.edgarsjanovskis.adlus.ProjectsHelper.RADIUS_COLUMN;
 
 public class GeofencingService extends Service implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
-    public GeofencingService() {
-    }
+    public GeofencingService() {}
 
     boolean isRunning = true;
     MediaPlayer player;
@@ -66,33 +65,27 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
                         try {
 
                             while (isRunning) {
+
                                 player.start();
                                 // Call GoogleApiClient connection when starting the Activity
-                                Log.d(TAG, "createGoogleApi()");
+                                Log.d(TAG, "run Player...()");
+
                                 if (!googleApiClient.isConnecting() || !googleApiClient.isConnected()) {
                                     googleApiClient.connect();
+
+                                }else {
+                                    googleApiClient.connect();
                                 }
-                                /////
-                                if (!googleApiClient.isConnected()) {
-                                    //Toast.makeText(this, getString(R.string.not_connected), Toast.LENGTH_SHORT).show();
-                                    return;
-                                }
-                                mGeofencePendingIntent = createGeofencesPendingIntent();
-                                mGeofenceRequest = createGeofencesRequest();
-                                if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                                    return;
-                                }
-                                LocationServices.GeofencingApi.addGeofences(googleApiClient, mGeofenceRequest, mGeofencePendingIntent);
-                                /////
-                                Thread.sleep(10 * 100);
+                                startLocationUpdates();
+                                startGeofences();
+                                Thread.sleep(1000);
                             }
                         } catch (Exception e) {
+                            Log.e("Exception ", e.toString());
                         }
                     }
                 }
         ).start();
-
-
         return Service.START_STICKY;
     }
 
@@ -112,7 +105,7 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
         mGeofenceList = new ArrayList<>();
         mLatLngList = new ArrayList<>();
 
-        int geofenceId = 0;
+        int geofenceId;
         float radius;
         double lat;
         double lon;
@@ -160,23 +153,28 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
 
     @Override
     public void onDestroy() {
-        isRunning = false;
         //closing db
         if (db != null) {
             db.close();
         }
+        player.stop();
         stopLocationUpdates();
         stopGeofences();
-
+        stopService();
         super.onDestroy();
         Toast.makeText(this, "Service is destroyed!", Toast.LENGTH_LONG).show();
+    }
+
+    private void stopService(){
+        isRunning = false;
+        stopSelf();
     }
 
 
     private LocationRequest locationRequest;
     // Defined in mili seconds.
-    private final int UPDATE_INTERVAL = 1000;  //3 min 3*60*100
-    private final int FASTEST_INTERVAL = 1000;   //30 sek 30*1000
+    private final int UPDATE_INTERVAL = 3*60*100;  //3 min 3*60*100
+    private final int FASTEST_INTERVAL = 30*1000;   //30 sek 30*1000
 
     // Start location Updates
     private void startLocationUpdates() {
@@ -189,7 +187,7 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, (LocationListener) this);
+        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
     }
 
     private void stopLocationUpdates(){
@@ -207,7 +205,7 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
         }
         lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
         if (lastLocation != null) {
-            Log.i(TAG, "LasKnown location. " +
+            Log.i(TAG, "LastKnown location. " +
                     "Long: " + lastLocation.getLongitude() +
                     " | Lat: " + lastLocation.getLatitude());
             //writeLastLocation();
@@ -287,8 +285,6 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
         }
         LocationServices.GeofencingApi.addGeofences(googleApiClient, mGeofenceRequest, mGeofencePendingIntent);
         Toast.makeText(this, getString(R.string.start_geofence_service), Toast.LENGTH_SHORT).show();
-        startLocationUpdates();
-        startGeofences();
         getLastKnownLocation();
     }
 

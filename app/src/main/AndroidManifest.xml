@@ -87,7 +87,7 @@
 
         <service
             android:name=".GeofenceTrasitionService"
-            android:exported="true" />
+            android:exported="false" />
 
         <activity android:name=".PhoneInfoActivity" />
         <activity
@@ -129,7 +129,12 @@
         <service
             android:name=".GeofencingService"
             android:enabled="true"
-            android:exported="false"></service>
+            android:exported="false"> </service>
+        <service
+            android:name=".PostIntentService"
+            android:enabled="true"
+            android:exported="false"> </service>
+
     </application>
 
 </manifest>
