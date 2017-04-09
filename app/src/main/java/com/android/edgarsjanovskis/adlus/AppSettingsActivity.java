@@ -250,6 +250,8 @@ public class AppSettingsActivity extends AppCompatActivity {
             prefs.edit().putString(SERVER_URL, serverUrl).apply();
         }
         // Create Brodcast if start/stop time is selected
+
+        /*
         if (cb.isChecked()){
             Intent intent = new Intent();
             intent.putExtra("hoursStart", hoursStart);
@@ -258,7 +260,12 @@ public class AppSettingsActivity extends AppCompatActivity {
             intent.putExtra("minutesStop", minutesStop);
             intent.setAction("com.android.edgarsjanovskis.adlus.TIME_BROADCAST");
             sendBroadcast(intent);
+
     }
+   */
+
+
+
         Intent intent = new Intent(this, Main2Activity.class);
         startActivity(intent);
 

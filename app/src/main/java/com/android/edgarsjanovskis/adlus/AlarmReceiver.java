@@ -16,25 +16,13 @@ import static com.android.edgarsjanovskis.adlus.Constants.TAG;
 
 public class AlarmReceiver extends BroadcastReceiver {
 
-    private static BroadcastReceiver tickReceiver;
-
     DateFormat formatter = new SimpleDateFormat("HH:mm");
-
     Date startT;
     Date stopT;
     Date now;
 
     @Override
     public void onReceive (Context context, Intent intent) {
-
-        tickReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if(intent.getAction().compareTo(Intent.ACTION_TIME_TICK)==0){
-                    now = new Date();
-                }
-            }
-        };
 
         Date time = new Date();
         String fnow = formatter.format(time);
@@ -75,13 +63,10 @@ public class AlarmReceiver extends BroadcastReceiver {
         i.setAction("com.android.edgarsjanovskis.adlus.TIME_BROADCAST");
 
         if (now.compareTo(startT) >= 0 && now.compareTo(stopT) <= 0) {
-
             context.startService(i);
             Log.i(TAG, "Service started?????");
         } else {
             context.stopService(i);
         }
-
     }
-
 }
