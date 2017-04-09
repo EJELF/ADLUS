@@ -134,6 +134,12 @@
             android:name=".PostIntentService"
             android:enabled="true"
             android:exported="false"> </service>
+        <receiver android:name=".AlarmReceiver">
+            <intent-filter>
+                <action android:name="com.android.edgarsjanovskis.adlus.TIME_BROADCAST"/>
+                <action android:name="android.intent.action.TIME_TICK"/>
+            </intent-filter>
+        </receiver>
 
     </application>
 

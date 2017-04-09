@@ -38,6 +38,7 @@ import static com.android.edgarsjanovskis.adlus.ProjectsHelper.RADIUS_COLUMN;
 
 public class GeofencingService extends Service implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
+    // have to bee a constructor EJ
     public GeofencingService() {}
 
     boolean isRunning = true;
@@ -48,7 +49,7 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
     List<Geofence> mGeofenceList;
     List<LatLng> mLatLngList;
 
-    private PendingIntent mGeofencePendingIntent;  // nezinu vai vajadzēs
+    private PendingIntent mGeofencePendingIntent;
     private GeofencingRequest mGeofenceRequest;
 
     public ProjectsHelper mDbHelper;
@@ -63,22 +64,20 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
                     @Override
                     public void run() {
                         try {
-
                             while (isRunning) {
-
                                 player.start();
                                 // Call GoogleApiClient connection when starting the Activity
                                 Log.d(TAG, "run Player...()");
-
                                 if (!googleApiClient.isConnecting() || !googleApiClient.isConnected()) {
                                     googleApiClient.connect();
+                                    Log.e(TAG, "googleApiClient connected");
 
                                 }else {
                                     googleApiClient.connect();
                                 }
                                 startLocationUpdates();
                                 startGeofences();
-                                Thread.sleep(1000);
+                                Thread.sleep(5000);
                             }
                         } catch (Exception e) {
                             Log.e("Exception ", e.toString());

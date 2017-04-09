@@ -357,10 +357,10 @@ public class ShowMap extends AppCompatActivity
     }
 
     private Marker geoFenceMarker;
+    // Draw Geofence circle on GoogleMap
+    private Circle geoFenceLimits;
 
     private void markerForGeofence(List<LatLng> mLatLngList) {
-
-
         for (LatLng position : mLatLngList) {
 
             LatLng latLng = new LatLng(position.latitude, position.longitude);
@@ -380,6 +380,17 @@ public class ShowMap extends AppCompatActivity
                 geoFenceMarker = map.addMarker(markerOptions);
 
             }
+            ////// and draw
+            //if (geoFenceLimits != null)
+                //geoFenceLimits.remove();
+
+            CircleOptions circleOptions = new CircleOptions()
+                    .center(geoFenceMarker.getPosition())
+                    .strokeColor(Color.argb(50, 70, 70, 70))
+                    .fillColor(Color.argb(100, 150, 150, 150))
+                    .radius(150);
+            geoFenceLimits = map.addCircle(circleOptions);
+
         }
     }
 
@@ -404,7 +415,7 @@ public class ShowMap extends AppCompatActivity
         return PendingIntent.getService(
                 this, GEOFENCE_REQ_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
-
+/*
     // Add the created GeofenceRequest to the device's monitoring list
     private void addGeofences(GeofencingRequest request) {
         Log.d(TAG, "addGeofence");
@@ -415,38 +426,20 @@ public class ShowMap extends AppCompatActivity
                     createGeofencesPendingIntent()
             ).setResultCallback(this);
     }
-
+*/
     @Override
     public void onResult(@NonNull Status status) {
         Log.i(TAG, "onResult: " + status);
 
         if (status.isSuccess()) {
-            markerForGeofence(mLatLngList); //????????
+            markerForGeofence(mLatLngList);
             //saveGeofence();
-            drawGeofence(mLatLngList);
+            //drawGeofence(mLatLngList);
         } else {
             Log.i(TAG, "nav ko uzzīmēt!!!" + status);
         }
     }
 
-    // Draw Geofence circle on GoogleMap
-    private Circle geoFenceLimits;
-
-    private void drawGeofence(List<LatLng> mLatLngList) {
-        for (LatLng latLng : mLatLngList) {
-            Log.d(TAG, "drawGeofence()");
-
-            if (geoFenceLimits != null)
-                geoFenceLimits.remove();
-
-            CircleOptions circleOptions = new CircleOptions()
-                    .center(geoFenceMarker.getPosition())
-                    .strokeColor(Color.argb(50, 70, 70, 70))
-                    .fillColor(Color.argb(100, 150, 150, 150))
-                    .radius(100);
-            geoFenceLimits = map.addCircle(circleOptions);
-        }
-    }
 
     // Recovering last Geofence marker
     private void recoverGeofenceMarker() {

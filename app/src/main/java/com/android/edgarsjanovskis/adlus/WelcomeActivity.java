@@ -16,5 +16,6 @@ public class WelcomeActivity extends AppCompatActivity {
     public void btnStart_onClick (View view){
         Intent intent = new Intent(this, AppSettingsActivity.class);
         startActivity(intent);
+        finish();
     }
 }

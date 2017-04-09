@@ -38,6 +38,7 @@ public class AppSettingsActivity extends AppCompatActivity {
 
 
     @Override
+    @SuppressWarnings("deprecation")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_settings);
@@ -91,8 +92,8 @@ public class AppSettingsActivity extends AppCompatActivity {
                     tp1.setVisibility(View.VISIBLE);
                     tv2.setVisibility(View.VISIBLE);
                     tp2.setVisibility(View.VISIBLE);
-                    setStartTime(tp1);
-                    setStopTime(tp2);
+                    setStartStopTime(tp1);
+                    setStartStopTime(tp2);
                     SharedPreferences prefs = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
                     prefs.edit().putBoolean(TIME_SELECTED, true).apply();
                 }else{
@@ -100,16 +101,16 @@ public class AppSettingsActivity extends AppCompatActivity {
                     tv2.setVisibility(View.GONE);
                     tp1.setVisibility(View.GONE);
                     tp2.setVisibility(View.GONE);
-                    setStartTime(tp1);
-                    setStopTime(tp2);
+                    setStartStopTime(tp1);
+                    setStartStopTime(tp2);
                     SharedPreferences prefs = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
                     prefs.edit().putBoolean(TIME_SELECTED, false).apply();
                 }
             }
         });
     }
-
-    public void setStartTime(View view) {
+    @SuppressWarnings("deprecation")
+    public void setStartStopTime(View view) {
         if (cb.isChecked()) {
             if (Build.VERSION.SDK_INT < 23) {
                 hoursStart = tp1.getCurrentHour();
@@ -118,18 +119,20 @@ public class AppSettingsActivity extends AppCompatActivity {
                 hoursStart = tp1.getHour();
                 minutesStart = tp1.getMinute();
             }
-        }else {hoursStart = 0; minutesStart = 0;}
-            StringBuilder sb1 = new StringBuilder();
-            sb1.append(hoursStart).append(":").append(minutesStart);
-            String startTime = sb1.toString();
-            Toast.makeText(this, "Sākums: " + startTime, Toast.LENGTH_LONG).show();
+            }else {hoursStart = 0; minutesStart = 0;}
+             /*   StringBuilder sb = new StringBuilder();
+            sb.append(hoursStop).append(":");
+            if (minutesStop<10){
+                sb.append("0");
+                sb.append(minutesStop);
+            }
+            else{sb.append(minutesStop);}
+            String startTime = sb.toString();
+        */
             SharedPreferences prefs = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
             prefs.edit().putInt(APP_START_TIME_HOUR, hoursStart).apply();
             prefs.edit().putInt(APP_START_TIME_MINUTE, minutesStart).apply();
 
-        }
-
-    public void setStopTime(View view){
         if (cb.isChecked()) {
             if(Build.VERSION.SDK_INT < 23){
                 hoursStop = tp2.getCurrentHour();
@@ -139,20 +142,26 @@ public class AppSettingsActivity extends AppCompatActivity {
                 minutesStop= tp2.getMinute();
             }
         }else{hoursStop = 0; minutesStop = 0;}
-        StringBuilder sb2 = new StringBuilder();
-        sb2.append(hoursStop).append(":").append(minutesStop);
-        String stopTime = sb2.toString();
-        Toast.makeText(this, "Beigas: " + stopTime, Toast.LENGTH_LONG).show();
-        SharedPreferences prefs = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
-        prefs.edit().putInt(APP_STOP_TIME_HOUR, hoursStop).apply();
-        prefs.edit().putInt(APP_STOP_TIME_MINUTE, minutesStop).apply();
-    }
+        /*
+        StringBuilder sb1 = new StringBuilder();
+        sb1.append(hoursStop).append(":");
+        if (minutesStop<10){
+            sb.append("0");
+            sb.append(minutesStop);
+        }
+        else{sb1.append(minutesStop);}
+        String stopTime = sb1.toString();
+*/
+        SharedPreferences prefs1 = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
+        prefs1.edit().putInt(APP_STOP_TIME_HOUR, hoursStop).apply();
+        prefs1.edit().putInt(APP_STOP_TIME_MINUTE, minutesStop).apply();
+}
 
     public void buttonSave_onClick (View view){
         String userImei;
         String serverUrl;
-        setStartTime(this.tp1);
-        setStopTime(this.tp2);
+        setStartStopTime(this.tp1);
+        setStartStopTime(this.tp2);
 
         EditText et1 = (EditText)findViewById(R.id.etImei);
         et1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -174,7 +183,8 @@ public class AppSettingsActivity extends AppCompatActivity {
         });
 
         userImei = et1.getText().toString().trim();
-        if(userImei.equals(" ")) {
+
+        if(userImei.equals("")) {
             AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
             builder1.setMessage("Lūdzu ievadiet tālruņa IMEI!");
             builder1.setCancelable(true);
@@ -209,7 +219,7 @@ public class AppSettingsActivity extends AppCompatActivity {
 
         serverUrl = et2.getText().toString().trim();
 
-        if(serverUrl.equals(" ")) {
+        if(serverUrl.equals("")) {
             AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
             builder1.setMessage("Lūdzu ievadiet servera adresi un portu");
             builder1.setCancelable(false);
@@ -239,9 +249,33 @@ public class AppSettingsActivity extends AppCompatActivity {
             SharedPreferences prefs = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
             prefs.edit().putString(SERVER_URL, serverUrl).apply();
         }
-
+        // Create Brodcast if start/stop time is selected
+        if (cb.isChecked()){
+            Intent intent = new Intent();
+            intent.putExtra("hoursStart", hoursStart);
+            intent.putExtra("minutesStart", minutesStart);
+            intent.putExtra("hoursStop", hoursStop);
+            intent.putExtra("minutesStop", minutesStop);
+            intent.setAction("com.android.edgarsjanovskis.adlus.TIME_BROADCAST");
+            sendBroadcast(intent);
+    }
         Intent intent = new Intent(this, Main2Activity.class);
         startActivity(intent);
+
+        String mStart;
+        String mStop;
+        if(minutesStart <10) {
+            mStart = "0" + String.valueOf(minutesStart);
+        }else {
+            mStart = String.valueOf(minutesStart);
+        }
+        if(minutesStop <10) {
+            mStop = "0" + String.valueOf(minutesStop);
+        }else {
+            mStop = String.valueOf(minutesStop);
+        }
+        Toast.makeText(getApplicationContext(),"AUTOMĀTISKA IESL.-IZSL. \n NO " + String.valueOf(hoursStart) + ":" + mStart + " LĪDZ "+ String.valueOf(hoursStop) + ":" + mStop,Toast.LENGTH_LONG).show();
+
         finish();
     }
 

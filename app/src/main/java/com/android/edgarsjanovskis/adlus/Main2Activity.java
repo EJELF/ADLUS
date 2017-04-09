@@ -1,8 +1,10 @@
 package com.android.edgarsjanovskis.adlus;
 
-import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -42,24 +44,20 @@ public class Main2Activity extends AppCompatActivity {
     RadioButton btnConnected;
     Color color = null;
 
-
-    //statisko metodi izmanto lai citā aktivitātē iegūtu vērtību
-    public static String getUniqueID() {
-        return uniqueID;
-    }
-
+    public static boolean isConnected = false;
+/*
     public boolean isConnected() {
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Activity.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnected();
     }
-
+*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
         checkFirstRun();
-        checkConnection();
+        //checkConnection();
 
         // get reference to the views
         tvLastUpdate = (TextView)findViewById(R.id.tvLastUpdate);
@@ -88,23 +86,45 @@ public class Main2Activity extends AppCompatActivity {
                 }
             }
         });
+
     }
 
-    public void checkConnection(){
-        tvIsConnLabel = (TextView)findViewById(R.id.tvIsConnLabel);
-        btnConnected = (RadioButton)findViewById(R.id.isConnected);
-
-        // check if you are connected or not
-        if(isConnected()){
-            btnConnected.setChecked(true);
-            tvIsConnLabel.setText(R.string.isConnected);
-        }
-        else{
-            btnConnected.setChecked(false);
-            tvIsConnLabel.setText(R.string.no_internet);
-        }
+    @Override
+    protected void onStart(){
+        super.onStart();
+        registerReceiver(NetworkStatusReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
+    protected void onStop(){
+        super.onStop();
+        unregisterReceiver(NetworkStatusReceiver);
     }
 
+    ////////////////////
+    private BroadcastReceiver NetworkStatusReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            ConnectivityManager connectivityManager = (ConnectivityManager) context
+                    .getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+            isConnected = networkInfo !=null && networkInfo.isConnectedOrConnecting();
+
+            tvIsConnLabel = (TextView) findViewById(R.id.tvIsConnLabel);
+            btnConnected = (RadioButton) findViewById(R.id.isConnected);
+
+            if(!isConnected){
+                Toast noInternetToast = Toast.makeText(getApplicationContext(),R.string.no_internet, Toast.LENGTH_LONG);
+                noInternetToast.show();
+                btnConnected.setChecked(false);
+                tvIsConnLabel.setText(R.string.no_internet);
+            } else {
+                btnConnected.setChecked(true);
+                tvIsConnLabel.setText(R.string.isConnected);
+            }
+        }
+    };
+
+    /////////////////////
     public void checkFirstRun(){
 
         //Get current version code
@@ -149,13 +169,14 @@ public class Main2Activity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        //unregisterReceiver(NetworkStatusReceiver);
     }
 
     @Override
     protected void onResume(){
         super.onResume();
-        checkConnection();
     }
+
 
     public void butonShowMap_onClick(View view){
         Intent intent = new Intent(this, ShowMap.class);
@@ -184,18 +205,32 @@ public class Main2Activity extends AppCompatActivity {
     }
 
     public void buttonSettings_onClick (View view){
-        Intent intent = new Intent(this, PostActivity.class);
+        Intent intent = new Intent(this, AppSettingsActivity.class);
         startActivity(intent);
     }
 
     public void buttonStartGeofencing_onClick (View view){
-        // sāk GeofencingActivity
-        Intent intent = new Intent(this, GeofencingService.class);
-        startService(intent);
+        // sāk GeofencingService pārbaudot vai nav sākta
+        if(!isMyServiceRunning(GeofencingService.class)) {
+            Intent intent = new Intent(this, GeofencingService.class);
+            startService(intent);
+        }else{
+            Toast.makeText(getApplicationContext(), "Service already running!", Toast.LENGTH_LONG).show();
+        }
     }
 
     public void butonShowSQlite_onClick (View view){
         Intent intent = new Intent(this, GeofencingService.class);
         stopService(intent);
+    }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass){
+        ActivityManager manager = (ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);
+        for(ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)){
+            if(serviceClass.getName().equals(service.service.getClassName())){
+                return true;
+            }
+        }
+        return false;
     }
 }

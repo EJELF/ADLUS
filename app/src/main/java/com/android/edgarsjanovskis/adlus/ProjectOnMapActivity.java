@@ -1,14 +1,12 @@
 package com.android.edgarsjanovskis.adlus;
 
-import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
@@ -22,6 +20,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -85,26 +85,26 @@ public class ProjectOnMapActivity extends AppCompatActivity
         googleApiClient.disconnect();
     }
 
-    private final int REQ_PERMISSION = 999;
+        private final int REQ_PERMISSION = 9;
+    /*
+        // Check for permission to access Location
+        private boolean checkPermission() {
+            Log.d(TAG, "checkPermission()");
+            // Ask for permission if it wasn't granted yet
+            return (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED );
+        }
 
-    // Check for permission to access Location
-    private boolean checkPermission() {
-        Log.d(TAG, "checkPermission()");
-        // Ask for permission if it wasn't granted yet
-        return (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED );
-    }
-
-    // Asks for permission
-    private void askPermission() {
-        Log.d(TAG, "askPermission()");
-        ActivityCompat.requestPermissions(
-                this,
-                new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
-                REQ_PERMISSION
-        );
-    }
-
+        // Asks for permission
+        private void askPermission() {
+            Log.d(TAG, "askPermission()");
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
+                    REQ_PERMISSION
+            );
+        }
+    */
     // Verify user's response of the permission requested
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -174,6 +174,8 @@ public class ProjectOnMapActivity extends AppCompatActivity
     }
 
     private Marker locationMarker;
+    // Draw Geofence circle on GoogleMap
+    public Circle geoFenceLimits;
         //paša veidots
     private void markerLocationFromIntent() {
 
@@ -183,6 +185,7 @@ public class ProjectOnMapActivity extends AppCompatActivity
             String latit = (String) b.get("lat");
             String longit = (String) b.get("lng");
             String lr = (String) b.get("lr");
+            String radius = (String) b.get("radius");
             textLat.setText("Lat: " +latit);
             textLong.setText("Long: " + longit);
             this.setTitle(String.format(lr + " atrašanās vieta kartē"));
@@ -190,14 +193,28 @@ public class ProjectOnMapActivity extends AppCompatActivity
             MarkerOptions markerOptions = new MarkerOptions()
                 .position(new LatLng(Double.parseDouble(latit), Double.parseDouble(longit)))
                 .title(lr);
+
         if ( map!=null ) {
             if ( locationMarker != null )
                 locationMarker.remove();
             locationMarker = map.addMarker(markerOptions);
+
+            CircleOptions circleOptions = new CircleOptions()
+                    .center(locationMarker.getPosition())
+                    .strokeColor(Color.argb(50, 70, 70, 70))
+                    .fillColor(Color.argb(100, 150, 150, 150))
+                    .radius(Integer.parseInt(radius));
+            geoFenceLimits = map.addCircle(circleOptions);
+
+
             float zoom = 16f;
             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom((new LatLng(Double.parseDouble(latit), Double.parseDouble(longit))), zoom);
             map.animateCamera(cameraUpdate);
             }
         }
+
+
+
+
     }
 }

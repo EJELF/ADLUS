@@ -15,6 +15,7 @@ public class MyGeofences implements ClusterItem {
         mTitle = null;
         mSnippet = null;
     }
+
     public MyGeofences( double lat, double lng) {
         mPosition = new LatLng(lat, lng);
         mTitle = null;

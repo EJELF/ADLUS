@@ -32,7 +32,7 @@ public class GeofenceTrasitionService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        System.out.println("INTENT RECEIVED");
+        System.out.println("GEOFENCING INTENT RECEIVED");
         GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
         // Handling errors
         if ( geofencingEvent.hasError() ) {
@@ -42,7 +42,7 @@ public class GeofenceTrasitionService extends IntentService {
         }
 
         int geoFenceTransition = geofencingEvent.getGeofenceTransition();
-        String geofenceName = geofencingEvent.getTriggeringGeofences().get(2).toString();
+   //     String geofenceName = geofencingEvent.getTriggeringGeofences().get(2).toString();
         // Check if the transition type is of interest
         if ( geoFenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER ||
                 geoFenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT ) {
@@ -57,7 +57,7 @@ public class GeofenceTrasitionService extends IntentService {
 
             //createPostIntent(geoFenceTransition, triggeringGeofences); // THIS SHOULD SEND EXTRAS TO POST ACTIVITY
             createPostPendingIntent(geoFenceTransition, triggeringGeofences.get(0));
-            Log.e("LOG Transistion", geofenceTransitionDetails + geofenceName);
+            Log.e("LOG Transistion", geofenceTransitionDetails);
         }
     }
 
@@ -70,9 +70,9 @@ public class GeofenceTrasitionService extends IntentService {
 
         String status = null;
         if ( geoFenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER )
-            status = "Entering ";
+            status = "Esi reģisrēts ";
         else if ( geoFenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT )
-            status = "Exiting ";
+            status = "Izreģistrējies no ";
         return status + TextUtils.join( ", ", triggeringGeofencesList);
     }
 
@@ -89,6 +89,7 @@ public class GeofenceTrasitionService extends IntentService {
         stackBuilder.addNextIntent(notificationIntent);
         PendingIntent notificationPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
+
         // Creating and sending Notification
         NotificationManager notificatioMng =
                 (NotificationManager) getSystemService( Context.NOTIFICATION_SERVICE );
@@ -99,12 +100,13 @@ public class GeofenceTrasitionService extends IntentService {
 
     // Create notification
     private Notification createNotification(String msg, PendingIntent notificationPendingIntent) {
+
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this);
         NotificationCompat.Builder builder = notificationBuilder
                 .setSmallIcon(R.drawable.ic_action_location)
                 .setColor(Color.RED)
                 .setContentTitle(msg)
-                .setContentText("Geofence Notification!")
+                .setContentText("ADLUS paziņojums!")
                 .setContentIntent(notificationPendingIntent)
                 .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND)
                 .setAutoCancel(true);
@@ -121,6 +123,8 @@ public class GeofenceTrasitionService extends IntentService {
         Intent intent = new Intent(this, PostIntentService.class);
          intent.putExtra("mGeofence", geofence.getRequestId());
          intent.putExtra("mTrigger", geoFenceTransition);
+
+         Log.e(TAG, "Extras sent" + geofence.getRequestId() + " " + geoFenceTransition);
         return PendingIntent.getService(this, POST_REQ_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 

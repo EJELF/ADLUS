@@ -56,7 +56,7 @@ public class PostIntentService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         // This describes what will happen when service is triggered
-        System.out.println("INTENT RECEIVED");
+        System.out.println("POST INTENT RECEIVED");
         if (intent == null){
             //error
             Toast.makeText(getApplicationContext(), "No Intent received", Toast.LENGTH_LONG).show();
@@ -98,7 +98,7 @@ public class PostIntentService extends IntentService {
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnected();
     }
-
+    @SuppressWarnings("deprecation")
     public String POST(String url, MyActivities actitity){
         InputStream inputStream;
         String result = "";

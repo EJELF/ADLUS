@@ -67,10 +67,12 @@ public class GetMyProjects extends AppCompatActivity {
         mProjectList = new ArrayList<>();
         lv = (ListView) findViewById(R.id.list);
         newRecords = new ArrayList<>();
-        new GetProjects().execute();
-        //Intent myintent = new Intent(this, ProjectsHelper.class);
-        //myintent.putIntegerArrayListExtra("newRecords", newRecords);
-        //startActivity(myintent);
+        //if(Main2Activity.isConnected){
+            new GetProjects().execute();
+        //}else{
+            Toast.makeText(getApplicationContext(), "Lai saņemtu datus, Tev jābūt piekļuvei \n   internetam un aktīvizētam VPN ", Toast.LENGTH_LONG).show();
+        //}
+
     }
 
     @Override
@@ -165,6 +167,7 @@ public class GetMyProjects extends AppCompatActivity {
                             geofence = new MyGeofences(lat, lng, geofenceId.toString(), lr);
                             geofence.setSnippet(lr);
                             newRecords.add(geofenceId);
+                            Log.i(TAG, "Geofence object created :" + lr);
 
                             //db storing only if IMEI match
                             databaseHelper.saveProjectsRecord(geofenceId, lr, lat, lng, radius, phoneId, imei, employee, customer, projectName, ts, custodianSurname, custodianPhone);
@@ -264,9 +267,11 @@ public class GetMyProjects extends AppCompatActivity {
                             String lat = mProjectList.get(i).get("Latitude");
                             String lng = mProjectList.get(i).get("Longitude");
                             String lr = mProjectList.get(i).get("LR");
+                            String radius = mProjectList.get(i).get("Radius");
                             intent.putExtra("lat", lat);
                             intent.putExtra("lng", lng);
                             intent.putExtra("lr", lr);
+                            intent.putExtra("radius", radius);
                             startActivity(intent);
                             dialog.cancel();
                         }
