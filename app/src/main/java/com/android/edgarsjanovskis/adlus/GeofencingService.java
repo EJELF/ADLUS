@@ -54,6 +54,7 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
 
     public ProjectsHelper mDbHelper;
     public SQLiteDatabase db;
+    Alarm alarm = new Alarm();
 
 
     @Override
@@ -85,6 +86,7 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
                     }
                 }
         ).start();
+        alarm.setAlarm(this);
         return Service.START_STICKY;
     }
 
