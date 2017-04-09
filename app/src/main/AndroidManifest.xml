@@ -56,15 +56,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".GeofencingActivity"
-            android:label="@string/map_activity_title">
-            <intent-filter>
-                <action android:name="android.intent.action.QUICK_VIEW" />
-
-                <category android:name="android.intent.category.APP_MAPS" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".ShowMap"
             android:label="@string/map_activity_title"
             android:parentActivityName=".Main2Activity">
@@ -135,19 +126,12 @@
             android:enabled="true"
             android:exported="false" />
 
-        <receiver android:name=".AlarmReceiver">
+        <receiver android:name=".OnAlarmReceived">
             <intent-filter>
                 <action android:name="com.android.edgarsjanovskis.adlus.TIME_BROADCAST" />
             </intent-filter>
         </receiver>
-        <receiver
-            android:name=".OnAlarmReceived"
-            android:enabled="true"
-            android:exported="true" />
 
-        <service
-            android:name=".WakeIntentService"
-            android:exported="false"></service>
     </application>
 
 </manifest>

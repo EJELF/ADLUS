@@ -63,7 +63,7 @@ public class ShowMap extends AppCompatActivity
         GoogleMap.OnMarkerClickListener,
         ResultCallback<Status> {
 
-    private static final String TAG = com.android.edgarsjanovskis.adlus.GeofencingActivity.class.getSimpleName();
+    private static final String TAG = com.android.edgarsjanovskis.adlus.GeofencingService.class.getSimpleName();
 
     private GoogleMap map;
     private GoogleApiClient googleApiClient;
@@ -88,7 +88,7 @@ public class ShowMap extends AppCompatActivity
 
     // Create a Intent send by the notification
     public static Intent makeNotificationIntent(Context context, String msg) {
-        Intent intent = new Intent(context, com.android.edgarsjanovskis.adlus.GeofencingActivity.class);
+        Intent intent = new Intent(context, com.android.edgarsjanovskis.adlus.GeofencingService.class);
         intent.putExtra(NOTIFICATION_MSG, msg);
         return intent;
     }

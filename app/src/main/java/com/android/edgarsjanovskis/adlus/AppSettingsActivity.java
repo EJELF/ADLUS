@@ -1,5 +1,7 @@
 package com.android.edgarsjanovskis.adlus;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -36,6 +38,8 @@ public class AppSettingsActivity extends AppCompatActivity {
     int hoursStop =0;
     int minutesStop = 0;
 
+    private AlarmManager alarmManager;
+    private PendingIntent alarmIntent;
 
     @Override
     @SuppressWarnings("deprecation")
@@ -251,7 +255,6 @@ public class AppSettingsActivity extends AppCompatActivity {
         }
         // Create Brodcast if start/stop time is selected
 
-        /*
         if (cb.isChecked()){
             Intent intent = new Intent();
             intent.putExtra("hoursStart", hoursStart);
@@ -260,11 +263,31 @@ public class AppSettingsActivity extends AppCompatActivity {
             intent.putExtra("minutesStop", minutesStop);
             intent.setAction("com.android.edgarsjanovskis.adlus.TIME_BROADCAST");
             sendBroadcast(intent);
-
     }
-   */
+    /*
 
+        alarmManager = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
+        Intent i = new Intent(getApplicationContext(), OnAlarmReceived.class);
+        alarmIntent =PendingIntent.getBroadcast(this, 0, i, 0);
 
+        Calendar calendar = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            calendar = Calendar.getInstance();
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            calendar.setTimeInMillis(System.currentTimeMillis());
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            calendar.set(Calendar.HOUR_OF_DAY, hoursStart);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            calendar.set(Calendar.MINUTE, minutesStart);
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_HALF_HOUR, alarmIntent);
+        }
+*/
 
         Intent intent = new Intent(this, Main2Activity.class);
         startActivity(intent);

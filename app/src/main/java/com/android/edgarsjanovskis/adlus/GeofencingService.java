@@ -3,6 +3,7 @@ package com.android.edgarsjanovskis.adlus;
 import android.Manifest;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -54,8 +55,7 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
 
     public ProjectsHelper mDbHelper;
     public SQLiteDatabase db;
-    Alarm alarm = new Alarm();
-
+    private static final String NOTIFICATION_MSG = "NOTIFICATION MSG";
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -86,7 +86,6 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
                     }
                 }
         ).start();
-        alarm.setAlarm(this);
         return Service.START_STICKY;
     }
 
@@ -304,5 +303,12 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
     public void onLocationChanged(Location location) {
         Log.d(TAG, "onLocationChanged [" + location + "]");
         lastLocation = location;
+    }
+
+    // Create a Intent send by the notification
+    public static Intent makeNotificationIntent(Context context, String msg) {
+        Intent intent = new Intent(context, GeofencingService.class);
+        intent.putExtra(NOTIFICATION_MSG, msg);
+        return intent;
     }
 }

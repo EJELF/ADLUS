@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
 
-    tools:context="com.android.edgarsjanovskis.adlus.GeofencingActivity">
+    tools:context="com.android.edgarsjanovskis.adlus.GeofencingService">
 
 
     <!-- Line with Latitude and Longitude -->
