@@ -1,9 +1,36 @@
 package com.android.edgarsjanovskis.adlus.model;
+/*
+public class MyGeofences{
+        private Integer mGeofenceId;
+        private Double mLattitude;
+        private Double mLongitude;
+        private String mTitle;
+        private String mSnippet;
+
+    public MyGeofences(Double lat, Double lng, Integer geofenceId, String lr) {
+    }
+    public MyGeofences(){}
+
+    public Integer getmId(){return mGeofenceId;}
+    public void setmId(Integer id){ this.mGeofenceId =id ;}
+    public Double getmLattitude(){return mLattitude;}
+    public void setmLattitude(Double lat){this.mLattitude = lat;}
+    public Double getmLongitude(){return mLongitude;}
+    public void setmLongitude(Double lng){this.mLongitude = lng;}
+    public String getmTitle(){return mTitle;}
+    public void setmTitle(String title){this.mTitle = title;}
+    public String getmSnippet(){return mSnippet;}
+    public void setmSnippet(String snippet){this.mSnippet = snippet;}
+
+
+
+
+        }
+*/
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.maps.android.clustering.ClusterItem;
 
-public class MyGeofences implements ClusterItem {
+public class MyGeofences {
     private final LatLng mPosition;
     private Integer mGeofenceId;
     private String mTitle;
@@ -16,8 +43,9 @@ public class MyGeofences implements ClusterItem {
         mSnippet = null;
     }
 
-    public MyGeofences( double lat, double lng) {
-        mPosition = new LatLng(lat, lng);
+    public MyGeofences(Integer id) {
+        mGeofenceId = id;
+        mPosition = null;
         mTitle = null;
         mSnippet = null;
     }
@@ -28,7 +56,6 @@ public class MyGeofences implements ClusterItem {
         mSnippet = snippet;
     }
 
-
     public void setmGeofenceId(Integer mGeofenceId) {
         this.mGeofenceId = mGeofenceId;
     }
@@ -37,24 +64,21 @@ public class MyGeofences implements ClusterItem {
         return mGeofenceId;
     }
 
-    @Override
     public LatLng getPosition() {
         return mPosition;
     }
 
-    @Override
     public String getTitle() { return mTitle; }
 
-    @Override
     public String getSnippet() {
         return mSnippet;
     }
-
 
     /**
      * Set the title of the marker
      * @param title string to be set as title
      */
+
     public void setTitle(String title) {
         mTitle = title;
     }
@@ -63,7 +87,10 @@ public class MyGeofences implements ClusterItem {
      * Set the description of the marker
      * @param snippet string to be set as snippet
      */
+
     public void setSnippet(String snippet) {
         mSnippet = snippet;
     }
 }
+
+

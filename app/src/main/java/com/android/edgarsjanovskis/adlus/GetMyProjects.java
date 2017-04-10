@@ -165,9 +165,10 @@ public class GetMyProjects extends AppCompatActivity {
                             // adding projects to project list
                             mProjectList.add(project);
                             geofence = new MyGeofences(lat, lng, geofenceId.toString(), lr);
+                            geofence.setmGeofenceId(geofenceId);
                             geofence.setSnippet(lr);
                             newRecords.add(geofenceId);
-                            Log.i(TAG, "Geofence object created :" + lr);
+                            Log.i(TAG, "Geofence object created :" + geofence.getSnippet());
 
                             //db storing only if IMEI match
                             databaseHelper.saveProjectsRecord(geofenceId, lr, lat, lng, radius, phoneId, imei, employee, customer, projectName, ts, custodianSurname, custodianPhone);

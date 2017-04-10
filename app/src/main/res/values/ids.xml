@@ -7,4 +7,6 @@
     <item name="login_progress" type="id" />
     <item name="not_connected" type="id">You are not connected!</item>
     <item name="usermail" type="id">useremail</item>
+    <item name="startCenter" type="id">startCenter</item>
+    <item name="startLayout" type="id" />
 </resources>

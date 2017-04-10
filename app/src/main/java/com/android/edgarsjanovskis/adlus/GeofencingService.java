@@ -3,7 +3,6 @@ package com.android.edgarsjanovskis.adlus;
 import android.Manifest;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -16,6 +15,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -37,15 +37,18 @@ import static com.android.edgarsjanovskis.adlus.ProjectsHelper.LATITUDE_COLUMN;
 import static com.android.edgarsjanovskis.adlus.ProjectsHelper.LONGITUDE_COLUMN;
 import static com.android.edgarsjanovskis.adlus.ProjectsHelper.RADIUS_COLUMN;
 
-public class GeofencingService extends Service implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+public class GeofencingService extends Service implements GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
-    // have to bee a constructor EJ
+    // have to be a constructor EJ
     public GeofencingService() {}
 
     boolean isRunning = true;
     MediaPlayer player;
     private Location lastLocation;
     private GoogleApiClient googleApiClient;
+
+    ImageButton imageButton;
 
     List<Geofence> mGeofenceList;
     List<LatLng> mLatLngList;
@@ -55,7 +58,7 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
 
     public ProjectsHelper mDbHelper;
     public SQLiteDatabase db;
-    private static final String NOTIFICATION_MSG = "NOTIFICATION MSG";
+
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -100,7 +103,6 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
         super.onCreate();
         player = MediaPlayer.create(this, R.raw.hot_summer);
         Toast.makeText(this, "Service is created!", Toast.LENGTH_LONG).show();
-
         // Instantiate the current List of geofences.
         mGeofenceList = new ArrayList<>();
         mLatLngList = new ArrayList<>();
@@ -167,6 +169,7 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
 
     private void stopService(){
         isRunning = false;
+        //imageButton.setBackgroundResource(R.drawable.button_round_green);
         stopSelf();
     }
 
@@ -305,10 +308,5 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
         lastLocation = location;
     }
 
-    // Create a Intent send by the notification
-    public static Intent makeNotificationIntent(Context context, String msg) {
-        Intent intent = new Intent(context, GeofencingService.class);
-        intent.putExtra(NOTIFICATION_MSG, msg);
-        return intent;
-    }
+
 }

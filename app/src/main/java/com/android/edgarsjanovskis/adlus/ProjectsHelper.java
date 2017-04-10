@@ -23,6 +23,7 @@ public class ProjectsHelper{
     private static final String DATABASE_NAME = "adlus.db";
     // Contacts table name
     public static final String TABLE_PROJECTS = "projects";
+    public static final String TABLE_ACTIVITIES = "activities";
     // Projects Table Columns names
     //public static final String KEY_ID = "id";
     public static final String GEOFENCE_ID_COLUMN = "GeofenceId";
@@ -38,6 +39,13 @@ public class ProjectsHelper{
     public static final String TS_COLUMN = "ts";
     public static final String CUSTODIAN_COLUMN = "CustodianSurname";
     public static final String CUSTODIAN_PHONE_COLUMN = "CustodianPhone";
+
+    public static final String ACTIVITY_POST_ID = "ActivityPostId";
+    public static final String ACTIVITY_ID = "ActivityId";
+    public static final String TRANSITION_ID = "TransitionId";
+    public static final String DATE_TIME = "DateTime";
+    public static final String STATUS = "Status";
+
     //šī ideja no DobrinGanev
     //private static final String[] COLUMNS = {KEY_ID, LATITUDE_COLUMN, LONGITUDE_COLUMN, RADIUS_COLUMN};
 
@@ -98,6 +106,15 @@ public class ProjectsHelper{
     }
 
 
+    public void saveActivityRecord (Integer activityPostId, Integer activityId, Integer geofenceId, Integer transitionId, Integer dt, Integer status){
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ACTIVITY_POST_ID, activityPostId);
+        contentValues.put(ACTIVITY_ID, activityId);
+        contentValues.put(GEOFENCE_ID_COLUMN, geofenceId);
+        contentValues.put(TRANSITION_ID, transitionId);
+        contentValues.put(DATE_TIME, dt);
+        contentValues.put(STATUS, status);
+    }
 
 
     public ArrayList<MyGeofences> getAllData(){
@@ -199,6 +216,14 @@ public class ProjectsHelper{
                     + TS_COLUMN + " Text, " + CUSTODIAN_COLUMN + " Text, "
                     + CUSTODIAN_PHONE_COLUMN + " Text" + ")");
             Log.e("Tabula - ", TABLE_PROJECTS + " - izveidota");
+            //////////////////
+
+            db.execSQL("CREATE TABLE " + TABLE_ACTIVITIES + "("
+                    + ACTIVITY_POST_ID + " INTEGER PRIMARY KEY, " + ACTIVITY_ID +  " INTEGER, "+ GEOFENCE_ID_COLUMN + " INTEGER, "
+                    + TRANSITION_ID + " INTEGER, " + DATE_TIME + " TIMESTAMP, " + STATUS + " INTIGER" + ")");
+            Log.e("Tabula - ", TABLE_ACTIVITIES + " - izveidota");
+
+            ///////////////////
         }
 
         // Upgrading database
@@ -206,6 +231,7 @@ public class ProjectsHelper{
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             // Drop older table if existed
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_PROJECTS);
+            db.execSQL("DROP TABLE IF EXIST " + TABLE_ACTIVITIES);
             // Create tables again
             onCreate(db);
         }

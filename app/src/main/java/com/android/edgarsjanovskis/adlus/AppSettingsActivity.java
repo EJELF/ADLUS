@@ -1,7 +1,9 @@
 package com.android.edgarsjanovskis.adlus;
 
+import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,6 +16,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -33,6 +36,7 @@ public class AppSettingsActivity extends AppCompatActivity {
     private TimePicker tp1;
     private TimePicker tp2;
     private CheckBox cb;
+    ImageButton imageButton;
     int hoursStart = 0;
     int minutesStart = 0;
     int hoursStop =0;
@@ -46,6 +50,7 @@ public class AppSettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_settings);
+        imageButton = (ImageButton)findViewById(R.id.ib_Start);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         SharedPreferences prefs = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
         String imei = prefs.getString("User_IMEI", " ");
@@ -313,4 +318,14 @@ public class AppSettingsActivity extends AppCompatActivity {
         InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass){
+        ActivityManager manager = (ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);
+        for(ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)){
+            if(serviceClass.getName().equals(service.service.getClassName())){
+                return true;
+            }
+        }
+        return false;
+    }
 }

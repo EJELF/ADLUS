@@ -39,7 +39,6 @@ public class PostIntentService extends IntentService {
     String mTrigger;
     MyActivities activity;
 
-
     @Override
     public void onCreate(){
         super.onCreate();// if you override onCreate(), make sure to call super().

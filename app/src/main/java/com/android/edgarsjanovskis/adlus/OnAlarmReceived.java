@@ -65,6 +65,7 @@ public class OnAlarmReceived extends BroadcastReceiver {
 
         if (now.compareTo(startT) >= 0 && now.compareTo(stopT) <= 0) {
                 context.startService(i);
+
                 Log.i(TAG, "Service started!!!!");
         } else {
             context.stopService(i);

@@ -41,10 +41,21 @@ public class Main2Activity extends AppCompatActivity {
     TextView tvIsConnLabel;
     TextView tvLastChanges;
     TextView tvLastUpdate;
+    ImageButton imageButton;
     RadioButton btnConnected;
     Color color = null;
 
     public static boolean isConnected = false;
+
+    private static final String NOTIFICATION_MSG = "NOTIFICATION MSG";
+
+    // Create a Intent send by the notification
+    public static Intent makeNotificationIntent(Context context, String msg) {
+        Intent intent = new Intent(context, Main2Activity.class);
+        intent.putExtra(NOTIFICATION_MSG, msg);
+        return intent;
+    }
+
 /*
     public boolean isConnected() {
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Activity.CONNECTIVITY_SERVICE);
@@ -55,23 +66,25 @@ public class Main2Activity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main2);
+        setContentView(R.layout.main);
         checkFirstRun();
+
         //checkConnection();
 
         // get reference to the views
         tvLastUpdate = (TextView)findViewById(R.id.tvLastUpdate);
         tvLastChanges = (TextView)findViewById(R.id.tvLastChanges);
+        imageButton = (ImageButton)findViewById(R.id.ib_Start);
         prefs = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
         String lastchanges =  prefs.getString(LAST_DB_CHANGES, " ");
         tvLastChanges.setText(lastchanges);
         String lastupdate =  prefs.getString(LAST_UPDATE, " ");
         tvLastUpdate.setText(lastupdate);
         sharedPref = getSharedPreferences("MapPrefsFile", MODE_PRIVATE );
+        toggleUi();
 
-
-        ImageButton bClock = (ImageButton) findViewById(R.id.btnMfiles);
-        bClock.setOnClickListener(new View.OnClickListener() {
+        ImageButton mFilesButton = (ImageButton) findViewById(R.id.btnMfiles);
+        mFilesButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Uri webpage = Uri.parse("https://www.mfiles.com");
                 Intent webIntent = new Intent(Intent.ACTION_VIEW, webpage);
@@ -93,10 +106,12 @@ public class Main2Activity extends AppCompatActivity {
     protected void onStart(){
         super.onStart();
         registerReceiver(NetworkStatusReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        toggleUi();
     }
     protected void onStop(){
         super.onStop();
         unregisterReceiver(NetworkStatusReceiver);
+        toggleUi();
     }
 
     ////////////////////
@@ -188,6 +203,10 @@ public class Main2Activity extends AppCompatActivity {
         startActivity(form);
     }
 
+    public void buttonPost_onClick (View view){
+        Intent form = new Intent(this, PostActivity.class);
+        startActivity(form);
+    }
     public void buttonUUID_onClick (View view){
         prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         try{
@@ -209,19 +228,27 @@ public class Main2Activity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    boolean started = false;
+
     public void buttonStartGeofencing_onClick (View view){
         // sāk GeofencingService pārbaudot vai nav sākta
         if(!isMyServiceRunning(GeofencingService.class)) {
             Intent intent = new Intent(this, GeofencingService.class);
             startService(intent);
+            started = true;
+            toggleUi();
+
         }else{
-            Toast.makeText(getApplicationContext(), "Service already running!", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(this, GeofencingService.class);
+            stopService(intent);
+            started = false;
+            toggleUi();
         }
     }
 
     public void butonShowSQlite_onClick (View view){
-        Intent intent = new Intent(this, GeofencingService.class);
-        stopService(intent);
+        Intent intent = new Intent(this, DbList.class);
+        startActivity(intent);
     }
 
     private boolean isMyServiceRunning(Class<?> serviceClass){
@@ -232,5 +259,14 @@ public class Main2Activity extends AppCompatActivity {
             }
         }
         return false;
+    }
+
+    private void toggleUi(){
+        if(!isMyServiceRunning(GeofencingService.class)){
+            imageButton.setBackgroundResource(R.drawable.button_round_green);
+        }else {
+            imageButton.setBackgroundResource(R.drawable.button_round_red);
+        }
+
     }
 }
