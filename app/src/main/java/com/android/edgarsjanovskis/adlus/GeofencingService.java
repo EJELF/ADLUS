@@ -32,10 +32,10 @@ import java.util.List;
 
 import static com.android.edgarsjanovskis.adlus.Constants.GEOFENCE_EXPIRATION_TIME;
 import static com.android.edgarsjanovskis.adlus.Constants.TAG;
-import static com.android.edgarsjanovskis.adlus.ProjectsHelper.GEOFENCE_ID_COLUMN;
-import static com.android.edgarsjanovskis.adlus.ProjectsHelper.LATITUDE_COLUMN;
-import static com.android.edgarsjanovskis.adlus.ProjectsHelper.LONGITUDE_COLUMN;
-import static com.android.edgarsjanovskis.adlus.ProjectsHelper.RADIUS_COLUMN;
+import static com.android.edgarsjanovskis.adlus.DatabaseHelper.GEOFENCE_ID_COLUMN;
+import static com.android.edgarsjanovskis.adlus.DatabaseHelper.LATITUDE_COLUMN;
+import static com.android.edgarsjanovskis.adlus.DatabaseHelper.LONGITUDE_COLUMN;
+import static com.android.edgarsjanovskis.adlus.DatabaseHelper.RADIUS_COLUMN;
 
 public class GeofencingService extends Service implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener {
@@ -56,7 +56,7 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
     private PendingIntent mGeofencePendingIntent;
     private GeofencingRequest mGeofenceRequest;
 
-    public ProjectsHelper mDbHelper;
+    public DatabaseHelper mDbHelper;
     public SQLiteDatabase db;
 
 
@@ -101,7 +101,7 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
     @Override
     public void onCreate() {
         super.onCreate();
-        player = MediaPlayer.create(this, R.raw.hot_summer);
+        player = MediaPlayer.create(this, R.raw.day_break);
         Toast.makeText(this, "Service is created!", Toast.LENGTH_LONG).show();
         // Instantiate the current List of geofences.
         mGeofenceList = new ArrayList<>();
@@ -112,7 +112,7 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
         double lat;
         double lon;
 
-        mDbHelper = new ProjectsHelper(this);
+        mDbHelper = new DatabaseHelper(this);
         Cursor reader = mDbHelper.getAllRecordList();
 ////////////////////////////////////
         Log.d(TAG, "createGoogleApi()");

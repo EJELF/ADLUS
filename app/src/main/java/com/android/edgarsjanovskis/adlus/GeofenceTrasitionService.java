@@ -7,9 +7,12 @@ import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.graphics.Color;
+import android.location.Location;
 import android.support.v4.app.NotificationCompat;
-import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -20,6 +23,8 @@ import com.google.android.gms.location.GeofencingEvent;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.android.edgarsjanovskis.adlus.DatabaseHelper.TABLE_PROJECTS;
 
 public class GeofenceTrasitionService extends IntentService {
 
@@ -34,7 +39,6 @@ public class GeofenceTrasitionService extends IntentService {
     }
 
     MyGeofences myGeofences;
-
     String mSnippet;
 
     @Override
@@ -48,8 +52,20 @@ public class GeofenceTrasitionService extends IntentService {
             return;
         }
 
+        //
+        Location location  = geofencingEvent.getTriggeringLocation();
+        double latitude = location.getLatitude();
+        double longitude = location.getLongitude();
+        float accuracy = location.getAccuracy();
+        int transitionId = geofencingEvent.getGeofenceTransition();
+
+        Log.e(TAG, "FromIntent lat/lng: " + latitude+"/"+longitude + " TransitionID:" + transitionId+ " Accuracy:"+ accuracy  + "LR :" + lr);
+        //
+
         int geoFenceTransition = geofencingEvent.getGeofenceTransition();
-   //     String geofenceName = geofencingEvent.getTriggeringGeofences().get(2).toString();
+        //String geofenceName = geofencingEvent.getTriggeringGeofences().get(0).toString();
+        Log.e(TAG, "Geofence transition: " + geoFenceTransition);
+
         // Check if the transition type is of interest
         if ( geoFenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER ||
                 geoFenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT ) {
@@ -67,21 +83,41 @@ public class GeofenceTrasitionService extends IntentService {
         }
     }
 
-    Geofence gf;
+    private Integer triggeringGeofenceId;
+    private String lr;
+    private DatabaseHelper mDbHelper;
+    public SQLiteDatabase db;
+    private Cursor reader;
+
     private String getGeofenceTrasitionDetails(int geoFenceTransition, List<Geofence> triggeringGeofences) {
+        mDbHelper = new DatabaseHelper(this);
+        reader = mDbHelper.getAllRecordList();
+
          //get the ID of each geofence triggered
         ArrayList<String> triggeringGeofencesList = new ArrayList<>();
         for ( Geofence geofence : triggeringGeofences ) {
-            triggeringGeofencesList.add( geofence.getRequestId() );
-            createPostPendingIntent(geoFenceTransition, geofence);
+            triggeringGeofencesList.add(geofence.getRequestId());
+            triggeringGeofenceId = Integer.parseInt(geofence.getRequestId());
+            //mPostPendingIntent = createPostPendingIntent(geoFenceTransition, geofence);
+            if (reader != null) {
+                for (reader.moveToFirst(); reader.isAfterLast(); reader.moveToNext()) {
+                    try {
+                        reader = db.rawQuery(" SELECT ProjectLr FROM " + TABLE_PROJECTS + " WHERE GeofenceId = " + triggeringGeofenceId, null);
+                        lr = reader.getString(reader.getColumnIndex("ProjectLr"));
+                    } catch (SQLiteException ex) {
+                        Toast.makeText(getApplicationContext(), "Problem reading SQLite" + ex, Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
         }
+
 
         String status = null;
         if ( geoFenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER )
             status = "Esi reģistrēts ";
         else if ( geoFenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT )
             status = "Izreģistrējies no ";
-        return status + TextUtils.join( ", ", triggeringGeofences);
+        return status + triggeringGeofenceId + " (" + lr + ")";//TextUtils.join( ", ", triggeringGeofences);
 
     }
 
@@ -116,10 +152,7 @@ public class GeofenceTrasitionService extends IntentService {
         return notificationBuilder.build();
     }
 
-
-
-
-     private final int POST_REQ_CODE = 0;
+     private final int POST_REQ_CODE = 99;
 
      private PendingIntent createPostPendingIntent(int geoFenceTransition, Geofence geofence) {
         Log.d(TAG, "createPostPendingIntent");
@@ -130,7 +163,7 @@ public class GeofenceTrasitionService extends IntentService {
          intent.putExtra("mGeofence", geofence.getRequestId());
          intent.putExtra("mTrigger", geoFenceTransition);
 
-         Log.e(TAG, "Extras sent" + geofence.getRequestId() + " " + geoFenceTransition);
+         Log.e(TAG, "Extras sent " + geofence.getRequestId() + " " + geoFenceTransition);
          Toast.makeText(getBaseContext(), "PostPandingIntent created: " + geofence.getRequestId() + " - " + geoFenceTransition, Toast.LENGTH_LONG).show();
         return PendingIntent.getService(this, POST_REQ_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
@@ -148,4 +181,11 @@ public class GeofenceTrasitionService extends IntentService {
                 return "Unknown error.";
         }
     }
+
+    private String getLrFromId(int id){
+        myGeofences = new MyGeofences(id);
+        myGeofences.getSnippet();
+        return mSnippet;
+    }
+
 }

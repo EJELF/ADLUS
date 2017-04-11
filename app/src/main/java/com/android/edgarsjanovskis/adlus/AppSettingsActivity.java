@@ -269,30 +269,6 @@ public class AppSettingsActivity extends AppCompatActivity {
             intent.setAction("com.android.edgarsjanovskis.adlus.TIME_BROADCAST");
             sendBroadcast(intent);
     }
-    /*
-
-        alarmManager = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
-        Intent i = new Intent(getApplicationContext(), OnAlarmReceived.class);
-        alarmIntent =PendingIntent.getBroadcast(this, 0, i, 0);
-
-        Calendar calendar = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            calendar = Calendar.getInstance();
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            calendar.setTimeInMillis(System.currentTimeMillis());
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            calendar.set(Calendar.HOUR_OF_DAY, hoursStart);
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            calendar.set(Calendar.MINUTE, minutesStart);
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_HALF_HOUR, alarmIntent);
-        }
-*/
 
         Intent intent = new Intent(this, Main2Activity.class);
         startActivity(intent);

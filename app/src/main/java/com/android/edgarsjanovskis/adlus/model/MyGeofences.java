@@ -21,17 +21,13 @@ public class MyGeofences{
     public void setmTitle(String title){this.mTitle = title;}
     public String getmSnippet(){return mSnippet;}
     public void setmSnippet(String snippet){this.mSnippet = snippet;}
-
-
-
-
-        }
+}
 */
 
 import com.google.android.gms.maps.model.LatLng;
 
 public class MyGeofences {
-    private final LatLng mPosition;
+    private LatLng mPosition;
     private Integer mGeofenceId;
     private String mTitle;
     private String mSnippet;
@@ -49,6 +45,8 @@ public class MyGeofences {
         mTitle = null;
         mSnippet = null;
     }
+
+    public MyGeofences(){}
 
     public MyGeofences(double lat, double lng, String title, String snippet) {
         mPosition = new LatLng(lat, lng);

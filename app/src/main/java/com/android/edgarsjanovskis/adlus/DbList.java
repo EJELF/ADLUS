@@ -9,17 +9,17 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-import static com.android.edgarsjanovskis.adlus.ProjectsHelper.GEOFENCE_ID_COLUMN;
-import static com.android.edgarsjanovskis.adlus.ProjectsHelper.LATITUDE_COLUMN;
-import static com.android.edgarsjanovskis.adlus.ProjectsHelper.LONGITUDE_COLUMN;
-import static com.android.edgarsjanovskis.adlus.ProjectsHelper.RADIUS_COLUMN;
+import static com.android.edgarsjanovskis.adlus.DatabaseHelper.GEOFENCE_ID_COLUMN;
+import static com.android.edgarsjanovskis.adlus.DatabaseHelper.LATITUDE_COLUMN;
+import static com.android.edgarsjanovskis.adlus.DatabaseHelper.LONGITUDE_COLUMN;
+import static com.android.edgarsjanovskis.adlus.DatabaseHelper.RADIUS_COLUMN;
 import static com.android.edgarsjanovskis.adlus.R.id.list;
 
 // This class is used only for debugging purposes!!!
 public class DbList extends AppCompatActivity {
 
     Cursor reader;
-    ProjectsHelper mDbHelper;
+    DatabaseHelper mDbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +38,7 @@ public class DbList extends AppCompatActivity {
         ListView lv = (ListView)findViewById(list);
         ArrayList<String> sqlList = new ArrayList<>();
 
-        mDbHelper = new ProjectsHelper(this);
+        mDbHelper = new DatabaseHelper(this);
         reader = mDbHelper.getAllRecordList();
 
         // ar if novērš kļūdu, kad android.database.CursorIndexOutOfBoundsException: Index 0 requested, with a size of 0

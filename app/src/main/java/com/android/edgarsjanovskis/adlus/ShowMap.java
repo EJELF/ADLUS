@@ -49,10 +49,10 @@ import java.util.List;
 
 import static com.android.edgarsjanovskis.adlus.Constants.GEOFENCE_EXPIRATION_TIME;
 import static com.android.edgarsjanovskis.adlus.Constants.MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION;
-import static com.android.edgarsjanovskis.adlus.ProjectsHelper.GEOFENCE_ID_COLUMN;
-import static com.android.edgarsjanovskis.adlus.ProjectsHelper.LATITUDE_COLUMN;
-import static com.android.edgarsjanovskis.adlus.ProjectsHelper.LONGITUDE_COLUMN;
-import static com.android.edgarsjanovskis.adlus.ProjectsHelper.RADIUS_COLUMN;
+import static com.android.edgarsjanovskis.adlus.DatabaseHelper.GEOFENCE_ID_COLUMN;
+import static com.android.edgarsjanovskis.adlus.DatabaseHelper.LATITUDE_COLUMN;
+import static com.android.edgarsjanovskis.adlus.DatabaseHelper.LONGITUDE_COLUMN;
+import static com.android.edgarsjanovskis.adlus.DatabaseHelper.RADIUS_COLUMN;
 
 public class ShowMap extends AppCompatActivity
         implements
@@ -81,7 +81,7 @@ public class ShowMap extends AppCompatActivity
     private PendingIntent mGeofencePendingIntent;  // nezinu vai vajadzēs
     private GeofencingRequest mGeofenceRequest;
 
-    public ProjectsHelper mDbHelper;
+    public DatabaseHelper mDbHelper;
     public SQLiteDatabase db;
 
     private static final String NOTIFICATION_MSG = "NOTIFICATION MSG";
@@ -114,8 +114,8 @@ public class ShowMap extends AppCompatActivity
         textLat = (TextView) findViewById(R.id.lat);
         textLong = (TextView) findViewById(R.id.lon);
 
-        //start new instance of ProjectsHelper and reader
-        //databaseHelper = new ProjectsHelper(this);
+        //start new instance of DatabaseHelper and reader
+        //databaseHelper = new DatabaseHelper(this);
 
         // Instantiate the current List of geofences.
         mGeofenceList = new ArrayList<>();
@@ -482,7 +482,7 @@ public class ShowMap extends AppCompatActivity
         double lat;
         double lon;
 
-        mDbHelper = new ProjectsHelper(this);
+        mDbHelper = new DatabaseHelper(this);
         Cursor reader = mDbHelper.getAllRecordList();
 
         for (reader.moveToFirst(); !reader.isAfterLast(); reader.moveToNext()) {

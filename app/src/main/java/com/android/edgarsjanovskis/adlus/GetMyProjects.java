@@ -46,7 +46,7 @@ public class GetMyProjects extends AppCompatActivity {
     // projects JSONArray
     JSONArray projects = null;
     // add a ProjectHelper to Activity (protected???)
-    protected ProjectsHelper databaseHelper;
+    protected DatabaseHelper databaseHelper;
     ArrayList<Integer> newRecords;
     MyGeofences geofence;
 
@@ -55,8 +55,8 @@ public class GetMyProjects extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_list);
 
-        //start new instance of ProjectsHelper and reader
-        databaseHelper = new ProjectsHelper(this);
+        //start new instance of DatabaseHelper and reader
+        databaseHelper = new DatabaseHelper(this);
         //Cursor reader = databaseHelper.getTimeRecordList();
         prefs = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
         myurl = prefs.getString("Server_URL", " ");
@@ -164,11 +164,10 @@ public class GetMyProjects extends AppCompatActivity {
                             project.put("CustodianPhone", custodianPhone);
                             // adding projects to project list
                             mProjectList.add(project);
-                            geofence = new MyGeofences(lat, lng, geofenceId.toString(), lr);
+                            geofence = new MyGeofences(lat, lng, lr, projectName);
                             geofence.setmGeofenceId(geofenceId);
-                            geofence.setSnippet(lr);
                             newRecords.add(geofenceId);
-                            Log.i(TAG, "Geofence object created :" + geofence.getSnippet());
+                            Log.i(TAG, "Geofence object created :" + geofence.getTitle());
 
                             //db storing only if IMEI match
                             databaseHelper.saveProjectsRecord(geofenceId, lr, lat, lng, radius, phoneId, imei, employee, customer, projectName, ts, custodianSurname, custodianPhone);
