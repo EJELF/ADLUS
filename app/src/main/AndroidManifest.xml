@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:receiverandroid="http://schemas.android.com/apk/res-auto"
     package="com.android.edgarsjanovskis.adlus">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -9,7 +10,8 @@
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -127,13 +129,54 @@
             android:enabled="true"
             android:exported="false" />
 
-        <receiver android:name=".OnAlarmReceived">
+        <!--
+        receiver
+            android:name=".OnAlarmReceived"
+            android:enabled="false">
             <intent-filter>
                 <action android:name="com.android.edgarsjanovskis.adlus.TIME_BROADCAST" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver
+        -->
+        <receiver
+            android:name=".StartAlarmReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name=".service.StartAlarmReceiver" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".StopAlarmReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name=".service.StopAlarmReceiver" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".Alarm"
+            android:enabled="true"
+            android:exported="false"
+            android:process=":remote"></receiver>
+
+        <service
+            android:name=".MyService"
+            android:enabled="true"
+            android:exported="false"
+            android:process=":my_service" />
+
+        <receiver
+            android:name=".AutoStart"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
-
     </application>
 
 </manifest>

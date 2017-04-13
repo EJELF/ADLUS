@@ -33,7 +33,6 @@ public class GeofenceTrasitionService extends IntentService {
     public static final int GEOFENCE_NOTIFICATION_ID = 0;
     private PendingIntent mPostPendingIntent;
 
-
     public GeofenceTrasitionService() {
         super(TAG);
     }
@@ -84,7 +83,7 @@ public class GeofenceTrasitionService extends IntentService {
     }
 
     private Integer triggeringGeofenceId;
-    private String lr;
+    private String lr = "LR...";
     private DatabaseHelper mDbHelper;
     public SQLiteDatabase db;
     private Cursor reader;
@@ -92,6 +91,7 @@ public class GeofenceTrasitionService extends IntentService {
     private String getGeofenceTrasitionDetails(int geoFenceTransition, List<Geofence> triggeringGeofences) {
         mDbHelper = new DatabaseHelper(this);
         reader = mDbHelper.getAllRecordList();
+
 
          //get the ID of each geofence triggered
         ArrayList<String> triggeringGeofencesList = new ArrayList<>();

@@ -1,5 +1,6 @@
 package com.android.edgarsjanovskis.adlus;
 
+import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -7,10 +8,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.icu.util.Calendar;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -24,6 +27,7 @@ import android.widget.Toast;
 public class AppSettingsActivity extends AppCompatActivity {
 
 
+    private static final String TAG =  "AppSettingsActivity";
     public final String USER_IMEI = "User_IMEI";
     public final String SERVER_URL = "Server_URL";
     public final String APP_START_TIME_HOUR = "startHour";
@@ -37,14 +41,17 @@ public class AppSettingsActivity extends AppCompatActivity {
     private TimePicker tp2;
     private CheckBox cb;
     ImageButton imageButton;
-    int hoursStart = 0;
-    int minutesStart = 0;
-    int hoursStop =0;
-    int minutesStop = 0;
+    private int hoursStart = 0;
+    private int minutesStart = 0;
+    private int hoursStop =0;
+    private int minutesStop = 0;
+    Calendar cal1;
+    Calendar cal2;
+    AlarmManager am;
+    PendingIntent sender1;
+    PendingIntent sender2;
 
-    private AlarmManager alarmManager;
-    private PendingIntent alarmIntent;
-
+    @SuppressLint("NewApi")
     @Override
     @SuppressWarnings("deprecation")
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +97,14 @@ public class AppSettingsActivity extends AppCompatActivity {
             tp2.setHour(prefs.getInt("stopHour", 0));
             tp2.setMinute(prefs.getInt("stopMinute", 0));
         }
-        //calendar = Calendar.getInstance();
+
+        //intents to call them by AlarmManeger
+        Intent int1 = new Intent(getBaseContext(), StartAlarmReceiver.class);
+        sender1 = PendingIntent.getBroadcast(getBaseContext(), 192837, int1, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Intent int2 = new Intent(getBaseContext(), StopAlarmReceiver.class);
+        sender2 = PendingIntent.getBroadcast(getBaseContext(), 192837, int2, PendingIntent.FLAG_UPDATE_CURRENT);
+
 
         cb.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,6 +119,7 @@ public class AppSettingsActivity extends AppCompatActivity {
                     setStartStopTime(tp2);
                     SharedPreferences prefs = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
                     prefs.edit().putBoolean(TIME_SELECTED, true).apply();
+
                 }else{
                     tv1.setVisibility(View.GONE);
                     tv2.setVisibility(View.GONE);
@@ -117,7 +132,9 @@ public class AppSettingsActivity extends AppCompatActivity {
                 }
             }
         });
+
     }
+    @SuppressLint("NewApi")
     @SuppressWarnings("deprecation")
     public void setStartStopTime(View view) {
         if (cb.isChecked()) {
@@ -150,7 +167,9 @@ public class AppSettingsActivity extends AppCompatActivity {
                 hoursStop = tp2.getHour();
                 minutesStop= tp2.getMinute();
             }
-        }else{hoursStop = 0; minutesStop = 0;}
+        }else{
+            hoursStop = 0;
+            minutesStop = 0;}
         /*
         StringBuilder sb1 = new StringBuilder();
         sb1.append(hoursStop).append(":");
@@ -164,8 +183,21 @@ public class AppSettingsActivity extends AppCompatActivity {
         SharedPreferences prefs1 = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
         prefs1.edit().putInt(APP_STOP_TIME_HOUR, hoursStop).apply();
         prefs1.edit().putInt(APP_STOP_TIME_MINUTE, minutesStop).apply();
+
+        ////
+        cal1 = Calendar.getInstance();
+        cal1.getTime();
+        cal1.add(Calendar.DAY_OF_MONTH, 0);
+        cal1.set(cal1.get(Calendar.YEAR), cal1.get(Calendar.MONTH), cal1.get(Calendar.DAY_OF_MONTH), hoursStart-3, minutesStart);
+
+        cal2 = Calendar.getInstance();
+        cal2.getTime();
+        cal2.add(Calendar.DAY_OF_MONTH, 0);
+        cal2.set(cal2.get(Calendar.YEAR), cal2.get(Calendar.MONTH), cal2.get(Calendar.DAY_OF_MONTH), hoursStop-3, minutesStop);
+        ////
 }
 
+    @SuppressLint("NewApi")
     public void buttonSave_onClick (View view){
         String userImei;
         String serverUrl;
@@ -258,19 +290,12 @@ public class AppSettingsActivity extends AppCompatActivity {
             SharedPreferences prefs = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
             prefs.edit().putString(SERVER_URL, serverUrl).apply();
         }
-        // Create Brodcast if start/stop time is selected
-
-        if (cb.isChecked()){
-            Intent intent = new Intent();
-            intent.putExtra("hoursStart", hoursStart);
-            intent.putExtra("minutesStart", minutesStart);
-            intent.putExtra("hoursStop", hoursStop);
-            intent.putExtra("minutesStop", minutesStop);
-            intent.setAction("com.android.edgarsjanovskis.adlus.TIME_BROADCAST");
-            sendBroadcast(intent);
-    }
 
         Intent intent = new Intent(this, Main2Activity.class);
+        //if(isMyServiceRunning(GeofencingService.class))
+        //intent.putExtra("started", true);
+        //else
+        //intent.putExtra("started",false);
         startActivity(intent);
 
         String mStart;
@@ -285,7 +310,22 @@ public class AppSettingsActivity extends AppCompatActivity {
         }else {
             mStop = String.valueOf(minutesStop);
         }
-        Toast.makeText(getApplicationContext(),"AUTOMĀTISKA IESL.-IZSL. \n NO " + String.valueOf(hoursStart) + ":" + mStart + " LĪDZ "+ String.valueOf(hoursStop) + ":" + mStop,Toast.LENGTH_LONG).show();
+        // if service not running both senders are set, otherwise only Stop sender
+
+        //if (!isMyServiceRunning(GeofencingService.class)) {
+            am = (AlarmManager) getSystemService(ALARM_SERVICE);
+            am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, cal1.getTimeInMillis(), sender1);
+            am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, cal2.getTimeInMillis(), sender2);
+        //}
+
+        Toast.makeText(getApplicationContext(),"Uzstādīta automātiska iesl.-izsl. \n no plkst. " + String.valueOf(hoursStart)
+                + ":" + mStart + " līdz "+ String.valueOf(hoursStop) + ":" + mStop + "\nCalendars: \n" + cal1.getTimeInMillis()
+                + "\n Current time: " + java.util.Calendar.getInstance().getTime() + " \n "
+                + " : \n " + cal2.getTimeInMillis(),Toast.LENGTH_LONG).show();
+
+        Log.e(TAG, "Start: " + cal1.getTimeInMillis());
+        Log.e(TAG, "Current: " + System.currentTimeMillis());
+        Log.e(TAG, "Stop: " + cal2.getTimeInMillis());
 
         finish();
     }

@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class Main2Activity extends AppCompatActivity {
-
+    private static final String TAG = "Main";
     Context context;
     public static String uniqueID;
     public final String PREFS_NAME = "AdlusPrefsFile";
@@ -56,31 +56,29 @@ public class Main2Activity extends AppCompatActivity {
         return intent;
     }
 
-/*
-    public boolean isConnected() {
-        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Activity.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        return networkInfo != null && networkInfo.isConnected();
-    }
-*/
+    /*
+        public boolean isConnected() {
+            ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Activity.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+            return networkInfo != null && networkInfo.isConnected();
+        }
+    */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         checkFirstRun();
 
-        //checkConnection();
-
         // get reference to the views
-        tvLastUpdate = (TextView)findViewById(R.id.tvLastUpdate);
-        tvLastChanges = (TextView)findViewById(R.id.tvLastChanges);
-        imageButton = (ImageButton)findViewById(R.id.ib_Start);
+        tvLastUpdate = (TextView) findViewById(R.id.tvLastUpdate);
+        tvLastChanges = (TextView) findViewById(R.id.tvLastChanges);
+        imageButton = (ImageButton) findViewById(R.id.ib_Start);
         prefs = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
-        String lastchanges =  prefs.getString(LAST_DB_CHANGES, " ");
+        String lastchanges = prefs.getString(LAST_DB_CHANGES, " ");
         tvLastChanges.setText(lastchanges);
-        String lastupdate =  prefs.getString(LAST_UPDATE, " ");
+        String lastupdate = prefs.getString(LAST_UPDATE, " ");
         tvLastUpdate.setText(lastupdate);
-        sharedPref = getSharedPreferences("MapPrefsFile", MODE_PRIVATE );
+        sharedPref = getSharedPreferences("MapPrefsFile", MODE_PRIVATE);
         toggleUi();
 
         ImageButton mFilesButton = (ImageButton) findViewById(R.id.btnMfiles);
@@ -103,12 +101,13 @@ public class Main2Activity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart(){
+    protected void onStart() {
         super.onStart();
         registerReceiver(NetworkStatusReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         toggleUi();
     }
-    protected void onStop(){
+
+    protected void onStop() {
         super.onStop();
         unregisterReceiver(NetworkStatusReceiver);
         toggleUi();
@@ -122,13 +121,13 @@ public class Main2Activity extends AppCompatActivity {
                     .getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
-            isConnected = networkInfo !=null && networkInfo.isConnectedOrConnecting();
+            isConnected = networkInfo != null && networkInfo.isConnectedOrConnecting();
 
             tvIsConnLabel = (TextView) findViewById(R.id.tvIsConnLabel);
             btnConnected = (RadioButton) findViewById(R.id.isConnected);
 
-            if(!isConnected){
-                Toast noInternetToast = Toast.makeText(getApplicationContext(),R.string.no_internet, Toast.LENGTH_LONG);
+            if (!isConnected) {
+                Toast noInternetToast = Toast.makeText(getApplicationContext(), R.string.no_internet, Toast.LENGTH_LONG);
                 noInternetToast.show();
                 btnConnected.setChecked(false);
                 tvIsConnLabel.setText(R.string.no_internet);
@@ -140,14 +139,14 @@ public class Main2Activity extends AppCompatActivity {
     };
 
     /////////////////////
-    public void checkFirstRun(){
+    public void checkFirstRun() {
 
         //Get current version code
         int currentVersionCode;
 
-        try{
+        try {
             currentVersionCode = getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
-        } catch (android.content.pm.PackageManager.NameNotFoundException e){
+        } catch (android.content.pm.PackageManager.NameNotFoundException e) {
             //handle exception
             e.printStackTrace();
             return;
@@ -157,16 +156,16 @@ public class Main2Activity extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         int savedVersionCode = prefs.getInt(PREF_VERSION_CODE_KEY, DOESNT_EXIST);
 
-        if (currentVersionCode == savedVersionCode){
+        if (currentVersionCode == savedVersionCode) {
             //This is just normal run
             return;
-        } else if (savedVersionCode == DOESNT_EXIST){
+        } else if (savedVersionCode == DOESNT_EXIST) {
             //this is a new install (of user cleared the shared prefs)
-            Intent intent = new Intent(Main2Activity.this,WelcomeActivity.class);
+            Intent intent = new Intent(Main2Activity.this, WelcomeActivity.class);
             startActivity(intent);
             createUUID();
 
-        } else if (currentVersionCode > savedVersionCode){
+        } else if (currentVersionCode > savedVersionCode) {
             // This is an upgrade. Pagaidām neizmantoju
             return;
         }
@@ -174,6 +173,7 @@ public class Main2Activity extends AppCompatActivity {
         prefs.edit().putInt(PREF_VERSION_CODE_KEY, currentVersionCode).apply();
         prefs.edit().putString(APP_UUID, uniqueID).apply();
     }
+
     public void createUUID() {
         uniqueID = UUID.randomUUID().toString();
         prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
@@ -181,92 +181,106 @@ public class Main2Activity extends AppCompatActivity {
 
         Toast.makeText(getApplicationContext(), "UUID izveidots : " + uniqueID, Toast.LENGTH_LONG).show();
     }
+
     @Override
     protected void onPause() {
         super.onPause();
-        //unregisterReceiver(NetworkStatusReceiver);
+        toggleUi();
     }
 
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
+        toggleUi();
     }
 
 
-    public void butonShowMap_onClick(View view){
+    public void butonShowMap_onClick(View view) {
         Intent intent = new Intent(this, ShowMap.class);
         startActivity(intent);
     }
 
-    public void buttonResponse_onClick (View view){
+    public void buttonResponse_onClick(View view) {
         Intent form = new Intent(this, GetMyProjects.class);
         startActivity(form);
     }
 
-    public void buttonPost_onClick (View view){
+    public void buttonPost_onClick(View view) {
         Intent form = new Intent(this, PostActivity.class);
         startActivity(form);
     }
-    public void buttonUUID_onClick (View view){
+
+    public void buttonUUID_onClick(View view) {
         prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-        try{
-            Map<String,?> keys = prefs.getAll();
-            for(Map.Entry<String,?> entry : keys.entrySet()){
-                Log.d("map values",entry.getKey() + ": " +
+        try {
+            Map<String, ?> keys = prefs.getAll();
+            for (Map.Entry<String, ?> entry : keys.entrySet()) {
+                Log.d("map values", entry.getKey() + ": " +
                         entry.getValue());
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             Log.e("Error: ", e.toString());
         }
         Intent intent = new Intent(this, PhoneInfoActivity.class);
         startActivity(intent);
     }
 
-    public void buttonSettings_onClick (View view){
+    public void buttonSettings_onClick(View view) {
         Intent intent = new Intent(this, AppSettingsActivity.class);
         startActivity(intent);
     }
 
     boolean started = false;
 
-    public void buttonStartGeofencing_onClick (View view){
+    public void buttonStartGeofencing_onClick(View view) {
         // sāk GeofencingService pārbaudot vai nav sākta
-        if(!isMyServiceRunning(GeofencingService.class)) {
+        if (!isMyServiceRunning(GeofencingService.class)) {
             Intent intent = new Intent(this, GeofencingService.class);
             startService(intent);
-            started = true;
+            isMyServiceRunning(GeofencingService.class);
             toggleUi();
 
-        }else{
+        } else {
             Intent intent = new Intent(this, GeofencingService.class);
             stopService(intent);
-            started = false;
+            isMyServiceRunning(GeofencingService.class);
             toggleUi();
         }
     }
 
-    public void butonShowSQlite_onClick (View view){
+    public void butonShowSQlite_onClick(View view) {
         Intent intent = new Intent(this, DbList.class);
         startActivity(intent);
     }
 
-    private boolean isMyServiceRunning(Class<?> serviceClass){
-        ActivityManager manager = (ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);
-        for(ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)){
-            if(serviceClass.getName().equals(service.service.getClassName())){
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
                 return true;
             }
         }
         return false;
     }
 
-    private void toggleUi(){
-        if(!isMyServiceRunning(GeofencingService.class)){
+    public void toggleUi() {
+        if (!isMyServiceRunning(GeofencingService.class)) {
             imageButton.setBackgroundResource(R.drawable.button_round_green);
-        }else {
+        } else {
             imageButton.setBackgroundResource(R.drawable.button_round_red);
         }
 
     }
+
+/*
+    boolean alarmUp = (PendingIntent.getBroadcast(context, 0, new Intent("com.android.edgarsjanovskis.adlus.StartAlarmReceiver"),
+            PendingIntent.FLAG_NO_CREATE) != null);
+        if(alarmUp)
+    {
+        Log.e(TAG, "Alarm is active");
+    }
+    */
+
+
 }

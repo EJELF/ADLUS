@@ -49,6 +49,7 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
     private GoogleApiClient googleApiClient;
 
     ImageButton imageButton;
+    StartAlarmReceiver startAlarmReceiver;
 
     List<Geofence> mGeofenceList;
     List<LatLng> mLatLngList;
@@ -89,7 +90,7 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
                     }
                 }
         ).start();
-        return Service.START_STICKY;
+        return  Service.START_STICKY;
     }
 
 
