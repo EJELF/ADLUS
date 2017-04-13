@@ -272,15 +272,4 @@ public class Main2Activity extends AppCompatActivity {
         }
 
     }
-
-/*
-    boolean alarmUp = (PendingIntent.getBroadcast(context, 0, new Intent("com.android.edgarsjanovskis.adlus.StartAlarmReceiver"),
-            PendingIntent.FLAG_NO_CREATE) != null);
-        if(alarmUp)
-    {
-        Log.e(TAG, "Alarm is active");
-    }
-    */
-
-
 }

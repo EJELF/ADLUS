@@ -26,7 +26,6 @@ import android.widget.Toast;
 
 public class AppSettingsActivity extends AppCompatActivity {
 
-
     private static final String TAG =  "AppSettingsActivity";
     public final String USER_IMEI = "User_IMEI";
     public final String SERVER_URL = "Server_URL";
@@ -184,6 +183,7 @@ public class AppSettingsActivity extends AppCompatActivity {
         prefs1.edit().putInt(APP_STOP_TIME_HOUR, hoursStop).apply();
         prefs1.edit().putInt(APP_STOP_TIME_MINUTE, minutesStop).apply();
 
+
         ////
         cal1 = Calendar.getInstance();
         cal1.getTime();
@@ -195,6 +195,7 @@ public class AppSettingsActivity extends AppCompatActivity {
         cal2.add(Calendar.DAY_OF_MONTH, 0);
         cal2.set(cal2.get(Calendar.YEAR), cal2.get(Calendar.MONTH), cal2.get(Calendar.DAY_OF_MONTH), hoursStop-3, minutesStop);
         ////
+
 }
 
     @SuppressLint("NewApi")
@@ -310,6 +311,7 @@ public class AppSettingsActivity extends AppCompatActivity {
         }else {
             mStop = String.valueOf(minutesStop);
         }
+
         // if service not running both senders are set, otherwise only Stop sender
 
         //if (!isMyServiceRunning(GeofencingService.class)) {
@@ -319,14 +321,14 @@ public class AppSettingsActivity extends AppCompatActivity {
         //}
 
         Toast.makeText(getApplicationContext(),"Uzstādīta automātiska iesl.-izsl. \n no plkst. " + String.valueOf(hoursStart)
-                + ":" + mStart + " līdz "+ String.valueOf(hoursStop) + ":" + mStop + "\nCalendars: \n" + cal1.getTimeInMillis()
-                + "\n Current time: " + java.util.Calendar.getInstance().getTime() + " \n "
-                + " : \n " + cal2.getTimeInMillis(),Toast.LENGTH_LONG).show();
+                + ":" + mStart + " līdz "+ String.valueOf(hoursStop) + ":" + mStop,Toast.LENGTH_LONG).show();
 
         Log.e(TAG, "Start: " + cal1.getTimeInMillis());
         Log.e(TAG, "Current: " + System.currentTimeMillis());
         Log.e(TAG, "Stop: " + cal2.getTimeInMillis());
 
+
+        //alarm.setAlarm(this);
         finish();
     }
 

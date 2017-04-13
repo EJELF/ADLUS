@@ -157,17 +157,6 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <receiver
-            android:name=".Alarm"
-            android:enabled="true"
-            android:exported="false"
-            android:process=":remote"></receiver>
-
-        <service
-            android:name=".MyService"
-            android:enabled="true"
-            android:exported="false"
-            android:process=":my_service" />
 
         <receiver
             android:name=".AutoStart"

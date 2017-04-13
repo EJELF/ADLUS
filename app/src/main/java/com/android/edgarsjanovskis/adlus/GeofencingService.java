@@ -71,15 +71,7 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
                         try {
                             while (isRunning) {
                                 player.start();
-                                // Call GoogleApiClient connection when starting the Activity
                                 Log.d(TAG, "run Player...()");
-                                if (!googleApiClient.isConnecting() || !googleApiClient.isConnected()) {
-                                    googleApiClient.connect();
-                                    Log.e(TAG, "googleApiClient connected");
-
-                                }else {
-                                    googleApiClient.connect();
-                                }
                                 startLocationUpdates();
                                 startGeofences();
                                 Thread.sleep(5000);
@@ -92,7 +84,6 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
         ).start();
         return  Service.START_STICKY;
     }
-
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -160,6 +151,7 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
         if (db != null) {
             db.close();
         }
+
         player.stop();
         stopLocationUpdates();
         stopGeofences();
@@ -170,7 +162,6 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
 
     private void stopService(){
         isRunning = false;
-        //imageButton.setBackgroundResource(R.drawable.button_round_green);
         stopSelf();
     }
 
@@ -196,7 +187,7 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
 
     private void stopLocationUpdates(){
         Log.i(TAG, "stopLocationUpdates()");
-        LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient,this);
+        LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
     }
 
 
