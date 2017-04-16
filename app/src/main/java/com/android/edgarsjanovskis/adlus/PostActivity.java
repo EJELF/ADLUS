@@ -75,9 +75,9 @@ public class PostActivity extends AppCompatActivity {
         // check if you are connected or not
         if (isConnected() && checkVPN() && checkNetworks()) {
             tvIsConnected.setBackgroundColor(0xFF00CC00);
-            tvIsConnected.setText("You are conncted");
+            tvIsConnected.setText("Savienojums izveidots");
         } else {
-            tvIsConnected.setText("You are NOT conncted");
+            tvIsConnected.setText("Nav savienojuma!");
         }
 
         Intent intent = getIntent();
@@ -160,7 +160,6 @@ public class PostActivity extends AppCompatActivity {
     }
 
     public void buttonPost_onClick(View view) {
-
         switch (view.getId()) {
             case R.id.btnPost:
                 if (!validate())

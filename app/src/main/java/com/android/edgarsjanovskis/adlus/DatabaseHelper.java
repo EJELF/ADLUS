@@ -40,11 +40,8 @@ public class DatabaseHelper {
     public static final String CUSTODIAN_COLUMN = "CustodianSurname";
     public static final String CUSTODIAN_PHONE_COLUMN = "CustodianPhone";
     // Activities Table Columns names
-    public static final String ACTIVITY_POST_ID = "ActivityPostId";
-    public static final String ACTIVITY_ID = "ActivityId";
-    public static final String TRANSITION_ID = "TransitionId";
-    public static final String DATE_TIME = "DateTime";
-    public static final String STATUS = "Status";
+    public static final String POST_ID = "PostId";
+    public static final String STRING_JSON = "Json";
 
     //šī ideja no DobrinGanev
     //private static final String[] COLUMNS = {KEY_ID, LATITUDE_COLUMN, LONGITUDE_COLUMN, RADIUS_COLUMN};
@@ -106,14 +103,17 @@ public class DatabaseHelper {
     }
 
 
-    public void saveActivityRecord (Integer activityPostId, Integer activityId, Integer geofenceId, Integer transitionId, Integer dt, Integer status){
+    public void saveActivityRecord (String Json){
+        database = openHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(ACTIVITY_POST_ID, activityPostId);
-        contentValues.put(ACTIVITY_ID, activityId);
-        contentValues.put(GEOFENCE_ID_COLUMN, geofenceId);
-        contentValues.put(TRANSITION_ID, transitionId);
-        contentValues.put(DATE_TIME, dt);
-        contentValues.put(STATUS, status);
+        contentValues.put(STRING_JSON, Json);
+        database.insert("activities", null, contentValues);
+        Log.e("Inserted content: ", contentValues.toString());
+        database.close();
+    }
+
+    public Cursor getAllPendingJsonById(Integer _id){
+        return database.rawQuery("SELECT * FROM activities WHERE PostId = " + _id, null);
     }
 
 
@@ -163,7 +163,6 @@ public class DatabaseHelper {
             Cursor c = database.rawQuery("Select * from projects", null);
 
         if(c.moveToFirst())
-
                             while (!c.isAfterLast()) {
                                 if (!newGeofenceIdList.contains(c.getInt(0))) {
                                 Log.e("Current id", String.valueOf(c.getInt(0)));
@@ -171,7 +170,6 @@ public class DatabaseHelper {
                                 Log.e("Deleted GeofenceId: ", String.valueOf(c.getInt(0)));
                                 c.moveToNext();
                             }
-
             }
             if (c.isAfterLast()){
                 c.close();
@@ -219,8 +217,7 @@ public class DatabaseHelper {
             //////////////////
 
             db.execSQL("CREATE TABLE " + TABLE_ACTIVITIES + "("
-                    + ACTIVITY_POST_ID + " INTEGER PRIMARY KEY, " + ACTIVITY_ID +  " INTEGER, "+ GEOFENCE_ID_COLUMN + " INTEGER, "
-                    + TRANSITION_ID + " INTEGER, " + DATE_TIME + " TIMESTAMP, " + STATUS + " INTIGER" + ")");
+                    + POST_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + STRING_JSON +  " STRING" + ")");
             Log.e("Tabula - ", TABLE_ACTIVITIES + " - izveidota");
 
             ///////////////////

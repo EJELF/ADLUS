@@ -42,7 +42,7 @@ public class GetMyProjects extends AppCompatActivity {
     private SharedPreferences prefs;
     public final String USER_NAME = "User_Name";
     public final String PHONE_ID = "PhoneID";
-    ArrayList<HashMap<String, String>> mProjectList;
+    public ArrayList<HashMap<String, String>> mProjectList;
     // projects JSONArray
     JSONArray projects = null;
     // add a ProjectHelper to Activity (protected???)
@@ -177,16 +177,6 @@ public class GetMyProjects extends AppCompatActivity {
                             // place where last update
                             String updateDatetime = String.valueOf(Calendar.getInstance().getTime());
                             prefs.edit().putString(LAST_UPDATE, updateDatetime).apply();
-
-                            /*if (isUpdated){
-                            String updateDatetime = String.valueOf(Calendar.getInstance().getTime());
-                            prefs.edit().putString(LAST_UPDATE, updateDatetime).apply();
-                        }
-                        }else{
-                        // jāieliek kas notiek, ja nav neviena ieraksta šim IMEI
-                        Toast.makeText(getApplicationContext(),"Izskatās, ka uz IMEI " + myimei + " nav reģistrēts neviens objekts!", Toast.LENGTH_LONG).show();
-                        }*/
-
                         }
                     }
                     //databaseHelper.deleteOldRecords();

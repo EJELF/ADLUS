@@ -43,19 +43,21 @@ public class StartAlarmReceiver extends WakefulBroadcastReceiver {
         SharedPreferences prefs = context.getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
         Integer hoursStart = prefs.getInt("startHour", 0);
         Integer minutesStart = prefs.getInt("startMinute", 0);
+        Boolean timeSelected = prefs.getBoolean("timeSelected", false);
 
         cal1 = Calendar.getInstance();
         cal1.getTime();
         cal1.add(Calendar.DAY_OF_MONTH, 0);
         cal1.set(cal1.get(Calendar.YEAR), cal1.get(Calendar.MONTH), cal1.get(Calendar.DAY_OF_MONTH), hoursStart-3, minutesStart);
 
+        if(timeSelected) {
+            AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
-        AlarmManager am =( AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-
-        //intents to call them by AlarmManeger
-        Intent int1 = new Intent(context, StartAlarmReceiver.class);
-        sender1 = PendingIntent.getBroadcast(context, 192837, int1, PendingIntent.FLAG_UPDATE_CURRENT);
-        am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, cal1.getTimeInMillis(), sender1);
+            //intents to call them by AlarmManeger
+            Intent int1 = new Intent(context, StartAlarmReceiver.class);
+            sender1 = PendingIntent.getBroadcast(context, 192837, int1, PendingIntent.FLAG_UPDATE_CURRENT);
+            am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, cal1.getTimeInMillis(), sender1);
+        }
     }
 
 

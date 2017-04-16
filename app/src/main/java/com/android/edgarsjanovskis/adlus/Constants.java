@@ -17,20 +17,17 @@
 package com.android.edgarsjanovskis.adlus;
 
 import com.google.android.gms.location.Geofence;
-
 /** Constants used in companion app. */
 public final class Constants {
 
-    private Constants() {
-    }
-
+    private Constants() {}
     public static final String TAG = "AdlusGeofencingApp";
-
 
     // For the purposes of this demo, the geofences are hard-coded and should not expire.
     // An app with dynamically-created geofences would want to include a reasonable expiration time.
     public static final long GEOFENCE_EXPIRATION_TIME = Geofence.NEVER_EXPIRE;
     public static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 99;
+    public static final int GEOFENCE_LOITERY_DELAY= 10;
 
     // Invalid values, used to test geofence storage when retrieving geofences.
     public static final long INVALID_LONG_VALUE = -999L;

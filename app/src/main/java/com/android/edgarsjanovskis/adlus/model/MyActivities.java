@@ -13,6 +13,16 @@ public class MyActivities {
     private String mTransition;
     private String mActivityTimestamp;
 
+    private boolean isPosted;
+    public boolean isPosted() {
+        return isPosted;
+    }
+
+    public void setPosted(boolean posted) {
+        isPosted = posted;
+    }
+
+
     public MyActivities(){}
 
     public String getmPhoneId() {

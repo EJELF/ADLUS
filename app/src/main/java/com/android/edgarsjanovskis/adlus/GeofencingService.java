@@ -15,7 +15,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -35,6 +34,7 @@ import static com.android.edgarsjanovskis.adlus.Constants.TAG;
 import static com.android.edgarsjanovskis.adlus.DatabaseHelper.GEOFENCE_ID_COLUMN;
 import static com.android.edgarsjanovskis.adlus.DatabaseHelper.LATITUDE_COLUMN;
 import static com.android.edgarsjanovskis.adlus.DatabaseHelper.LONGITUDE_COLUMN;
+import static com.android.edgarsjanovskis.adlus.DatabaseHelper.PROJECT_LR_COLUMN;
 import static com.android.edgarsjanovskis.adlus.DatabaseHelper.RADIUS_COLUMN;
 
 public class GeofencingService extends Service implements GoogleApiClient.ConnectionCallbacks,
@@ -48,9 +48,6 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
     private Location lastLocation;
     private GoogleApiClient googleApiClient;
 
-    ImageButton imageButton;
-    StartAlarmReceiver startAlarmReceiver;
-
     List<Geofence> mGeofenceList;
     List<LatLng> mLatLngList;
 
@@ -59,7 +56,6 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
 
     public DatabaseHelper mDbHelper;
     public SQLiteDatabase db;
-
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -103,6 +99,7 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
         float radius;
         double lat;
         double lon;
+        String lr;
 
         mDbHelper = new DatabaseHelper(this);
         Cursor reader = mDbHelper.getAllRecordList();
@@ -119,20 +116,20 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
             googleApiClient.connect();
         }
 
-
         if (reader != null)
             for (reader.moveToFirst(); !reader.isAfterLast(); reader.moveToNext()) {
                 geofenceId = reader.getInt(reader.getColumnIndex(GEOFENCE_ID_COLUMN));
+                lr = reader.getString(reader.getColumnIndex(PROJECT_LR_COLUMN));
                 lat = reader.getDouble(reader.getColumnIndex(LATITUDE_COLUMN));
                 lon = reader.getDouble(reader.getColumnIndex(LONGITUDE_COLUMN));
                 radius = reader.getFloat(reader.getColumnIndex(RADIUS_COLUMN));
 
-                ////////////////////////////////////////////////////////////// pamēģināšu šeit
                 LatLng latLng = new LatLng(lat, lon);
                 Geofence fence = new Geofence.Builder()
                         .setRequestId(String.valueOf(geofenceId))
                         .setCircularRegion(latLng.latitude, latLng.longitude, radius)
                         .setExpirationDuration(GEOFENCE_EXPIRATION_TIME)
+                        .setLoiteringDelay(1000*60*3) // for DWELL
                         .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER
                                 | Geofence.GEOFENCE_TRANSITION_EXIT)
                         .build();
@@ -142,7 +139,14 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
                 if (reader.isAfterLast())
                     reader.close();
             }
-        ////////////////////////////////
+    }
+
+    private void checkGeofenceListNotNull() {
+        if (mGeofenceList == null){
+            Toast.makeText(this, "Rādās Tev nav neviena aktīva projekta! \n Serviss tika apstādināts.", Toast.LENGTH_LONG).show();
+            stopSelf();
+            return;
+        }
     }
 
     @Override
@@ -151,20 +155,18 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
         if (db != null) {
             db.close();
         }
-
         player.stop();
         stopLocationUpdates();
         stopGeofences();
         stopService();
-        super.onDestroy();
         Toast.makeText(this, "Service is destroyed!", Toast.LENGTH_LONG).show();
+        super.onDestroy();
     }
 
     private void stopService(){
         isRunning = false;
         stopSelf();
     }
-
 
     private LocationRequest locationRequest;
     // Defined in mili seconds.
@@ -190,11 +192,9 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
         LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
     }
 
-
     // Get last known location
     private void getLastKnownLocation() {
         Log.d(TAG, "getLastKnownLocation()");
-
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
@@ -209,13 +209,10 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
             Log.w(TAG, "No location retrieved yet");
             startLocationUpdates();
         }
-
     }
-
 
     // Start Geofence creation process //Pārsaucu uz StartGeofences , jo ir saraksts
     private void startGeofences() {
-
         Log.i(TAG, "startGeofences()");
         GeofencingRequest geofenceRequest = createGeofencesRequest();
         addGeofences(geofenceRequest);
@@ -227,15 +224,13 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
         LocationServices.GeofencingApi.removeGeofences(googleApiClient, mGeofencePendingIntent);
     }
 
-
-
     // Create a Geofence Request
     private GeofencingRequest createGeofencesRequest() {
         Log.d(TAG, "createGeofenceRequest");
-        return new GeofencingRequest.Builder()
-                .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_DWELL)
-                .addGeofences(mGeofenceList)   // List
-                .build();
+            return new GeofencingRequest.Builder()
+                    .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_DWELL)
+                    .addGeofences(mGeofenceList)   // List
+                    .build();
     }
 
     // private PendingIntent geoFencePendingIntent;
@@ -263,7 +258,6 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
                 createGeofencesPendingIntent());
     }
 
-
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         Log.i(TAG, "onConnected()");
@@ -286,7 +280,7 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
     @Override
     public void onConnectionSuspended(int i) {
         Log.w(TAG, "onConnectionSuspended()");
-        googleApiClient.connect(); // ieliku es
+        //googleApiClient.connect(); // ieliku es
     }
 
     @Override

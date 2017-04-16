@@ -2,13 +2,15 @@ package com.android.edgarsjanovskis.adlus;
 
 import android.app.Activity;
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.android.edgarsjanovskis.adlus.model.MyActivities;
 
@@ -39,12 +41,14 @@ public class PostIntentService extends IntentService {
     String mTrigger;
     MyActivities activity;
 
+    protected DatabaseHelper databaseHelper;
+
     @Override
-    public void onCreate(){
+    public void onCreate() {
         super.onCreate();// if you override onCreate(), make sure to call super().
         // If a Context object is needed, call getApplicationContext() here.
         // JUST DO IN BACKGROUND
-        Toast.makeText(getBaseContext(), "Post Service started!", Toast.LENGTH_LONG).show();
+        //Toast.makeText(getApplicationContext(), "Post Service started!", Toast.LENGTH_LONG).show();
 
         prefs = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
         myurl = prefs.getString("Server_URL", " ");
@@ -58,18 +62,22 @@ public class PostIntentService extends IntentService {
         System.out.println("POST INTENT RECEIVED");
         if (intent == null){
             //error
-            Toast.makeText(getApplicationContext(), "No Intent received", Toast.LENGTH_LONG).show();
+           // Toast.makeText(PostIntentService.this, "No Intent received", Toast.LENGTH_LONG).show();
+
         }else{
             mGeofence = intent.getStringExtra("mGeofence");
             mTrigger = intent.getStringExtra("mTrigger");
+            Log.i(TAG, "Extras received: " + mGeofence + " ; " + mTrigger);
         }
-        if(isConnected())
             startPost();
     }
 
     private void startPost(){
         // call AsynTask to perform network operation on separate thread
+        if(isConnected() && checkNetworks())
         new PostIntentService.HttpAsyncTask().execute("http://"+myurl+"/api/Activities");
+        else
+            Log.e(TAG, "No network connection, Post was not sent!");
     }
 
     private class HttpAsyncTask extends AsyncTask<String, Void, String> {
@@ -81,63 +89,75 @@ public class PostIntentService extends IntentService {
             activity.setmPhoneId(phoneId.toString());
             activity.setmTransition(mTrigger);
             activity.setmActivityTimestamp(new Date().toString());
-
             return POST(urls[0],activity);
         }
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
-            Toast.makeText(getBaseContext(), "New data sent!", Toast.LENGTH_LONG).show();
+            //Toast.makeText(PostIntentService.this, "New data sent!", Toast.LENGTH_LONG).show();
         }
     }
-
 
     public boolean isConnected(){
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Activity.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnected();
     }
+    public boolean checkNetworks(){
+        ConnectivityManager cm = (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        Network[] networks = cm.getAllNetworks();
+
+        Log.i(TAG, "Network count: " + networks.length);
+        for(int i = 0; i < networks.length; i++) {
+
+            NetworkCapabilities caps = cm.getNetworkCapabilities(networks[i]);
+
+            Log.i(TAG, "Network " + i + ": " + networks[i].toString());
+            Log.i(TAG, "VPN transport is: " + caps.hasTransport(NetworkCapabilities.TRANSPORT_VPN));
+            Log.i(TAG, "NOT_VPN capability is: " + caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_VPN));
+            if(caps.hasTransport(NetworkCapabilities.TRANSPORT_VPN)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     @SuppressWarnings("deprecation")
     public String POST(String url, MyActivities actitity){
         InputStream inputStream;
         String result = "";
         try {
-
             // 1. create HttpClient
             HttpClient httpclient = new DefaultHttpClient();
-
             // 2. make POST request to the given URL
             HttpPost httpPost = new HttpPost(url);
-
             String json;
-
             // 3. build jsonObject
             JSONObject jsonObject = new JSONObject();
             jsonObject.accumulate("geofenceID", mGeofence);
             jsonObject.accumulate("phoneID", phoneId);
             jsonObject.accumulate("transitionStateID", mTrigger);
-            //jsonObject.accumulate("transitionStateID", actitity.getmTransition());
             jsonObject.accumulate("dateTime", actitity.getmActivityTimestamp());
-
             // 4. convert JSONObject to JSON to String
             json = jsonObject.toString();
-
+            /*/////////////////////////
+            Log.e(TAG, "Try to save JSON to Db :" +  json);
+            databaseHelper.saveActivityRecord(json);
+            Log.e(TAG, "JSON String saved to Db :" +  json);
+            //databaseHelper.getAllPendingJsonById();
+            //////////////////////////*/
             // 5. set json to StringEntity
             StringEntity se = new StringEntity(json);
-
             // 6. set httpPost Entity
             httpPost.setEntity(se);
-
             // 7. Set some headers to inform server about the type of the content
             httpPost.setHeader("Accept", "application/json");
             httpPost.setHeader("Content-type", "application/json");
-
             // 8. Execute POST request to the given URL
             HttpResponse httpResponse = httpclient.execute(httpPost);
-
             // 9. receive response as inputStream
             inputStream = httpResponse.getEntity().getContent();
-
             // 10. convert inputstream to string
             if(inputStream != null) {
                 result = convertInputStreamToString(inputStream);
@@ -151,7 +171,6 @@ public class PostIntentService extends IntentService {
         } catch (Exception e) {
             Log.d("InputStream", e.getLocalizedMessage());
         }
-
         // 11. return result
         return result;
     }

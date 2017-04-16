@@ -129,16 +129,6 @@
             android:enabled="true"
             android:exported="false" />
 
-        <!--
-        receiver
-            android:name=".OnAlarmReceived"
-            android:enabled="false">
-            <intent-filter>
-                <action android:name="com.android.edgarsjanovskis.adlus.TIME_BROADCAST" />
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver
-        -->
         <receiver
             android:name=".StartAlarmReceiver"
             android:enabled="true"
@@ -157,15 +147,18 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-
         <receiver
             android:name=".AutoStart"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
+        <service
+            android:name=".MyPOSTIntentService"
+            android:exported="false"></service>
     </application>
 
 </manifest>

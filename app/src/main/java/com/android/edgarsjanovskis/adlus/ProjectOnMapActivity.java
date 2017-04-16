@@ -3,7 +3,6 @@ package com.android.edgarsjanovskis.adlus;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -34,12 +33,9 @@ public class ProjectOnMapActivity extends AppCompatActivity
         GoogleMap.OnMarkerClickListener{
 
     private static final String TAG = ProjectOnMapActivity.class.getSimpleName();
-    private static final boolean DEVELOPER_MODE = true;
 
     private GoogleMap map;
     private GoogleApiClient googleApiClient;
-    private Location lastLocation;
-
     private TextView textLat, textLong;
     private MapFragment mapFragment;
 
@@ -47,7 +43,6 @@ public class ProjectOnMapActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        //Realm.init(this); //initialize other plugins
         setContentView(R.layout.activity_map);
 
         textLat = (TextView) findViewById(R.id.lat);
@@ -86,25 +81,6 @@ public class ProjectOnMapActivity extends AppCompatActivity
     }
 
         private final int REQ_PERMISSION = 9;
-    /*
-        // Check for permission to access Location
-        private boolean checkPermission() {
-            Log.d(TAG, "checkPermission()");
-            // Ask for permission if it wasn't granted yet
-            return (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                    == PackageManager.PERMISSION_GRANTED );
-        }
-
-        // Asks for permission
-        private void askPermission() {
-            Log.d(TAG, "askPermission()");
-            ActivityCompat.requestPermissions(
-                    this,
-                    new String[] { Manifest.permission.ACCESS_FINE_LOCATION },
-                    REQ_PERMISSION
-            );
-        }
-    */
     // Verify user's response of the permission requested
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

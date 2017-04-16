@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import static com.android.edgarsjanovskis.adlus.DatabaseHelper.GEOFENCE_ID_COLUMN;
 import static com.android.edgarsjanovskis.adlus.DatabaseHelper.LATITUDE_COLUMN;
 import static com.android.edgarsjanovskis.adlus.DatabaseHelper.LONGITUDE_COLUMN;
+import static com.android.edgarsjanovskis.adlus.DatabaseHelper.PROJECT_LR_COLUMN;
 import static com.android.edgarsjanovskis.adlus.DatabaseHelper.RADIUS_COLUMN;
 import static com.android.edgarsjanovskis.adlus.R.id.list;
 
@@ -31,6 +32,7 @@ public class DbList extends AppCompatActivity {
         super.onResume();
 
         int geofenceId;
+        String lr;
         float radius;
         double lat;
         double lon;
@@ -46,11 +48,12 @@ public class DbList extends AppCompatActivity {
             try{
         for( reader.moveToFirst(); !reader.isAfterLast(); reader.moveToNext() ) {
             geofenceId = reader.getInt(reader.getColumnIndex(GEOFENCE_ID_COLUMN));
+            lr = reader.getString(reader.getColumnIndex(PROJECT_LR_COLUMN));
             lat = reader.getDouble(reader.getColumnIndex(LATITUDE_COLUMN));
             lon = reader.getDouble(reader.getColumnIndex(LONGITUDE_COLUMN));
             radius = reader.getFloat(reader.getColumnIndex(RADIUS_COLUMN));
 
-            sqlList.add("Geofence ID: " + geofenceId + "\nLatitude: " + lat + "\nLongitude: " + lon + "\nRadius: " + radius);
+            sqlList.add("Geofence ID: " + geofenceId +  " ("+ lr + ") "+ "\nLatitude: " + lat + "\nLongitude: " + lon + "\nRadius: " + radius);
             }
         }catch (Exception e) {
                 Log.e("Error: ", e.toString());

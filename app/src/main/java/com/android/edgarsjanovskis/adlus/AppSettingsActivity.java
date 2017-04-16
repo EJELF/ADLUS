@@ -292,43 +292,38 @@ public class AppSettingsActivity extends AppCompatActivity {
             prefs.edit().putString(SERVER_URL, serverUrl).apply();
         }
 
-        Intent intent = new Intent(this, Main2Activity.class);
-        //if(isMyServiceRunning(GeofencingService.class))
-        //intent.putExtra("started", true);
-        //else
-        //intent.putExtra("started",false);
-        startActivity(intent);
+        if(cb.isChecked()) {
 
-        String mStart;
-        String mStop;
-        if(minutesStart <10) {
-            mStart = "0" + String.valueOf(minutesStart);
-        }else {
-            mStart = String.valueOf(minutesStart);
-        }
-        if(minutesStop <10) {
-            mStop = "0" + String.valueOf(minutesStop);
-        }else {
-            mStop = String.valueOf(minutesStop);
-        }
+            String mStart;
+            String mStop;
+            if (minutesStart < 10) {
+                mStart = "0" + String.valueOf(minutesStart);
+            } else {
+                mStart = String.valueOf(minutesStart);
+            }
+            if (minutesStop < 10) {
+                mStop = "0" + String.valueOf(minutesStop);
+            } else {
+                mStop = String.valueOf(minutesStop);
+            }
 
-        // if service not running both senders are set, otherwise only Stop sender
+            // if service not running both senders are set, otherwise only Stop sender
 
-        //if (!isMyServiceRunning(GeofencingService.class)) {
+            //if (!isMyServiceRunning(GeofencingService.class)) {
             am = (AlarmManager) getSystemService(ALARM_SERVICE);
             am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, cal1.getTimeInMillis(), sender1);
             am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, cal2.getTimeInMillis(), sender2);
-        //}
+            //}
 
-        Toast.makeText(getApplicationContext(),"Uzstādīta automātiska iesl.-izsl. \n no plkst. " + String.valueOf(hoursStart)
-                + ":" + mStart + " līdz "+ String.valueOf(hoursStop) + ":" + mStop,Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Uzstādīta automātiska iesl.-izsl. \n no plkst. " + String.valueOf(hoursStart)
+                    + ":" + mStart + " līdz " + String.valueOf(hoursStop) + ":" + mStop, Toast.LENGTH_LONG).show();
 
-        Log.e(TAG, "Start: " + cal1.getTimeInMillis());
-        Log.e(TAG, "Current: " + System.currentTimeMillis());
-        Log.e(TAG, "Stop: " + cal2.getTimeInMillis());
-
-
-        //alarm.setAlarm(this);
+            Log.e(TAG, "Start: " + cal1.getTimeInMillis());
+            Log.e(TAG, "Current: " + System.currentTimeMillis());
+            Log.e(TAG, "Stop: " + cal2.getTimeInMillis());
+        }
+        Intent intent = new Intent(this, Main2Activity.class);
+        startActivity(intent);
         finish();
     }
 

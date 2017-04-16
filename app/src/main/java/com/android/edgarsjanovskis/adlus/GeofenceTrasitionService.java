@@ -24,6 +24,7 @@ import com.google.android.gms.location.GeofencingEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.android.edgarsjanovskis.adlus.DatabaseHelper.PROJECT_LR_COLUMN;
 import static com.android.edgarsjanovskis.adlus.DatabaseHelper.TABLE_PROJECTS;
 
 public class GeofenceTrasitionService extends IntentService {
@@ -37,8 +38,19 @@ public class GeofenceTrasitionService extends IntentService {
         super(TAG);
     }
 
+    Context context;
     MyGeofences myGeofences;
     String mSnippet;
+    Cursor reader;
+    DatabaseHelper mDbHelper;
+    SQLiteDatabase db;
+
+    @Override
+    public void onCreate(){
+        super.onCreate();
+        mDbHelper = new DatabaseHelper(this);
+        mDbHelper.getAllRecordList();
+    }
 
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -70,56 +82,51 @@ public class GeofenceTrasitionService extends IntentService {
                 geoFenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT ) {
             // Get the geofence that were triggered
             List<Geofence> triggeringGeofences = geofencingEvent.getTriggeringGeofences();
-
             String geofenceTransitionDetails = getGeofenceTrasitionDetails(geoFenceTransition, triggeringGeofences);
 
             // Send notification details as a String
             sendNotification(geofenceTransitionDetails);
 
-            //createPostIntent(geoFenceTransition, triggeringGeofences); // THIS SHOULD SEND EXTRAS TO POST ACTIVITY
-            //createPostPendingIntent(geoFenceTransition, triggeringGeofences.get(0));
+            // THIS SHOULD SEND EXTRAS TO POST ACTIVITY
+            createPostPendingIntent(geoFenceTransition, triggeringGeofences.get(0));
             Log.e("LOG Transistion", geofenceTransitionDetails);
         }
     }
 
     private Integer triggeringGeofenceId;
-    private String lr = "LR...";
-    private DatabaseHelper mDbHelper;
-    public SQLiteDatabase db;
-    private Cursor reader;
-
+    private String lr = "LR000";
     private String getGeofenceTrasitionDetails(int geoFenceTransition, List<Geofence> triggeringGeofences) {
-        mDbHelper = new DatabaseHelper(this);
-        reader = mDbHelper.getAllRecordList();
 
-
-         //get the ID of each geofence triggered
+        //get the ID of each geofence triggered
         ArrayList<String> triggeringGeofencesList = new ArrayList<>();
-        for ( Geofence geofence : triggeringGeofences ) {
+        for (Geofence geofence : triggeringGeofences) {
             triggeringGeofencesList.add(geofence.getRequestId());
             triggeringGeofenceId = Integer.parseInt(geofence.getRequestId());
-            //mPostPendingIntent = createPostPendingIntent(geoFenceTransition, geofence);
-            if (reader != null) {
-                for (reader.moveToFirst(); reader.isAfterLast(); reader.moveToNext()) {
-                    try {
-                        reader = db.rawQuery(" SELECT ProjectLr FROM " + TABLE_PROJECTS + " WHERE GeofenceId = " + triggeringGeofenceId, null);
-                        lr = reader.getString(reader.getColumnIndex("ProjectLr"));
-                    } catch (SQLiteException ex) {
-                        Toast.makeText(getApplicationContext(), "Problem reading SQLite" + ex, Toast.LENGTH_LONG).show();
+            mPostPendingIntent = createPostPendingIntent(geoFenceTransition, geofence);
+        }
+        if (reader != null) {
+            for (reader.moveToFirst(); reader.isAfterLast(); reader.moveToNext()) {
+                try {
+                    reader = db.rawQuery(" SELECT ProjectLr FROM " + TABLE_PROJECTS + " WHERE GeofenceId = " + triggeringGeofenceId, null);
+                    lr = reader.getString(reader.getColumnIndex(PROJECT_LR_COLUMN));
+                } catch (SQLiteException ex) {
+                    Log.e("Error: ", ex.toString());
+                    Toast.makeText(getApplicationContext(), "Problem reading SQLite" + ex, Toast.LENGTH_LONG).show();
+                } finally {
+                    if (reader.isAfterLast()) {
+                        reader.close();
                     }
                 }
             }
         }
-
-
-        String status = null;
-        if ( geoFenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER )
-            status = "Esi reģistrēts ";
-        else if ( geoFenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT )
-            status = "Izreģistrējies no ";
-        return status + triggeringGeofenceId + " (" + lr + ")";//TextUtils.join( ", ", triggeringGeofences);
-
+            String status = null;
+            if (geoFenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER)
+                status = "Esi reģistrēts ";
+            else if (geoFenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT)
+                status = "Izreģistrējies no ";
+            return status + triggeringGeofenceId + " (" + lr + ")";//TextUtils.join( ", ", triggeringGeofences);
     }
+
 
     private void sendNotification( String msg ) {
         Log.i(TAG, "sendNotification: " + msg );
