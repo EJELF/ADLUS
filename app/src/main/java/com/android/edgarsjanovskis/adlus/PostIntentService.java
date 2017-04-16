@@ -9,29 +9,27 @@ import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.util.Log;
 
-import com.android.edgarsjanovskis.adlus.model.MyActivities;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class PostIntentService extends IntentService {
-    private static final String TAG = PostIntentService.class.getSimpleName();
+import static com.android.edgarsjanovskis.adlus.Constants.TAG;
 
+public class PostIntentService extends IntentService {
     public PostIntentService() {
-        super(TAG);
+        super("PostIntentService");
     }
 
     public String myurl = "";
@@ -39,9 +37,12 @@ public class PostIntentService extends IntentService {
     private SharedPreferences prefs;
     String mGeofence;
     String mTrigger;
-    MyActivities activity;
-
-    protected DatabaseHelper databaseHelper;
+    String json = null;
+    InputStream inputStream;
+    HttpURLConnection urlConnection;
+    byte[] outputBytes;
+    String ResponseData = "";
+    int statusCode;
 
     @Override
     public void onCreate() {
@@ -50,7 +51,7 @@ public class PostIntentService extends IntentService {
         // JUST DO IN BACKGROUND
         //Toast.makeText(getApplicationContext(), "Post Service started!", Toast.LENGTH_LONG).show();
 
-        prefs = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
+        prefs = getApplicationContext().getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
         myurl = prefs.getString("Server_URL", " ");
         Log.i("URL: ", myurl);
         phoneId = prefs.getInt("PhoneID", 0);
@@ -58,44 +59,65 @@ public class PostIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        // This describes what will happen when service is triggered
-        System.out.println("POST INTENT RECEIVED");
-        if (intent == null){
-            //error
-           // Toast.makeText(PostIntentService.this, "No Intent received", Toast.LENGTH_LONG).show();
+        if (intent != null) {
+            // This describes what will happen when service is triggered
+            System.out.println("POST INTENT RECEIVED");
+            if (intent == null) {
+                //error
+                // Toast.makeText(PostIntentService.this, "No Intent received", Toast.LENGTH_LONG).show();
+                Log.e(TAG, " POST ERROR ");
 
-        }else{
-            mGeofence = intent.getStringExtra("mGeofence");
-            mTrigger = intent.getStringExtra("mTrigger");
-            Log.i(TAG, "Extras received: " + mGeofence + " ; " + mTrigger);
-        }
-            startPost();
-    }
+            } else {
+                mGeofence = intent.getStringExtra("mGeofence");
+                mTrigger = intent.getStringExtra("mTrigger");
+                Log.i(TAG, "Extras received: " + mGeofence + " ; " + mTrigger);
+            }
 
-    private void startPost(){
-        // call AsynTask to perform network operation on separate thread
-        if(isConnected() && checkNetworks())
-        new PostIntentService.HttpAsyncTask().execute("http://"+myurl+"/api/Activities");
-        else
-            Log.e(TAG, "No network connection, Post was not sent!");
-    }
+            String currentDateTime;
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+            currentDateTime = sdf.format(new Date());
 
-    private class HttpAsyncTask extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... urls) {
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.accumulate("geofenceID", mGeofence);
+                jsonObject.accumulate("phoneID", phoneId);
+                jsonObject.accumulate("transitionStateID", mTrigger);
+                jsonObject.accumulate("dateTime", currentDateTime);
+                json = jsonObject.toString();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Log.i(TAG, "Json created: " + json);
 
-            activity = new MyActivities();
-            activity.setmGeofence(mGeofence);
-            activity.setmPhoneId(phoneId.toString());
-            activity.setmTransition(mTrigger);
-            activity.setmActivityTimestamp(new Date().toString());
-            return POST(urls[0],activity);
-        }
-        // onPostExecute displays the results of the AsyncTask.
-        @Override
-        protected void onPostExecute(String result) {
-            //Toast.makeText(PostIntentService.this, "New data sent!", Toast.LENGTH_LONG).show();
-        }
+                try {
+                    URL url = new URL("http://" + myurl + "/api/Activities");
+                    urlConnection = (HttpURLConnection) url.openConnection();
+                    urlConnection.setReadTimeout(1500);
+                    urlConnection.setConnectTimeout(1500);
+                    outputBytes = json.getBytes("UTF-8");
+                    urlConnection.setRequestMethod("POST");
+                    urlConnection.setDoOutput(true);
+                    urlConnection.setDoInput(true);
+                    urlConnection.setRequestProperty("Content-type", "application/json");
+                    urlConnection.addRequestProperty("Accept", "application/json");
+                    urlConnection.connect();
+                    OutputStream os = urlConnection.getOutputStream();
+                    os.write(outputBytes);
+                    os.close();
+
+                    statusCode = urlConnection.getResponseCode();
+                    if (statusCode == HttpURLConnection.HTTP_CREATED) {
+                        inputStream = new BufferedInputStream(urlConnection.getInputStream());
+                        ResponseData = convertStreamToString(inputStream);
+                    } else {
+                        ResponseData = null;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.e(TAG, "Response: " + ResponseData);
+            }
+
     }
 
     public boolean isConnected(){
@@ -122,67 +144,26 @@ public class PostIntentService extends IntentService {
         return false;
     }
 
+    public static String convertStreamToString(InputStream is) {
 
-    @SuppressWarnings("deprecation")
-    public String POST(String url, MyActivities actitity){
-        InputStream inputStream;
-        String result = "";
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        StringBuilder sb = new StringBuilder();
+
+        String line = null;
         try {
-            // 1. create HttpClient
-            HttpClient httpclient = new DefaultHttpClient();
-            // 2. make POST request to the given URL
-            HttpPost httpPost = new HttpPost(url);
-            String json;
-            // 3. build jsonObject
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.accumulate("geofenceID", mGeofence);
-            jsonObject.accumulate("phoneID", phoneId);
-            jsonObject.accumulate("transitionStateID", mTrigger);
-            jsonObject.accumulate("dateTime", actitity.getmActivityTimestamp());
-            // 4. convert JSONObject to JSON to String
-            json = jsonObject.toString();
-            /*/////////////////////////
-            Log.e(TAG, "Try to save JSON to Db :" +  json);
-            databaseHelper.saveActivityRecord(json);
-            Log.e(TAG, "JSON String saved to Db :" +  json);
-            //databaseHelper.getAllPendingJsonById();
-            //////////////////////////*/
-            // 5. set json to StringEntity
-            StringEntity se = new StringEntity(json);
-            // 6. set httpPost Entity
-            httpPost.setEntity(se);
-            // 7. Set some headers to inform server about the type of the content
-            httpPost.setHeader("Accept", "application/json");
-            httpPost.setHeader("Content-type", "application/json");
-            // 8. Execute POST request to the given URL
-            HttpResponse httpResponse = httpclient.execute(httpPost);
-            // 9. receive response as inputStream
-            inputStream = httpResponse.getEntity().getContent();
-            // 10. convert inputstream to string
-            if(inputStream != null) {
-                result = convertInputStreamToString(inputStream);
-                Log.i("InputStream", result);
-                Integer statusCode = httpResponse.getStatusLine().getStatusCode();
-                Log.i("Statuscode = ", statusCode.toString());
+            while ((line = reader.readLine()) != null) {
+                sb.append((line + "\n"));
             }
-            else
-                result = "Did not work!";
-
-        } catch (Exception e) {
-            Log.d("InputStream", e.getLocalizedMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        // 11. return result
-        return result;
+        return sb.toString();
     }
 
-    private static String convertInputStreamToString(InputStream inputStream) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
-        String line;
-        String result ="";
-        while((line = bufferedReader.readLine()) != null)
-            result += line;
-        inputStream.close();
-        return result;
-
-    }
 }

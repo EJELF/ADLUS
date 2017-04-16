@@ -206,7 +206,7 @@ public class Main2Activity extends AppCompatActivity {
     }
 
     public void buttonPost_onClick(View view) {
-        Intent form = new Intent(this, MyPOSTIntentService.class);
+        Intent form = new Intent(this, PostIntentService.class);
         form.putExtra("mGeofence", "6");
         form.putExtra("mTrigger", "2");
         startService(form);

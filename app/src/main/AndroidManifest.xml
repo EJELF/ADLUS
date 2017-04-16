@@ -114,18 +114,9 @@
 
             <category android:name="android.intent.category.DEFAULT" />
         </activity>
-        <activity android:name=".PostActivity">
-            <action android:name="android.intent.action.QUICK_VIEW" />
-
-            <category android:name="android.intent.category.DEFAULT" />
-        </activity>
 
         <service
             android:name=".GeofencingService"
-            android:enabled="true"
-            android:exported="false" />
-        <service
-            android:name=".PostIntentService"
             android:enabled="true"
             android:exported="false" />
 
@@ -157,7 +148,7 @@
         </receiver>
 
         <service
-            android:name=".MyPOSTIntentService"
+            android:name=".PostIntentService"
             android:exported="false"></service>
     </application>
 
