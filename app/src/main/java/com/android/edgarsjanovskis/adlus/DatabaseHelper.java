@@ -46,7 +46,7 @@ public class DatabaseHelper {
     //šī ideja no DobrinGanev
     //private static final String[] COLUMNS = {KEY_ID, LATITUDE_COLUMN, LONGITUDE_COLUMN, RADIUS_COLUMN};
 
-    Projects openHelper;
+     Data openHelper;
     private SQLiteDatabase database;
     Context context;
     //List<Geofence> mGeofenceList;
@@ -54,7 +54,7 @@ public class DatabaseHelper {
 
 
     public DatabaseHelper(Context context){
-        openHelper = new Projects(context);
+        openHelper = new  Data(context);
         database = openHelper.getWritableDatabase();
     }
 
@@ -199,8 +199,8 @@ public class DatabaseHelper {
         return database.rawQuery("select * from " + TABLE_PROJECTS, null);
     }
 
-    private class Projects extends SQLiteOpenHelper {
-        public Projects(Context context) {
+    private class Data extends SQLiteOpenHelper {
+        public  Data(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
         }
 

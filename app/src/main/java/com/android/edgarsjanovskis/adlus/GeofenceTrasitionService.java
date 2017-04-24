@@ -7,14 +7,10 @@ import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.graphics.Color;
 import android.location.Location;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.android.edgarsjanovskis.adlus.model.MyGeofences;
 import com.google.android.gms.location.Geofence;
@@ -23,9 +19,6 @@ import com.google.android.gms.location.GeofencingEvent;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.android.edgarsjanovskis.adlus.DatabaseHelper.PROJECT_LR_COLUMN;
-import static com.android.edgarsjanovskis.adlus.DatabaseHelper.TABLE_PROJECTS;
 
 public class GeofenceTrasitionService extends IntentService {
 
@@ -38,18 +31,14 @@ public class GeofenceTrasitionService extends IntentService {
         super(TAG);
     }
 
-    Context context;
+    Context mContext;
     MyGeofences myGeofences;
     String mSnippet;
-    Cursor reader;
-    DatabaseHelper mDbHelper;
-    SQLiteDatabase db;
+    Intent postIntent;
 
     @Override
     public void onCreate(){
         super.onCreate();
-        mDbHelper = new DatabaseHelper(this);
-        mDbHelper.getAllRecordList();
     }
 
     @Override
@@ -88,13 +77,18 @@ public class GeofenceTrasitionService extends IntentService {
             sendNotification(geofenceTransitionDetails);
 
             // THIS SHOULD SEND EXTRAS TO POST ACTIVITY
-            createPostPendingIntent(geoFenceTransition, triggeringGeofences.get(0));
-            Log.e("LOG Transistion", geofenceTransitionDetails);
+            startPostIntent(geoFenceTransition, triggeringGeofences.get(0));
         }
     }
 
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        mContext = getApplicationContext();
+        return super.onStartCommand(intent, flags, startId);
+    }
+
     private Integer triggeringGeofenceId;
-    private String lr = "LR000";
+    private String lr = "LR...";
     private String getGeofenceTrasitionDetails(int geoFenceTransition, List<Geofence> triggeringGeofences) {
 
         //get the ID of each geofence triggered
@@ -102,31 +96,15 @@ public class GeofenceTrasitionService extends IntentService {
         for (Geofence geofence : triggeringGeofences) {
             triggeringGeofencesList.add(geofence.getRequestId());
             triggeringGeofenceId = Integer.parseInt(geofence.getRequestId());
-            mPostPendingIntent = createPostPendingIntent(geoFenceTransition, geofence);
         }
-        if (reader != null) {
-            for (reader.moveToFirst(); reader.isAfterLast(); reader.moveToNext()) {
-                try {
-                    reader = db.rawQuery(" SELECT ProjectLr FROM " + TABLE_PROJECTS + " WHERE GeofenceId = " + triggeringGeofenceId, null);
-                    lr = reader.getString(reader.getColumnIndex(PROJECT_LR_COLUMN));
-                } catch (SQLiteException ex) {
-                    Log.e("Error: ", ex.toString());
-                    Toast.makeText(getApplicationContext(), "Problem reading SQLite" + ex, Toast.LENGTH_LONG).show();
-                } finally {
-                    if (reader.isAfterLast()) {
-                        reader.close();
-                    }
-                }
-            }
-        }
-            String status = null;
+
+        String status = null;
             if (geoFenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER)
                 status = "Esi reģistrēts ";
             else if (geoFenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT)
                 status = "Izreģistrējies no ";
             return status + triggeringGeofenceId + " (" + lr + ")";//TextUtils.join( ", ", triggeringGeofences);
     }
-
 
     private void sendNotification( String msg ) {
         Log.i(TAG, "sendNotification: " + msg );
@@ -159,22 +137,13 @@ public class GeofenceTrasitionService extends IntentService {
         return notificationBuilder.build();
     }
 
-     private final int POST_REQ_CODE = 99;
-
-     private PendingIntent createPostPendingIntent(int geoFenceTransition, Geofence geofence) {
-        Log.d(TAG, "createPostPendingIntent");
-        if (mPostPendingIntent != null)
-            return mPostPendingIntent;
-
-        Intent intent = new Intent(this, PostIntentService.class);
-         intent.putExtra("mGeofence", geofence.getRequestId());
-         intent.putExtra("mTrigger", geoFenceTransition);
-
-         Log.e(TAG, "Extras sent " + geofence.getRequestId() + " " + geoFenceTransition);
-         Toast.makeText(getBaseContext(), "PostPandingIntent created: " + geofence.getRequestId() + " - " + geoFenceTransition, Toast.LENGTH_LONG).show();
-        return PendingIntent.getService(this, POST_REQ_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    private void startPostIntent (int geoFenceTransition, Geofence geofence){
+        postIntent = new Intent(mContext, PostVolleyIntentService.class);
+        postIntent.putExtra("mGeofence", geofence.getRequestId());
+        postIntent.putExtra("mTrigger", String.valueOf(geoFenceTransition));
+        Log.e(TAG, "Extras sent " + geofence.getRequestId() + ", " + geoFenceTransition);
+        startService(postIntent);
     }
-
 
     private static String getErrorString(int errorCode) {
         switch (errorCode) {

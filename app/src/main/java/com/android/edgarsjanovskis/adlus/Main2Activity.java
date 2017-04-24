@@ -1,6 +1,7 @@
 package com.android.edgarsjanovskis.adlus;
 
 import android.app.ActivityManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -20,6 +21,13 @@ import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
 import java.util.List;
 import java.util.Map;
@@ -44,6 +52,7 @@ public class Main2Activity extends AppCompatActivity {
     ImageButton imageButton;
     RadioButton btnConnected;
     Color color = null;
+    PendingIntent mPostPendingIntent;
 
     public static boolean isConnected = false;
 
@@ -206,11 +215,29 @@ public class Main2Activity extends AppCompatActivity {
     }
 
     public void buttonPost_onClick(View view) {
-        Intent form = new Intent(this, PostIntentService.class);
-        form.putExtra("mGeofence", "6");
-        form.putExtra("mTrigger", "2");
-        startService(form);
+// Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url ="http://192.168.10.86:5111/api/AndroidDbUpdates";
+
+// Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Display the first 500 characters of the response string.
+                        Log.e(TAG, "Response is: "+ response.substring(0,500));
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, "That didn't work!");
+            }
+        });
+// Add the request to the RequestQueue.
+        queue.add(stringRequest);
     }
+
+
 
     public void buttonUUID_onClick(View view) {
         prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
@@ -274,4 +301,5 @@ public class Main2Activity extends AppCompatActivity {
         }
 
     }
+
 }

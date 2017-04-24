@@ -79,10 +79,6 @@
             </intent-filter>
         </activity>
 
-        <service
-            android:name=".GeofenceTrasitionService"
-            android:exported="false" />
-
         <activity android:name=".PhoneInfoActivity" />
         <activity
             android:name=".GetMyProjects"
@@ -116,6 +112,15 @@
         </activity>
 
         <service
+            android:name=".GeofenceTrasitionService"
+            android:exported="false" />
+        <service
+            android:name=".PostIntentService"
+            android:exported="false" />
+        <service
+            android:name=".PostVolleyIntentService"
+            android:exported="false" />
+        <service
             android:name=".GeofencingService"
             android:enabled="true"
             android:exported="false" />
@@ -147,9 +152,6 @@
             </intent-filter>
         </receiver>
 
-        <service
-            android:name=".PostIntentService"
-            android:exported="false"></service>
     </application>
 
 </manifest>

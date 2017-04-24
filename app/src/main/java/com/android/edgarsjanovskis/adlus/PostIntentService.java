@@ -25,12 +25,13 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static com.android.edgarsjanovskis.adlus.Constants.TAG;
 
 public class PostIntentService extends IntentService {
-    public PostIntentService() {
-        super("PostIntentService");
-    }
+    private static final String TAG = PostIntentService.class.getSimpleName();
+
+    public PostIntentService() {super(TAG);}
+
+    Context mContext;
 
     public String myurl = "";
     private Integer phoneId = 0;
@@ -44,93 +45,102 @@ public class PostIntentService extends IntentService {
     String ResponseData = "";
     int statusCode;
 
+
     @Override
     public void onCreate() {
-        super.onCreate();// if you override onCreate(), make sure to call super().
+        super.onCreate();
+        // if you override onCreate(), make sure to call super().
         // If a Context object is needed, call getApplicationContext() here.
         // JUST DO IN BACKGROUND
         //Toast.makeText(getApplicationContext(), "Post Service started!", Toast.LENGTH_LONG).show();
-
+        Log.e(TAG, "Post service started");
         prefs = getApplicationContext().getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
         myurl = prefs.getString("Server_URL", " ");
         Log.i("URL: ", myurl);
         phoneId = prefs.getInt("PhoneID", 0);
     }
 
+
     @Override
-    protected void onHandleIntent(Intent intent) {
-        if (intent != null) {
-            // This describes what will happen when service is triggered
-            System.out.println("POST INTENT RECEIVED");
-            if (intent == null) {
-                //error
-                // Toast.makeText(PostIntentService.this, "No Intent received", Toast.LENGTH_LONG).show();
-                Log.e(TAG, " POST ERROR ");
+    protected void onHandleIntent(Intent postIntent) {
 
-            } else {
-                mGeofence = intent.getStringExtra("mGeofence");
-                mTrigger = intent.getStringExtra("mTrigger");
-                Log.i(TAG, "Extras received: " + mGeofence + " ; " + mTrigger);
-            }
+        //if (intent != null) {
+        // This describes what will happen when service is triggered
+        System.out.println("POST INTENT RECEIVED");
 
-            String currentDateTime;
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-            currentDateTime = sdf.format(new Date());
+        mGeofence = postIntent.getStringExtra("mGeofence");
+        mTrigger = postIntent.getStringExtra("mTrigger");
+        Log.i(TAG, "Extras received: " + mGeofence + " ; " + mTrigger);
 
-            JSONObject jsonObject = new JSONObject();
+
+        final String currentDateTime;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        currentDateTime = sdf.format(new Date());
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.accumulate("geofenceID", mGeofence);
+            jsonObject.accumulate("phoneID", phoneId);
+            jsonObject.accumulate("transitionStateID", mTrigger);
+            jsonObject.accumulate("dateTime", currentDateTime);
+            json = jsonObject.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Log.i(TAG, "Json created: " + json);
+
+        if (isConnected() && checkNetworks()) {
+
             try {
-                jsonObject.accumulate("geofenceID", mGeofence);
-                jsonObject.accumulate("phoneID", phoneId);
-                jsonObject.accumulate("transitionStateID", mTrigger);
-                jsonObject.accumulate("dateTime", currentDateTime);
-                json = jsonObject.toString();
-            } catch (JSONException e) {
+                URL url = new URL("http://" + myurl + "/api/Activities");
+                urlConnection = (HttpURLConnection) url.openConnection();
+                //urlConnection.setReadTimeout(5500);
+                //urlConnection.setConnectTimeout(5500);
+                outputBytes = json.getBytes("UTF-8");
+                urlConnection.setRequestMethod("POST");
+                urlConnection.setDoOutput(true);
+                urlConnection.setDoInput(true);
+                urlConnection.setRequestProperty("Content-type", "application/json");
+                urlConnection.addRequestProperty("Accept", "application/json");
+                urlConnection.connect();
+                OutputStream os = urlConnection.getOutputStream();
+                os.write(outputBytes);
+                os.close();
+
+                statusCode = urlConnection.getResponseCode();
+                if (statusCode == HttpURLConnection.HTTP_CREATED) {
+                    inputStream = new BufferedInputStream(urlConnection.getInputStream());
+                    ResponseData = convertStreamToString(inputStream);
+                } else {
+                    ResponseData = null;
+                }
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-            Log.i(TAG, "Json created: " + json);
-
-                try {
-                    URL url = new URL("http://" + myurl + "/api/Activities");
-                    urlConnection = (HttpURLConnection) url.openConnection();
-                    urlConnection.setReadTimeout(1500);
-                    urlConnection.setConnectTimeout(1500);
-                    outputBytes = json.getBytes("UTF-8");
-                    urlConnection.setRequestMethod("POST");
-                    urlConnection.setDoOutput(true);
-                    urlConnection.setDoInput(true);
-                    urlConnection.setRequestProperty("Content-type", "application/json");
-                    urlConnection.addRequestProperty("Accept", "application/json");
-                    urlConnection.connect();
-                    OutputStream os = urlConnection.getOutputStream();
-                    os.write(outputBytes);
-                    os.close();
-
-                    statusCode = urlConnection.getResponseCode();
-                    if (statusCode == HttpURLConnection.HTTP_CREATED) {
-                        inputStream = new BufferedInputStream(urlConnection.getInputStream());
-                        ResponseData = convertStreamToString(inputStream);
-                    } else {
-                        ResponseData = null;
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                Log.e(TAG, "Response: " + ResponseData);
-            }
-
+            Log.e(TAG, "Response: " + ResponseData);
+            // }else {
+            // Log.e(TAG, " NO INTENT RECEIVED");
+        }
     }
 
-    public boolean isConnected(){
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        mContext = getApplicationContext();
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    public boolean isConnected() {
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Activity.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnected();
     }
-    public boolean checkNetworks(){
-        ConnectivityManager cm = (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+    public boolean checkNetworks() {
+        ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
         Network[] networks = cm.getAllNetworks();
 
         Log.i(TAG, "Network count: " + networks.length);
-        for(int i = 0; i < networks.length; i++) {
+        for (int i = 0; i < networks.length; i++) {
 
             NetworkCapabilities caps = cm.getNetworkCapabilities(networks[i]);
 
@@ -165,5 +175,4 @@ public class PostIntentService extends IntentService {
         }
         return sb.toString();
     }
-
 }

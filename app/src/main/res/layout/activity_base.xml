@@ -161,7 +161,7 @@
             android:padding="1dp"
             android:background="@color/lightBlue"
             android:textSize="12sp"
-            android:text="POST dati"
+            android:text="........."
             android:onClick="buttonPost_onClick" />
         <LinearLayout
             android:layout_width="wrap_content"
