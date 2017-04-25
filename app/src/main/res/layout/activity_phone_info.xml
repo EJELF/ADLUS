@@ -29,7 +29,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Tālruņa IMEI"
+        android:text="Tālruņa ID"
         android:textSize="16sp"
         android:textColor="#FFC000"
         android:id="@+id/text2" />

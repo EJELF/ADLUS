@@ -8,7 +8,6 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
@@ -44,7 +43,7 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
     public GeofencingService() {}
 
     boolean isRunning = true;
-    MediaPlayer player;
+    //MediaPlayer player;
     private Location lastLocation;
     private GoogleApiClient googleApiClient;
 
@@ -59,6 +58,7 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
         Toast.makeText(this, "Service is started!", Toast.LENGTH_LONG).show();
         new Thread(
                 new Runnable() {
@@ -66,8 +66,8 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
                     public void run() {
                         try {
                             while (isRunning) {
-                                player.start();
-                                Log.d(TAG, "run Player...()");
+                                //player.start();
+                                //Log.d(TAG, "run Player...()");
                                 startLocationUpdates();
                                 startGeofences();
                                 Thread.sleep(5000);
@@ -89,7 +89,7 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
     @Override
     public void onCreate() {
         super.onCreate();
-        player = MediaPlayer.create(this, R.raw.day_break);
+        //player = MediaPlayer.create(this, R.raw.day_break);
         Toast.makeText(this, "Service is created!", Toast.LENGTH_LONG).show();
         // Instantiate the current List of geofences.
         mGeofenceList = new ArrayList<>();
@@ -129,7 +129,7 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
                         .setRequestId(String.valueOf(geofenceId))
                         .setCircularRegion(latLng.latitude, latLng.longitude, radius)
                         .setExpirationDuration(GEOFENCE_EXPIRATION_TIME)
-                        .setLoiteringDelay(1000*60*3) // for DWELL
+                        .setLoiteringDelay(1000*60*1) // for DWELL
                         .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER
                                 | Geofence.GEOFENCE_TRANSITION_EXIT)
                         .build();
@@ -141,11 +141,13 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
             }
     }
 
-    private void checkGeofenceListNotNull() {
-        if (mGeofenceList == null){
+    private boolean checkGeofenceListNotNull() {
+        if (mGeofenceList == null) {
             Toast.makeText(this, "Rādās Tev nav neviena aktīva projekta! \n Serviss tika apstādināts.", Toast.LENGTH_LONG).show();
             stopSelf();
-            return;
+            return false;
+        }else{
+            return true;
         }
     }
 
@@ -155,7 +157,7 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
         if (db != null) {
             db.close();
         }
-        player.stop();
+        //player.stop();
         stopLocationUpdates();
         stopGeofences();
         stopService();
@@ -228,7 +230,7 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
     private GeofencingRequest createGeofencesRequest() {
         Log.d(TAG, "createGeofenceRequest");
             return new GeofencingRequest.Builder()
-                    .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_DWELL)
+                    .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER) // Dwell to start cheching even if in geofence
                     .addGeofences(mGeofenceList)   // List
                     .build();
     }

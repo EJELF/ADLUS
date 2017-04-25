@@ -322,7 +322,7 @@ public class AppSettingsActivity extends AppCompatActivity {
             Log.e(TAG, "Current: " + System.currentTimeMillis());
             Log.e(TAG, "Stop: " + cal2.getTimeInMillis());
         }
-        Intent intent = new Intent(this, Main2Activity.class);
+        Intent intent = new Intent(this, GetMyProjects.class);
         startActivity(intent);
         finish();
     }

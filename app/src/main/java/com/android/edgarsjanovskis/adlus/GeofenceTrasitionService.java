@@ -59,7 +59,7 @@ public class GeofenceTrasitionService extends IntentService {
         float accuracy = location.getAccuracy();
         int transitionId = geofencingEvent.getGeofenceTransition();
 
-        Log.e(TAG, "FromIntent lat/lng: " + latitude+"/"+longitude + " TransitionID:" + transitionId+ " Accuracy:"+ accuracy  + "LR :" + lr);
+        Log.e(TAG, "FromIntent lat/lng: " + latitude+"/"+longitude + " TransitionID:" + transitionId+ " Accuracy:"+ accuracy);
         //
 
         int geoFenceTransition = geofencingEvent.getGeofenceTransition();
@@ -88,14 +88,14 @@ public class GeofenceTrasitionService extends IntentService {
     }
 
     private Integer triggeringGeofenceId;
-    private String lr = "LR...";
+    //private String lr = "LR...";
     private String getGeofenceTrasitionDetails(int geoFenceTransition, List<Geofence> triggeringGeofences) {
 
         //get the ID of each geofence triggered
         ArrayList<String> triggeringGeofencesList = new ArrayList<>();
         for (Geofence geofence : triggeringGeofences) {
             triggeringGeofencesList.add(geofence.getRequestId());
-            triggeringGeofenceId = Integer.parseInt(geofence.getRequestId());
+            triggeringGeofenceId = Integer.getInteger(geofence.getRequestId());
         }
 
         String status = null;
@@ -103,7 +103,11 @@ public class GeofenceTrasitionService extends IntentService {
                 status = "Esi reģistrēts ";
             else if (geoFenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT)
                 status = "Izreģistrējies no ";
-            return status + triggeringGeofenceId + " (" + lr + ")";//TextUtils.join( ", ", triggeringGeofences);
+            /*
+            else if (geoFenceTransition == Geofence.GEOFENCE_TRANSITION_DWELL)
+                status = "Joprojām atrodies ";
+*/
+            return status + triggeringGeofenceId;//TextUtils.join( ", ", triggeringGeofences);
     }
 
     private void sendNotification( String msg ) {
@@ -138,7 +142,7 @@ public class GeofenceTrasitionService extends IntentService {
     }
 
     private void startPostIntent (int geoFenceTransition, Geofence geofence){
-        postIntent = new Intent(mContext, PostVolleyIntentService.class);
+        postIntent = new Intent(mContext, PostIntentService.class);
         postIntent.putExtra("mGeofence", geofence.getRequestId());
         postIntent.putExtra("mTrigger", String.valueOf(geoFenceTransition));
         Log.e(TAG, "Extras sent " + geofence.getRequestId() + ", " + geoFenceTransition);

@@ -120,7 +120,7 @@
     <string name="appsettings_activity_title">ADLUS iestatījumi</string>
     <string name="myprojects_activity_title">Tav ir šādi projekti</string>
     <string name="projectonmap_activity_title">LR atrašanās vieta</string>
-    <string name="show_SQlite">Rādīt SQLite datus</string>
+    <string name="show_SQlite">Rādīt projektu sarakstu</string>
     <string name="isConnected">Savienojums izveidots</string>
-    <string name="no_internet">Hmm, nav interneta savienojuma</string>
+    <string name="no_internet">Hmm, nav interneta savienojuma...</string>
 </resources>

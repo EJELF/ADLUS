@@ -113,17 +113,14 @@
 
         <service
             android:name=".GeofenceTrasitionService"
-            android:exported="false" />
+            android:exported="true" />
         <service
             android:name=".PostIntentService"
-            android:exported="false" />
-        <service
-            android:name=".PostVolleyIntentService"
-            android:exported="false" />
+            android:exported="true" />
         <service
             android:name=".GeofencingService"
             android:enabled="true"
-            android:exported="false" />
+            android:exported="true" />
 
         <receiver
             android:name=".StartAlarmReceiver"

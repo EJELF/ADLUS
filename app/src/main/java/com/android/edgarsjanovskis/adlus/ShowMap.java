@@ -63,7 +63,7 @@ public class ShowMap extends AppCompatActivity
         GoogleMap.OnMarkerClickListener,
         ResultCallback<Status> {
 
-    private static final String TAG = com.android.edgarsjanovskis.adlus.GeofencingService.class.getSimpleName();
+    private static final String TAG = com.android.edgarsjanovskis.adlus.ShowMap.class.getSimpleName();
 
     private GoogleMap map;
     private GoogleApiClient googleApiClient;

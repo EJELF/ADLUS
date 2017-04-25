@@ -113,6 +113,7 @@ public class PostIntentService extends IntentService {
                     ResponseData = convertStreamToString(inputStream);
                 } else {
                     ResponseData = null;
+
                 }
             } catch (Exception e) {
                 e.printStackTrace();

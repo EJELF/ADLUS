@@ -22,13 +22,6 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -80,11 +73,11 @@ public class Main2Activity extends AppCompatActivity {
 
         // get reference to the views
         tvLastUpdate = (TextView) findViewById(R.id.tvLastUpdate);
-        tvLastChanges = (TextView) findViewById(R.id.tvLastChanges);
+        //tvLastChanges = (TextView) findViewById(R.id.tvLastChanges);
         imageButton = (ImageButton) findViewById(R.id.ib_Start);
         prefs = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
         String lastchanges = prefs.getString(LAST_DB_CHANGES, " ");
-        tvLastChanges.setText(lastchanges);
+       // tvLastChanges.setText(lastchanges);
         String lastupdate = prefs.getString(LAST_UPDATE, " ");
         tvLastUpdate.setText(lastupdate);
         sharedPref = getSharedPreferences("MapPrefsFile", MODE_PRIVATE);
@@ -215,6 +208,7 @@ public class Main2Activity extends AppCompatActivity {
     }
 
     public void buttonPost_onClick(View view) {
+        /*
 // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(this);
         String url ="http://192.168.10.86:5111/api/AndroidDbUpdates";
@@ -235,6 +229,8 @@ public class Main2Activity extends AppCompatActivity {
         });
 // Add the request to the RequestQueue.
         queue.add(stringRequest);
+        */
+        Toast.makeText(getApplicationContext(),"Diemžēl šī poga vēl nav aktīva!", Toast.LENGTH_LONG).show();
     }
 
 
