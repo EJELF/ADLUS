@@ -14,7 +14,6 @@ public class SplashScreen extends Activity {
             public void run(){
                 try{
                     sleep(3000);
-
                 }
                 catch(InterruptedException e){
                     e.printStackTrace();
@@ -22,7 +21,7 @@ public class SplashScreen extends Activity {
                 finally {
 
                     Intent intent = new Intent(SplashScreen.this,Main2Activity.class);
-                    // Šim jānovērš vairāku launcher ikonu veidošanu
+                    // Add flags to get quit with multi louncher icons on desktop
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -36,7 +35,6 @@ public class SplashScreen extends Activity {
 
     @Override
     protected void onPause() {
-        //  Auto-generated method stub
         super.onPause();
         finish();
     }
