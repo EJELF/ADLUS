@@ -12,7 +12,6 @@ import android.location.Location;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import com.android.edgarsjanovskis.adlus.model.MyGeofences;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofenceStatusCodes;
 import com.google.android.gms.location.GeofencingEvent;
@@ -25,15 +24,12 @@ public class GeofenceTrasitionService extends IntentService {
     private static final String TAG = GeofenceTrasitionService.class.getSimpleName();
 
     public static final int GEOFENCE_NOTIFICATION_ID = 0;
-    private PendingIntent mPostPendingIntent;
 
     public GeofenceTrasitionService() {
         super(TAG);
     }
 
     Context mContext;
-    MyGeofences myGeofences;
-    String mSnippet;
     Intent postIntent;
 
     @Override
@@ -52,7 +48,6 @@ public class GeofenceTrasitionService extends IntentService {
             return;
         }
 
-        //
         Location location  = geofencingEvent.getTriggeringLocation();
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
@@ -60,7 +55,6 @@ public class GeofenceTrasitionService extends IntentService {
         int transitionId = geofencingEvent.getGeofenceTransition();
 
         Log.e(TAG, "FromIntent lat/lng: " + latitude+"/"+longitude + " TransitionID:" + transitionId+ " Accuracy:"+ accuracy);
-        //
 
         int geoFenceTransition = geofencingEvent.getGeofenceTransition();
         //String geofenceName = geofencingEvent.getTriggeringGeofences().get(0).toString();
@@ -87,7 +81,7 @@ public class GeofenceTrasitionService extends IntentService {
         return super.onStartCommand(intent, flags, startId);
     }
 
-    private Integer triggeringGeofenceId;
+    private String triggeringGeofenceId;
     //private String lr = "LR...";
     private String getGeofenceTrasitionDetails(int geoFenceTransition, List<Geofence> triggeringGeofences) {
 
@@ -95,7 +89,7 @@ public class GeofenceTrasitionService extends IntentService {
         ArrayList<String> triggeringGeofencesList = new ArrayList<>();
         for (Geofence geofence : triggeringGeofences) {
             triggeringGeofencesList.add(geofence.getRequestId());
-            triggeringGeofenceId = Integer.getInteger(geofence.getRequestId());
+            triggeringGeofenceId = geofence.getRequestId();
         }
 
         String status = null;
@@ -143,7 +137,8 @@ public class GeofenceTrasitionService extends IntentService {
 
     private void startPostIntent (int geoFenceTransition, Geofence geofence){
         postIntent = new Intent(mContext, PostIntentService.class);
-        postIntent.putExtra("mGeofence", geofence.getRequestId());
+        int i = geofence.getRequestId().indexOf("(");
+        postIntent.putExtra("mGeofence", geofence.getRequestId().substring(0, i-1));
         postIntent.putExtra("mTrigger", String.valueOf(geoFenceTransition));
         Log.e(TAG, "Extras sent " + geofence.getRequestId() + ", " + geoFenceTransition);
         startService(postIntent);
@@ -160,12 +155,6 @@ public class GeofenceTrasitionService extends IntentService {
             default:
                 return "Unknown error.";
         }
-    }
-
-    private String getLrFromId(int id){
-        myGeofences = new MyGeofences(id);
-        myGeofences.getSnippet();
-        return mSnippet;
     }
 
 }

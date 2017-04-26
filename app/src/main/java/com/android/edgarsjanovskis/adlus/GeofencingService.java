@@ -39,7 +39,6 @@ import static com.android.edgarsjanovskis.adlus.DatabaseHelper.RADIUS_COLUMN;
 public class GeofencingService extends Service implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener {
 
-    // have to be a constructor EJ
     public GeofencingService() {}
 
     boolean isRunning = true;
@@ -66,8 +65,6 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
                     public void run() {
                         try {
                             while (isRunning) {
-                                //player.start();
-                                //Log.d(TAG, "run Player...()");
                                 startLocationUpdates();
                                 startGeofences();
                                 Thread.sleep(5000);
@@ -89,7 +86,6 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
     @Override
     public void onCreate() {
         super.onCreate();
-        //player = MediaPlayer.create(this, R.raw.day_break);
         Toast.makeText(this, "Service is created!", Toast.LENGTH_LONG).show();
         // Instantiate the current List of geofences.
         mGeofenceList = new ArrayList<>();
@@ -126,10 +122,10 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
 
                 LatLng latLng = new LatLng(lat, lon);
                 Geofence fence = new Geofence.Builder()
-                        .setRequestId(String.valueOf(geofenceId))
+                        .setRequestId(String.valueOf(geofenceId) + " (" + lr +")")
                         .setCircularRegion(latLng.latitude, latLng.longitude, radius)
                         .setExpirationDuration(GEOFENCE_EXPIRATION_TIME)
-                        .setLoiteringDelay(1000*60*1) // for DWELL
+                        .setLoiteringDelay(1000 * 60) // for DWELL
                         .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER
                                 | Geofence.GEOFENCE_TRANSITION_EXIT)
                         .build();
@@ -139,16 +135,6 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
                 if (reader.isAfterLast())
                     reader.close();
             }
-    }
-
-    private boolean checkGeofenceListNotNull() {
-        if (mGeofenceList == null) {
-            Toast.makeText(this, "Rādās Tev nav neviena aktīva projekta! \n Serviss tika apstādināts.", Toast.LENGTH_LONG).show();
-            stopSelf();
-            return false;
-        }else{
-            return true;
-        }
     }
 
     @Override

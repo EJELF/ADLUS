@@ -1,12 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="password" type="id" />
-    <item name="login" type="id" />
-    <item name="email_sign_in_button" type="id" />
-    <item name="login_form" type="id" />
-    <item name="login_progress" type="id" />
-    <item name="not_connected" type="id">You are not connected!</item>
-    <item name="usermail" type="id">useremail</item>
     <item name="startCenter" type="id">startCenter</item>
-    <item name="startLayout" type="id" />
 </resources>

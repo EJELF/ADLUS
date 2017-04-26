@@ -1,8 +1,6 @@
 package com.android.edgarsjanovskis.adlus;
 
 
- //Created by Edgars on 23.12.16.
-
 import android.util.Log;
 
 import java.io.BufferedInputStream;

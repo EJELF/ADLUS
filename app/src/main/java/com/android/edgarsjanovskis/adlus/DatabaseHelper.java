@@ -43,9 +43,6 @@ public class DatabaseHelper {
     public static final String POST_ID = "PostId";
     public static final String STRING_JSON = "Json";
 
-    //šī ideja no DobrinGanev
-    //private static final String[] COLUMNS = {KEY_ID, LATITUDE_COLUMN, LONGITUDE_COLUMN, RADIUS_COLUMN};
-
      Data openHelper;
     private SQLiteDatabase database;
     Context context;
@@ -152,7 +149,7 @@ public class DatabaseHelper {
 
 
     public static <T> T[] convert(ArrayList<T> newGeofenceIdList, Class clazz){
-        return (T[]) newGeofenceIdList.toArray((T[]) Array.newInstance(clazz, newGeofenceIdList.size()));
+        return newGeofenceIdList.toArray((T[]) Array.newInstance(clazz, newGeofenceIdList.size()));
     }
 
     public void deleteOldRecords() throws SQLiteException {
@@ -177,23 +174,6 @@ public class DatabaseHelper {
             }
         database.close();
     }
-
-/*
-    public boolean checkProjects(int id){
-        database = openHelper.getReadableDatabase();
-
-        Cursor c = database.query(TABLE_PROJECTS, new String[]{GEOFENCE_ID_COLUMN}, GEOFENCE_ID_COLUMN + " = ? ",
-                new String[] {String.valueOf(id)},
-                null, null, null, null);
-
-        if (c.moveToFirst()) {
-            return true;
-        } // row exist
-            else{
-            return false;
-        }
-    }
-*/
 
     public Cursor getAllRecordList(){
         return database.rawQuery("select * from " + TABLE_PROJECTS, null);
@@ -220,7 +200,6 @@ public class DatabaseHelper {
                     + POST_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + STRING_JSON +  " STRING" + ")");
             Log.e("Tabula - ", TABLE_ACTIVITIES + " - izveidota");
 
-            ///////////////////
         }
 
         // Upgrading database
@@ -232,74 +211,5 @@ public class DatabaseHelper {
             // Create tables again
             onCreate(db);
         }
-        /*
-        @Override
-        public void onDowngrade (SQLiteDatabase db, int oldVersion, int newVersion){
-            db.execSQL("DROP TABLE IF EXISTS " + TABLE_PROJECTS);
-            // Create tables again
-            onCreate(db);
-        }
-        */
-
-
-        //??? Kā dabūt no datubāzes@@@
-/*
-        public void createGeofence(int id){
-            //1. get reference to readable db
-            SQLiteDatabase db = this.getReadableDatabase();
-            //2. buld quiry
-
-            Cursor c = db.query(TABLE_PROJECTS, // a. table
-                    COLUMNS,// b. column names
-                    " id = ?", // c. selections
-                    new String[] {String.valueOf(id)}, // d. selections args
-                    null,// e. group by
-                    null,// f. having
-                    null,// g. order by
-                    null);// h. limit
-            // 3. if we got results get the first one
-            if (c != null)
-                c.moveToFirst();
-            // 4. build book object
-            LatLng latLng = new LatLng((c.getFloat(1)), (c.getFloat(2)));
-            Geofence fence= new Geofence.Builder()
-                    .setRequestId(c.getString(0))
-                    .setCircularRegion( latLng.latitude, latLng.longitude, c.getLong(3))
-                    .setExpirationDuration( GEOFENCE_EXPIRATION_TIME )
-                    .setTransitionTypes( Geofence.GEOFENCE_TRANSITION_DWELL
-                            | Geofence.GEOFENCE_TRANSITION_EXIT )
-                    .build();
-            mGeofenceList.add(fence);
-        }
-        public void createGeofence(){
-            //1. get reference to readable db
-            SQLiteDatabase db = this.getReadableDatabase();
-            //2. buld quiry
-
-            Cursor c = db.query(TABLE_PROJECTS, // a. table
-                    COLUMNS,// b. column names
-                    " id = ?", // c. selections
-                    new String[] {String.valueOf(id)}, // d. selections args
-                    null,// e. group by
-                    null,// f. having
-                    null,// g. order by
-                    null);// h. limit
-            // 3. if we got results get the first one
-            if (c != null)
-                c.moveToFirst();
-            // 4. build book object
-            LatLng latLng = new LatLng((c.getFloat(1)), (c.getFloat(2)));
-            Geofence fence= new Geofence.Builder()
-                    .setRequestId(c.getString(0))
-                    .setCircularRegion( latLng.latitude, latLng.longitude, c.getLong(3))
-                    .setExpirationDuration( GEOFENCE_EXPIRATION_TIME )
-                    .setTransitionTypes( Geofence.GEOFENCE_TRANSITION_DWELL
-                            | Geofence.GEOFENCE_TRANSITION_EXIT )
-                    .build();
-            mGeofenceList.add(fence);
-        }*/
-
-
     }
-
 }

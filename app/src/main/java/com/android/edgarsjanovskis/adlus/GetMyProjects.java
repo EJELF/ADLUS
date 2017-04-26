@@ -43,8 +43,6 @@ public class GetMyProjects extends AppCompatActivity {
     public final String USER_NAME = "User_Name";
     public final String PHONE_ID = "PhoneID";
     public ArrayList<HashMap<String, String>> mProjectList;
-    // projects JSONArray
-    JSONArray projects = null;
     // add a ProjectHelper to Activity (protected???)
     protected DatabaseHelper databaseHelper;
     ArrayList<Integer> newRecords;

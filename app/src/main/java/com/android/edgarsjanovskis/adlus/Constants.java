@@ -28,10 +28,4 @@ public final class Constants {
     public static final long GEOFENCE_EXPIRATION_TIME = Geofence.NEVER_EXPIRE;
     public static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 99;
     public static final int GEOFENCE_LOITERY_DELAY= 10;
-
-    // Invalid values, used to test geofence storage when retrieving geofences.
-    public static final long INVALID_LONG_VALUE = -999L;
-    public static final float INVALID_FLOAT_VALUE = -999.0f;
-    public static final int INVALID_INT_VALUE = -999;
-
 }
