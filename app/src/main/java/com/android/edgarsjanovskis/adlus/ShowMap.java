@@ -1,6 +1,7 @@
 package com.android.edgarsjanovskis.adlus;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -71,18 +72,14 @@ public class ShowMap extends AppCompatActivity
 
     private TextView textLat, textLong;
 
-    private MapFragment mapFragment;
     // Internal List of Geofence objects. In a real app, these might be provided by an API based on
     // locations within the user's proximity.
-    List<Geofence> mGeofenceList;
-    List<LatLng> mLatLngList;
+    private List<Geofence> mGeofenceList;
+    private List<LatLng> mLatLngList;
     MyGeofences geofence;
 
-    private PendingIntent mGeofencePendingIntent;  // nezinu vai vajadzēs
-    private GeofencingRequest mGeofenceRequest;
-
-    public DatabaseHelper mDbHelper;
-    public SQLiteDatabase db;
+    private DatabaseHelper mDbHelper;
+    private final SQLiteDatabase db = null;
 
     private static final String NOTIFICATION_MSG = "NOTIFICATION MSG";
 
@@ -103,6 +100,7 @@ public class ShowMap extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
@@ -151,6 +149,7 @@ public class ShowMap extends AppCompatActivity
         }
     }
 
+    @SuppressWarnings("EmptyMethod")
     @Override
     protected void onStop() {
         super.onStop();
@@ -220,7 +219,7 @@ public class ShowMap extends AppCompatActivity
 
     // Initialize GoogleMaps
     private void initGMaps() {
-        mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
 
@@ -237,15 +236,12 @@ public class ShowMap extends AppCompatActivity
         return false;
     }
 
-    private LocationRequest locationRequest;
-    // Defined in mili seconds.
-    private final int UPDATE_INTERVAL =  30*60*10000;  //3 min
-    private final int FASTEST_INTERVAL = 60*1000;   //30 sek
-
     // Start location Updates
     private void startLocationUpdates() {
         Log.i(TAG, "startLocationUpdates()");
-        locationRequest = LocationRequest.create()
+        int UPDATE_INTERVAL = 30 * 60 * 10000;
+        int FASTEST_INTERVAL = 60 * 1000;
+        LocationRequest locationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setInterval(UPDATE_INTERVAL)
                 .setFastestInterval(FASTEST_INTERVAL);
@@ -270,9 +266,10 @@ public class ShowMap extends AppCompatActivity
             Toast.makeText(this, getString(R.string.not_connected), Toast.LENGTH_SHORT).show();
             return;
         }
-        mGeofencePendingIntent = createGeofencesPendingIntent();
-        mGeofenceRequest = createGeofencesRequest();
+        PendingIntent mGeofencePendingIntent = createGeofencesPendingIntent();
+        GeofencingRequest mGeofenceRequest = createGeofencesRequest();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            //noinspection StatementWithEmptyBody
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.ACCESS_FINE_LOCATION)) {
             } else {
@@ -325,6 +322,7 @@ public class ShowMap extends AppCompatActivity
         } else askPermission();
     }
 
+    @SuppressLint("SetTextI18n")
     private void writeActualLocation(Location location) {
         textLat.setText("Lat: " + location.getLatitude());
         textLong.setText("Long: " + location.getLongitude());
@@ -403,8 +401,7 @@ public class ShowMap extends AppCompatActivity
                 .build();
     }
 
-    private PendingIntent geoFencePendingIntent;
-    private final int GEOFENCE_REQ_CODE = 0;
+    private final PendingIntent geoFencePendingIntent = null;
 
     private PendingIntent createGeofencesPendingIntent() {
         Log.d(TAG, "createGeofencePendingIntent");
@@ -412,6 +409,7 @@ public class ShowMap extends AppCompatActivity
             return geoFencePendingIntent;
 
         Intent intent = new Intent(this, GeofenceTrasitionService.class);
+        int GEOFENCE_REQ_CODE = 0;
         return PendingIntent.getService(
                 this, GEOFENCE_REQ_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }

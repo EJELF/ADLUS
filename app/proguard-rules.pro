@@ -15,3 +15,12 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+-dontwarn org.mockito.**
+-dontwarn sun.reflect.**
+-dontwarn android.test.**
+-dontwarn android.gms.**
+-dontwarn com.birbit.android.**
+-dontwarn okio.**
+-dontwarn retrofit2.Platform$Java8
+-dontwarn javax.naming.**
+-dontwarn java.lang.management.**

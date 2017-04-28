@@ -18,7 +18,7 @@ package com.android.edgarsjanovskis.adlus;
 
 import com.google.android.gms.location.Geofence;
 /** Constants used in companion app. */
-public final class Constants {
+final class Constants {
 
     private Constants() {}
     public static final String TAG = "AdlusGeofencingApp";

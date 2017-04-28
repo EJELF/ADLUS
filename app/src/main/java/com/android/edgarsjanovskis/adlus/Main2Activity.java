@@ -29,25 +29,25 @@ import java.util.UUID;
 public class Main2Activity extends AppCompatActivity {
     private static final String TAG = "Main";
     Context context;
-    public static String uniqueID;
-    public final String PREFS_NAME = "AdlusPrefsFile";
-    final String PREF_VERSION_CODE_KEY = "version_code";
-    public static final String LAST_DB_CHANGES = "LastChanges";
+    private static String uniqueID;
+    private final String PREFS_NAME = "AdlusPrefsFile";
+    private final String PREF_VERSION_CODE_KEY = "version_code";
+    private static final String LAST_DB_CHANGES = "LastChanges";
     public static final String LAST_UPDATE = "LastUpdate";
-    public final String APP_UUID = "app_uuid";
-    public final int DOESNT_EXIST = -1;
-    SharedPreferences prefs;
-    SharedPreferences sharedPref;
+    private final String APP_UUID = "app_uuid";
+    private final int DOESNT_EXIST = -1;
+    private SharedPreferences prefs;
+    private SharedPreferences sharedPref;
 
-    TextView tvIsConnLabel;
+    private TextView tvIsConnLabel;
     TextView tvLastChanges;
-    TextView tvLastUpdate;
-    ImageButton imageButton;
-    RadioButton btnConnected;
+    private TextView tvLastUpdate;
+    private ImageButton imageButton;
+    private RadioButton btnConnected;
     Color color = null;
     PendingIntent mPostPendingIntent;
 
-    public static boolean isConnected = false;
+    private static boolean isConnected = false;
 
     private static final String NOTIFICATION_MSG = "NOTIFICATION MSG";
 
@@ -116,7 +116,7 @@ public class Main2Activity extends AppCompatActivity {
     }
 
     ////////////////////
-    private BroadcastReceiver NetworkStatusReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver NetworkStatusReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             ConnectivityManager connectivityManager = (ConnectivityManager) context
@@ -141,7 +141,7 @@ public class Main2Activity extends AppCompatActivity {
     };
 
     /////////////////////
-    public void checkFirstRun() {
+    private void checkFirstRun() {
 
         //Get current version code
         int currentVersionCode;
@@ -176,7 +176,7 @@ public class Main2Activity extends AppCompatActivity {
         prefs.edit().putString(APP_UUID, uniqueID).apply();
     }
 
-    public void createUUID() {
+    private void createUUID() {
         uniqueID = UUID.randomUUID().toString();
         prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         prefs.edit().putString(APP_UUID, uniqueID).apply();
@@ -289,7 +289,7 @@ public class Main2Activity extends AppCompatActivity {
         return false;
     }
 
-    public void toggleUi() {
+    private void toggleUi() {
         if (!isMyServiceRunning(GeofencingService.class)) {
             imageButton.setBackgroundResource(R.drawable.button_round_green);
         } else {

@@ -16,10 +16,11 @@ import static com.android.edgarsjanovskis.adlus.Constants.TAG;
 
 public class StartAlarmReceiver extends WakefulBroadcastReceiver {
 
-    Calendar cal1;
-    PendingIntent sender1;
+    private Calendar cal1;
+    private PendingIntent sender1;
 
-    boolean isStarted;
+    private boolean isStarted;
+    @SuppressLint("UnsafeProtectedBroadcastReceiver")
     @Override
     public void onReceive(Context context, Intent intent) {
         PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);

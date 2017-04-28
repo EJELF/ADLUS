@@ -1,13 +1,11 @@
 package com.android.edgarsjanovskis.adlus.model;
 
+import android.annotation.SuppressLint;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-/**
- * Created by Edgars on 15.03.17.
- */
-
-public class MyActivities {
+class MyActivities {
     private String mPhoneId;
     private String mGeofence;
     private String mTransition;
@@ -50,14 +48,10 @@ public class MyActivities {
     }
 
     public String getmActivityTimestamp() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-        String currentDateTime = sdf.format(new Date());
-        return currentDateTime;
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        return sdf.format(new Date());
     }
 
-    public void setmActivityTimestamp(String mActivityTimestamp) {
-
-    }
 }
 
 

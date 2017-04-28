@@ -5,8 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 
 public class AutoStart extends BroadcastReceiver {
-    StartAlarmReceiver startAlarmReceiver = new StartAlarmReceiver();
-    StopAlarmReceiver stopAlarmReceiver = new StopAlarmReceiver();
+    private final StartAlarmReceiver startAlarmReceiver = new StartAlarmReceiver();
+    private final StopAlarmReceiver stopAlarmReceiver = new StopAlarmReceiver();
 
     @Override
     public void onReceive(Context context, Intent intent) {

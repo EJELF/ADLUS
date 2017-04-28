@@ -1,5 +1,6 @@
 package com.android.edgarsjanovskis.adlus;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -37,7 +38,6 @@ public class ProjectOnMapActivity extends AppCompatActivity
     private GoogleMap map;
     private GoogleApiClient googleApiClient;
     private TextView textLat, textLong;
-    private MapFragment mapFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +47,7 @@ public class ProjectOnMapActivity extends AppCompatActivity
 
         textLat = (TextView) findViewById(R.id.lat);
         textLong = (TextView) findViewById(R.id.lon);
-        this.setTitle(String.format("your_format_string, your_personal_text_to_display"));
+        this.setTitle("your_format_string, your_personal_text_to_display");
         // initialize GoogleMaps
         initGMaps();
         // create GoogleApiClient
@@ -88,6 +88,7 @@ public class ProjectOnMapActivity extends AppCompatActivity
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch ( requestCode ) {
             case REQ_PERMISSION: {
+                //noinspection StatementWithEmptyBody
                 if ( grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED ){
                     // Permission granted
@@ -112,7 +113,7 @@ public class ProjectOnMapActivity extends AppCompatActivity
 
     // Initialize GoogleMaps
     private void initGMaps(){
-        mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
 
@@ -151,8 +152,9 @@ public class ProjectOnMapActivity extends AppCompatActivity
 
     private Marker locationMarker;
     // Draw Geofence circle on GoogleMap
-    public Circle geoFenceLimits;
+    private Circle geoFenceLimits;
         //paša veidots
+    @SuppressLint("SetTextI18n")
     private void markerLocationFromIntent() {
 
         Intent iin = getIntent();
@@ -164,7 +166,7 @@ public class ProjectOnMapActivity extends AppCompatActivity
             String radius = (String) b.get("radius");
             textLat.setText("Lat: " +latit);
             textLong.setText("Long: " + longit);
-            this.setTitle(String.format(lr + " atrašanās vieta kartē"));
+            this.setTitle(lr + " atrašanās vieta kartē");
 
             MarkerOptions markerOptions = new MarkerOptions()
                 .position(new LatLng(Double.parseDouble(latit), Double.parseDouble(longit)))

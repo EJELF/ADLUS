@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.TimePicker;
 
-class TimePicker24h extends TimePicker {
+public class TimePicker24h extends TimePicker {
 
     public TimePicker24h(Context context) {
         super(context);

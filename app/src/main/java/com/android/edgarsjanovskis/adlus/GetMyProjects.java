@@ -31,22 +31,21 @@ import static com.android.edgarsjanovskis.adlus.Main2Activity.LAST_UPDATE;
 
 public class GetMyProjects extends AppCompatActivity {
 
-    private String TAG = GetMyProjects.class.getSimpleName();
+    private final String TAG = GetMyProjects.class.getSimpleName();
     private ProgressDialog pDialog;
     private ListView lv;
 
     // User entered components as IMEI and URL!!!
-    public String myurl = " ";
+    private String myurl = " ";
     private String myimei = " ";
     private String url;
-    private SharedPreferences prefs;
-    public final String USER_NAME = "User_Name";
-    public final String PHONE_ID = "PhoneID";
-    public ArrayList<HashMap<String, String>> mProjectList;
+    private final String USER_NAME = "User_Name";
+    private final String PHONE_ID = "PhoneID";
+    private ArrayList<HashMap<String, String>> mProjectList;
     // add a ProjectHelper to Activity (protected???)
-    protected DatabaseHelper databaseHelper;
-    ArrayList<Integer> newRecords;
-    MyGeofences geofence;
+    private DatabaseHelper databaseHelper;
+    private ArrayList<Integer> newRecords;
+    private MyGeofences geofence;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +55,7 @@ public class GetMyProjects extends AppCompatActivity {
         //start new instance of DatabaseHelper and reader
         databaseHelper = new DatabaseHelper(this);
         //Cursor reader = databaseHelper.getTimeRecordList();
-        prefs = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
         myurl = prefs.getString("Server_URL", " ");
         Log.i("URL: ", myurl);
         myimei = prefs.getString("User_IMEI", " ");

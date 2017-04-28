@@ -1,5 +1,6 @@
 package com.android.edgarsjanovskis.adlus;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.IntentService;
 import android.content.Context;
@@ -31,19 +32,19 @@ public class PostIntentService extends IntentService {
 
     public PostIntentService() {super(TAG);}
 
-    Context mContext;
+    private Context mContext;
 
-    public String myurl = "";
+    private String myurl = "";
     private Integer phoneId = 0;
     private SharedPreferences prefs;
-    String mGeofence;
-    String mTrigger;
-    String json = null;
-    InputStream inputStream;
-    HttpURLConnection urlConnection;
-    byte[] outputBytes;
-    String ResponseData = "";
-    int statusCode;
+    private String mGeofence;
+    private String mTrigger;
+    private String json = null;
+    private InputStream inputStream;
+    private HttpURLConnection urlConnection;
+    private byte[] outputBytes;
+    private String ResponseData = "";
+    private int statusCode;
 
 
     @Override
@@ -59,8 +60,7 @@ public class PostIntentService extends IntentService {
         Log.i("URL: ", myurl);
         phoneId = prefs.getInt("PhoneID", 0);
     }
-
-
+    
     @Override
     protected void onHandleIntent(Intent postIntent) {
 
@@ -74,7 +74,7 @@ public class PostIntentService extends IntentService {
 
 
         final String currentDateTime;
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         currentDateTime = sdf.format(new Date());
 
         JSONObject jsonObject = new JSONObject();
@@ -130,13 +130,13 @@ public class PostIntentService extends IntentService {
         return super.onStartCommand(intent, flags, startId);
     }
 
-    public boolean isConnected() {
+    private boolean isConnected() {
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Activity.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnected();
     }
 
-    public boolean checkNetworks() {
+    private boolean checkNetworks() {
         ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
         Network[] networks = cm.getAllNetworks();
 
@@ -155,7 +155,7 @@ public class PostIntentService extends IntentService {
         return false;
     }
 
-    public static String convertStreamToString(InputStream is) {
+    private static String convertStreamToString(InputStream is) {
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         StringBuilder sb = new StringBuilder();
@@ -163,7 +163,7 @@ public class PostIntentService extends IntentService {
         String line = null;
         try {
             while ((line = reader.readLine()) != null) {
-                sb.append((line + "\n"));
+                sb.append(line).append("\n");
             }
         } catch (IOException e) {
             e.printStackTrace();

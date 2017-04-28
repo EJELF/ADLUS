@@ -19,18 +19,19 @@ import com.google.android.gms.location.GeofencingEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("EmptyMethod")
 public class GeofenceTrasitionService extends IntentService {
 
     private static final String TAG = GeofenceTrasitionService.class.getSimpleName();
 
-    public static final int GEOFENCE_NOTIFICATION_ID = 0;
+    private static final int GEOFENCE_NOTIFICATION_ID = 0;
 
     public GeofenceTrasitionService() {
         super(TAG);
     }
 
-    Context mContext;
-    Intent postIntent;
+    private Context mContext;
+    private Intent postIntent;
 
     @Override
     public void onCreate(){
@@ -86,7 +87,7 @@ public class GeofenceTrasitionService extends IntentService {
     private String getGeofenceTrasitionDetails(int geoFenceTransition, List<Geofence> triggeringGeofences) {
 
         //get the ID of each geofence triggered
-        ArrayList<String> triggeringGeofencesList = new ArrayList<>();
+        @SuppressWarnings("MismatchedQueryAndUpdateOfCollection") ArrayList<String> triggeringGeofencesList = new ArrayList<>();
         for (Geofence geofence : triggeringGeofences) {
             triggeringGeofencesList.add(geofence.getRequestId());
             triggeringGeofenceId = geofence.getRequestId();

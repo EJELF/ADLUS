@@ -41,19 +41,19 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
 
     public GeofencingService() {}
 
-    boolean isRunning = true;
+    private boolean isRunning = true;
     //MediaPlayer player;
     private Location lastLocation;
     private GoogleApiClient googleApiClient;
 
-    List<Geofence> mGeofenceList;
-    List<LatLng> mLatLngList;
+    private List<Geofence> mGeofenceList;
+    private List<LatLng> mLatLngList;
 
     private PendingIntent mGeofencePendingIntent;
     private GeofencingRequest mGeofenceRequest;
 
-    public DatabaseHelper mDbHelper;
-    public SQLiteDatabase db;
+    private DatabaseHelper mDbHelper;
+    private SQLiteDatabase db;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -99,7 +99,6 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
 
         mDbHelper = new DatabaseHelper(this);
         Cursor reader = mDbHelper.getAllRecordList();
-////////////////////////////////////
         Log.d(TAG, "createGoogleApi()");
         if (googleApiClient == null) {
             googleApiClient = new GoogleApiClient.Builder(this)
@@ -156,15 +155,12 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
         stopSelf();
     }
 
-    private LocationRequest locationRequest;
-    // Defined in mili seconds.
-    private final int UPDATE_INTERVAL = 3*60*100;  //3 min 3*60*100
-    private final int FASTEST_INTERVAL = 30*1000;   //30 sek 30*1000
-
     // Start location Updates
     private void startLocationUpdates() {
         Log.i(TAG, "startLocationUpdates()");
-        locationRequest = LocationRequest.create()
+        int UPDATE_INTERVAL = 3 * 60 * 100;
+        int FASTEST_INTERVAL = 30 * 1000;
+        LocationRequest locationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setInterval(UPDATE_INTERVAL)
                 .setFastestInterval(FASTEST_INTERVAL);
@@ -221,15 +217,13 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
                     .build();
     }
 
-    // private PendingIntent geoFencePendingIntent;
-    private final int GEOFENCE_REQ_CODE = 0;
-
     private PendingIntent createGeofencesPendingIntent() {
         Log.d(TAG, "createGeofencePendingIntent");
         if (mGeofencePendingIntent != null)
             return mGeofencePendingIntent;
 
         Intent intent = new Intent(this, GeofenceTrasitionService.class);
+        int GEOFENCE_REQ_CODE = 0;
         return PendingIntent.getService(
                 this, GEOFENCE_REQ_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }

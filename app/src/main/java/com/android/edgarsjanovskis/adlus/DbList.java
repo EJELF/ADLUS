@@ -19,8 +19,8 @@ import static com.android.edgarsjanovskis.adlus.R.id.list;
 // This class is used only for debugging purposes!!!
 public class DbList extends AppCompatActivity {
 
-    Cursor reader;
-    DatabaseHelper mDbHelper;
+    private Cursor reader;
+    private DatabaseHelper mDbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

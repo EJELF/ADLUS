@@ -1,5 +1,6 @@
 package com.android.edgarsjanovskis.adlus;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -14,6 +15,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 
+@SuppressWarnings("unchecked")
 public class DatabaseHelper {
     // All Static variables
     // Database Version
@@ -22,8 +24,8 @@ public class DatabaseHelper {
     // Database Name
     private static final String DATABASE_NAME = "adlus.db";
     // Contacts table name
-    public static final String TABLE_PROJECTS = "projects";
-    public static final String TABLE_ACTIVITIES = "activities";
+    private static final String TABLE_PROJECTS = "projects";
+    private static final String TABLE_ACTIVITIES = "activities";
     // Projects Table Columns names
     //public static final String KEY_ID = "id";
     public static final String GEOFENCE_ID_COLUMN = "GeofenceId";
@@ -31,23 +33,23 @@ public class DatabaseHelper {
     public static final String LATITUDE_COLUMN = "Latitude";
     public static final String LONGITUDE_COLUMN = "Longitude";
     public static final String RADIUS_COLUMN = "Radius";
-    public static final String PHONE_ID_COLUMN = "PhoneId";
-    public static final String IMEI_COLUMN = "Imei";
-    public static final String EMPLOYEE_COLUMN = "EmployeeName";
-    public static final String CUSTOMER_COLUMN = "CustomerName";
-    public static final String PROJECT_COLUMN = "ProjectName";
-    public static final String TS_COLUMN = "ts";
-    public static final String CUSTODIAN_COLUMN = "CustodianSurname";
-    public static final String CUSTODIAN_PHONE_COLUMN = "CustodianPhone";
+    private static final String PHONE_ID_COLUMN = "PhoneId";
+    private static final String IMEI_COLUMN = "Imei";
+    private static final String EMPLOYEE_COLUMN = "EmployeeName";
+    private static final String CUSTOMER_COLUMN = "CustomerName";
+    private static final String PROJECT_COLUMN = "ProjectName";
+    private static final String TS_COLUMN = "ts";
+    private static final String CUSTODIAN_COLUMN = "CustodianSurname";
+    private static final String CUSTODIAN_PHONE_COLUMN = "CustodianPhone";
     // Activities Table Columns names
-    public static final String POST_ID = "PostId";
-    public static final String STRING_JSON = "Json";
+    private static final String POST_ID = "PostId";
+    private static final String STRING_JSON = "Json";
 
-     Data openHelper;
+     private final Data openHelper;
     private SQLiteDatabase database;
     Context context;
     //List<Geofence> mGeofenceList;
-    ArrayList<Integer> newGeofenceIdList;
+    private ArrayList<Integer> newGeofenceIdList;
 
 
     public DatabaseHelper(Context context){
@@ -116,14 +118,14 @@ public class DatabaseHelper {
 
     public ArrayList<MyGeofences> getAllData(){
 
-        ArrayList<MyGeofences> arrayList = new ArrayList<MyGeofences>();
+        ArrayList<MyGeofences> arrayList = new ArrayList<>();
 
         database = openHelper.getWritableDatabase();
 
-        Cursor cc = database.rawQuery("SELECT *" + " FROM " + TABLE_PROJECTS, null);
+        @SuppressLint("Recycle") Cursor cc = database.rawQuery("SELECT *" + " FROM " + TABLE_PROJECTS, null);
 
         cc.moveToFirst();
-        while(cc.isAfterLast() == false){
+        while(!cc.isAfterLast()){
 
             MyGeofences geofenece = new MyGeofences(cc.getInt(cc.getColumnIndex(GEOFENCE_ID_COLUMN)),cc.getDouble(cc.getColumnIndex(LATITUDE_COLUMN)),cc.getDouble(cc.getColumnIndex(LONGITUDE_COLUMN)));
 
@@ -134,11 +136,12 @@ public class DatabaseHelper {
 
             cc.moveToNext();
         }
+        cc.close();
         database.close();
      return arrayList ;
     }
 
-    public void showNewRecArray(){
+    private void showNewRecArray(){
         
             Integer[] arr = convert(newGeofenceIdList, Integer.class);
 
@@ -148,7 +151,7 @@ public class DatabaseHelper {
     }
 
 
-    public static <T> T[] convert(ArrayList<T> newGeofenceIdList, Class clazz){
+    private static <T> T[] convert(ArrayList<T> newGeofenceIdList, Class clazz){
         return newGeofenceIdList.toArray((T[]) Array.newInstance(clazz, newGeofenceIdList.size()));
     }
 

@@ -27,28 +27,28 @@ import android.widget.Toast;
 public class AppSettingsActivity extends AppCompatActivity {
 
     private static final String TAG =  "AppSettingsActivity";
-    public final String USER_IMEI = "User_IMEI";
-    public final String SERVER_URL = "Server_URL";
-    public final String APP_START_TIME_HOUR = "startHour";
-    public final String APP_START_TIME_MINUTE= "startMinute";
-    public final String APP_STOP_TIME_HOUR = "stopHour";
-    public final String APP_STOP_TIME_MINUTE= "stopMinute";
-    public final String TIME_SELECTED = "timeSelected";
+    private final String USER_IMEI = "User_IMEI";
+    private final String SERVER_URL = "Server_URL";
+    private final String APP_START_TIME_HOUR = "startHour";
+    private final String APP_START_TIME_MINUTE= "startMinute";
+    private final String APP_STOP_TIME_HOUR = "stopHour";
+    private final String APP_STOP_TIME_MINUTE= "stopMinute";
+    private final String TIME_SELECTED = "timeSelected";
     private TextView tv1;
     private TextView tv2;
     private TimePicker tp1;
     private TimePicker tp2;
     private CheckBox cb;
-    ImageButton imageButton;
+    private ImageButton imageButton;
     private int hoursStart = 0;
     private int minutesStart = 0;
     private int hoursStop =0;
     private int minutesStop = 0;
-    Calendar cal1;
-    Calendar cal2;
-    AlarmManager am;
-    PendingIntent sender1;
-    PendingIntent sender2;
+    private Calendar cal1;
+    private Calendar cal2;
+    private AlarmManager am;
+    private PendingIntent sender1;
+    private PendingIntent sender2;
 
     @SuppressLint("NewApi")
     @Override
@@ -135,7 +135,7 @@ public class AppSettingsActivity extends AppCompatActivity {
     }
     @SuppressLint("NewApi")
     @SuppressWarnings("deprecation")
-    public void setStartStopTime(View view) {
+    private void setStartStopTime(View view) {
         if (cb.isChecked()) {
             if (Build.VERSION.SDK_INT < 23) {
                 hoursStart = tp1.getCurrentHour();
@@ -236,7 +236,6 @@ public class AppSettingsActivity extends AppCompatActivity {
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             dialog.cancel();
-                            return;
                         }
                     });
 
@@ -266,11 +265,11 @@ public class AppSettingsActivity extends AppCompatActivity {
             builder1.setMessage("Lūdzu ievadiet servera adresi un portu");
             builder1.setCancelable(false);
 
+            //noinspection EmptyMethod
             builder1.setPositiveButton(
                     "LABI",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            return;
                         }
                     });
 
@@ -327,7 +326,7 @@ public class AppSettingsActivity extends AppCompatActivity {
         finish();
     }
 
-    public void hideKeyboard(View view) {
+    private void hideKeyboard(View view) {
         InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }

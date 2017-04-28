@@ -15,10 +15,11 @@ import static android.content.Context.MODE_PRIVATE;
 import static com.android.edgarsjanovskis.adlus.Constants.TAG;
 
 public class StopAlarmReceiver extends WakefulBroadcastReceiver {
-    Calendar cal2;
-    PendingIntent sender2;
+    private Calendar cal2;
+    private PendingIntent sender2;
 
-    boolean isStarted;
+    private boolean isStarted;
+    @SuppressLint("UnsafeProtectedBroadcastReceiver")
     @Override
     public void onReceive(Context context, Intent intent) {
         PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
