@@ -67,7 +67,7 @@ public class GetMyProjects extends AppCompatActivity {
         //if(Main2Activity.isConnected){
             new GetProjects().execute();
         //}else{
-            Toast.makeText(getApplicationContext(), "Lai saņemtu datus, Tev jābūt piekļuvei \n   internetam un aktīvizētam VPN ", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Lai saņemtu datus no servera,\n Tev jābūt piekļuvei internetam", Toast.LENGTH_LONG).show();
         //}
     }
 

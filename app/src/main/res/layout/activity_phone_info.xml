@@ -13,7 +13,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/aplikcijas_uuid"
+        android:text="@string/app_uuid"
         android:textSize="16sp"
         android:textColor="#FFC000" />
 
@@ -21,13 +21,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/deviceid"
-        android:hint="@string/aplikcijas_uuid"
+        android:hint="@string/app_uuid"
         android:textAlignment="center"
          />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Tālruņa ID"
+        android:text="@string/phone_imei"
         android:textSize="16sp"
         android:textColor="#FFC000"
         android:id="@+id/text2" />
@@ -35,43 +35,43 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/userimei"
-        android:hint="Tālruņa IMEI nav preferencēs"
+        android:hint="@string/imei_not_in_references"
         android:textAlignment="center" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Serveris"
+        android:text="@string/serverText"
         android:textSize="16sp"
         android:textColor="#FFC000" />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/server"
-        android:hint="Serveris un ports nav preferencēs"
+        android:hint="@string/server_not_in_preferences"
         android:textAlignment="center" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Ieslēgšanās laiks"
+        android:text="@string/on_time_text"
         android:textSize="16sp"
         android:textColor="#FFC000" />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/startTime"
-        android:hint="Ieslēgšanās laiks"
+        android:hint="@string/on_time_text"
         android:textAlignment="center" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Izslēgšanās laiks"
+        android:text="@string/off_time_text"
         android:textSize="16sp"
         android:textColor="#FFC000" />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/stopTime"
-        android:hint="Izslēgšanās laiks"
+        android:hint="@string/off_time_text"
         android:textAlignment="center" />
 
 </LinearLayout>

@@ -88,7 +88,7 @@ public class PostIntentService extends IntentService {
         }
         Log.i(TAG, "Json created: " + json);
 
-        if (isConnected() && checkNetworks()) {
+        if (isConnected()) {
 
             try {
                 URL url = new URL("http://" + myurl + "/api/Activities");

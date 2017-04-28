@@ -1,11 +1,11 @@
 <resources>
     <string name="app_name">ADLUS</string>
-    <string name="start_geofence_service">Starting geofence transition service</string>
+    <string name="start_geofence_service">ADLUS serviss palaists</string>
 
     <!-- Buttons strings -->
 
     <!-- Error strings -->
-    <string name="not_connected">GoogleApiClient no yet connected. Try again.</string>
+    <string name="not_connected">GoogleApiClient nav palaists. Mēģini vēlreiz!</string>
 
     <!-- Transition type strings -->
 
@@ -21,8 +21,8 @@
     <!-- Example settings for Notifications -->
 
     <string name="cancel">Aizvērt</string>
-    <string name="Save">Saglabāt iestatījumus</string>
-    <string name="aplikcijas_uuid">Aplikācijas UUID:</string>
+    <string name="save">Saglabāt iestatījumus</string>
+    <string name="app_uuid">Aplikācijas UUID:</string>
     <string name="map_activity_title">Kartes aktivitāte</string>
     <string name="appsettings_activity_title">ADLUS iestatījumi</string>
     <string name="myprojects_activity_title">Tav ir šādi projekti</string>
@@ -31,15 +31,21 @@
     <string name="isConnected">Savienojums izveidots</string>
     <string name="no_internet">Hmm, nav interneta savienojuma…</string>
     <string name="splashscreen">SplashScreen</string>
-    <string name="laipni_l_gts_adlus">Laipni lūgts ADLUS!</string>
-    <string name="darba_laika_uzskaites_sist_m_kas_rad_ta_lai_atvieglotu_tavu_darba_ikdienu">Darba laika uzskaites sistēmā, kas radīta, lai atvieglotu Tavu darba ikdienu</string>
-    <string name="lai_adlus_aplik_cija_var_tu_darboties_tai_ir_nepiecie_amas_das_at_aujas_n_at_auja_noteikt_atra_an_s_vietu_n_at_auja_izmantot_wifi_t_klu_n_at_auja_izmantot_mobilos_datus">Lai ADLUS aplikācija varētu darboties, tai ir nepieciešamas šādas atļaujas:   * Atļauja noteikt atrašanās vietu   * Atļauja izmantot WiFi tīklu   * Atļauja izmantot mobilos datus</string>
-    <string name="spied_eit_un_s_c_lietot">Spied šeit un sāc lietot!</string>
-    <string name="t_lru_a_id">TĀLRUŅA ID:</string>
-    <string name="id_numurs_kuru_pie_ir_administrators">ID numurs, kuru piešķir administrators</string>
-    <string name="serveris">SERVERIS:</string>
-    <string name="servera_ip_adrese_un_ports">Servera IP adrese un ports</string>
-    <string name="iestat_t_autom_tisku_iesl_g_an_s_un_izsl_g_anas_laiku">Iestatīt automātisku ieslēgšanās un izslēgšanas laiku</string>
-    <string name="iesl_g_an_s_laiks">Ieslēgšanās laiks</string>
-    <string name="izsl_g_an_s_laiks">Izslēgšanās laiks</string>
+    <string name="welcome">Laipni lūgts ADLUS!</string>
+    <string name="welcome_message">Darba laika uzskaites sistēmā, kas radīta, lai atvieglotu Tavu darba ikdienu</string>
+    <string name="startup_message">Lai ADLUS aplikācija varētu darboties, tai ir nepieciešamas šādas atļaujas:   * Atļauja noteikt atrašanās vietu   * Atļauja izmantot WiFi tīklu   * Atļauja izmantot mobilos datus</string>
+    <string name="push_to_start">Spied šeit un sāc lietot!</string>
+    <string name="phone_id">TĀLRUŅA ID:</string>
+    <string name="id_number">ID numurs, kuru piešķir administrators</string>
+    <string name="server">SERVERIS:</string>
+    <string name="server_ip_address_and_port">Servera IP adrese un ports</string>
+    <string name="on_off_time">Iestatīt automātisku ieslēgšanās un izslēgšanas laiku</string>
+    <string name="on_time">Ieslēgšanās laiks</string>
+    <string name="off_time">Izslēgšanās laiks</string>
+    <string name="phone_imei">Tālruņa ID</string>
+    <string name="imei_not_in_references">Tālruņa IMEI nav preferencēs</string>
+    <string name="serverText">Serveris</string>
+    <string name="server_not_in_preferences">Serveris un ports nav preferencēs</string>
+    <string name="on_time_text">Ieslēgšanās laiks</string>
+    <string name="off_time_text">Ieslēgšanās laiks</string>
 </resources>

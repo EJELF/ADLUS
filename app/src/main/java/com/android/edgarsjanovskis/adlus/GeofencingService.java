@@ -58,7 +58,7 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        Toast.makeText(this, "Service is started!", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Serviss startē!", Toast.LENGTH_LONG).show();
         new Thread(
                 new Runnable() {
                     @Override
@@ -86,7 +86,7 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
     @Override
     public void onCreate() {
         super.onCreate();
-        Toast.makeText(this, "Service is created!", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Serviss izveidots!", Toast.LENGTH_LONG).show();
         // Instantiate the current List of geofences.
         mGeofenceList = new ArrayList<>();
         mLatLngList = new ArrayList<>();
