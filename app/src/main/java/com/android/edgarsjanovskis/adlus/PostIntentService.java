@@ -10,6 +10,8 @@ import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -25,7 +27,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 
 public class PostIntentService extends IntentService {
     private static final String TAG = PostIntentService.class.getSimpleName();
@@ -50,10 +51,7 @@ public class PostIntentService extends IntentService {
     @Override
     public void onCreate() {
         super.onCreate();
-        // if you override onCreate(), make sure to call super().
-        // If a Context object is needed, call getApplicationContext() here.
-        // JUST DO IN BACKGROUND
-        //Toast.makeText(getApplicationContext(), "Post Service started!", Toast.LENGTH_LONG).show();
+
         Log.e(TAG, "Post service started");
         prefs = getApplicationContext().getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
         myurl = prefs.getString("Server_URL", " ");
@@ -61,6 +59,7 @@ public class PostIntentService extends IntentService {
         phoneId = prefs.getInt("PhoneID", 0);
     }
     
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onHandleIntent(Intent postIntent) {
 
@@ -119,8 +118,6 @@ public class PostIntentService extends IntentService {
                 e.printStackTrace();
             }
             Log.e(TAG, "Response: " + ResponseData);
-            // }else {
-            // Log.e(TAG, " NO INTENT RECEIVED");
         }
     }
 
@@ -136,6 +133,7 @@ public class PostIntentService extends IntentService {
         return networkInfo != null && networkInfo.isConnected();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private boolean checkNetworks() {
         ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
         Network[] networks = cm.getAllNetworks();
@@ -160,7 +158,7 @@ public class PostIntentService extends IntentService {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         StringBuilder sb = new StringBuilder();
 
-        String line = null;
+        String line;
         try {
             while ((line = reader.readLine()) != null) {
                 sb.append(line).append("\n");

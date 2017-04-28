@@ -1,7 +1,6 @@
 package com.android.edgarsjanovskis.adlus;
 
 import android.app.ActivityManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,7 +8,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -40,12 +38,10 @@ public class Main2Activity extends AppCompatActivity {
     private SharedPreferences sharedPref;
 
     private TextView tvIsConnLabel;
-    TextView tvLastChanges;
     private TextView tvLastUpdate;
     private ImageButton imageButton;
     private RadioButton btnConnected;
-    Color color = null;
-    PendingIntent mPostPendingIntent;
+
 
     private static boolean isConnected = false;
 
@@ -58,13 +54,6 @@ public class Main2Activity extends AppCompatActivity {
         return intent;
     }
 
-    /*
-        public boolean isConnected() {
-            ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Activity.CONNECTIVITY_SERVICE);
-            NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-            return networkInfo != null && networkInfo.isConnected();
-        }
-    */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,7 +88,6 @@ public class Main2Activity extends AppCompatActivity {
                 }
             }
         });
-
     }
 
     @Override
@@ -115,7 +103,6 @@ public class Main2Activity extends AppCompatActivity {
         toggleUi();
     }
 
-    ////////////////////
     private final BroadcastReceiver NetworkStatusReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -208,32 +195,8 @@ public class Main2Activity extends AppCompatActivity {
     }
 
     public void buttonPost_onClick(View view) {
-        /*
-// Instantiate the RequestQueue.
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String url ="http://192.168.10.86:5111/api/AndroidDbUpdates";
-
-// Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        // Display the first 500 characters of the response string.
-                        Log.e(TAG, "Response is: "+ response.substring(0,500));
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "That didn't work!");
-            }
-        });
-// Add the request to the RequestQueue.
-        queue.add(stringRequest);
-        */
-        Toast.makeText(getApplicationContext(),"Diemžēl šī poga vēl nav aktīva!", Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(),"Ups... šai pogai vēl nav funkcijas!", Toast.LENGTH_LONG).show();
     }
-
-
 
     public void buttonUUID_onClick(View view) {
         prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);

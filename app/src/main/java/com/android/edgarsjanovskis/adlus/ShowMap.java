@@ -2,7 +2,6 @@ package com.android.edgarsjanovskis.adlus;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -29,7 +28,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.Geofence;
-import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -74,7 +72,7 @@ public class ShowMap extends AppCompatActivity
 
     // Internal List of Geofence objects. In a real app, these might be provided by an API based on
     // locations within the user's proximity.
-    private List<Geofence> mGeofenceList;
+    private List<Geofence> mGeofenceList = null;
     private List<LatLng> mLatLngList;
     MyGeofences geofence;
 
@@ -266,8 +264,8 @@ public class ShowMap extends AppCompatActivity
             Toast.makeText(this, getString(R.string.not_connected), Toast.LENGTH_SHORT).show();
             return;
         }
-        PendingIntent mGeofencePendingIntent = createGeofencesPendingIntent();
-        GeofencingRequest mGeofenceRequest = createGeofencesRequest();
+        //PendingIntent mGeofencePendingIntent = createGeofencesPendingIntent();
+        //GeofencingRequest mGeofenceRequest = createGeofencesRequest();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             //noinspection StatementWithEmptyBody
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
@@ -348,6 +346,9 @@ public class ShowMap extends AppCompatActivity
                     locationMarker.remove();
 
                 locationMarker = map.addMarker(markerOptions);
+                if(locationMarker == null) {
+                    Toast.makeText(getApplicationContext(), "Tev nav reģistrēts neviens objekts!", Toast.LENGTH_LONG).show();
+                }
                 float zoom = 9f;
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, zoom);
                 map.animateCamera(cameraUpdate);
@@ -392,16 +393,16 @@ public class ShowMap extends AppCompatActivity
         }
     }
 
-    // Create a Geofence Request
+   /* // Create a Geofence Request
     private GeofencingRequest createGeofencesRequest() {
-        Log.d(TAG, "createGeofenceRequest");
-        return new GeofencingRequest.Builder()
-                .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_DWELL)
-                .addGeofences(mGeofenceList)   // List
-                .build();
-    }
+            Log.d(TAG, "createGeofenceRequest");
+            return new GeofencingRequest.Builder()
+                    .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_DWELL)
+                    .addGeofences(mGeofenceList)   // List
+                    .build();
+    }*/
 
-    private final PendingIntent geoFencePendingIntent = null;
+   /* private final PendingIntent geoFencePendingIntent = null;
 
     private PendingIntent createGeofencesPendingIntent() {
         Log.d(TAG, "createGeofencePendingIntent");
@@ -412,7 +413,7 @@ public class ShowMap extends AppCompatActivity
         int GEOFENCE_REQ_CODE = 0;
         return PendingIntent.getService(
                 this, GEOFENCE_REQ_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-    }
+    }*/
 /*
     // Add the created GeofenceRequest to the device's monitoring list
     private void addGeofences(GeofencingRequest request) {
@@ -445,7 +446,7 @@ public class ShowMap extends AppCompatActivity
         markerForGeofence(mLatLngList);
         //drawGeofence(mLatLngList);
     }
-
+/*
     // Clear Geofence
     private void clearGeofences() {
         Log.d(TAG, "clearGeofences()");
@@ -462,7 +463,7 @@ public class ShowMap extends AppCompatActivity
             }
         });
     }
-
+*/
     private void removeGeofenceDraw() {
         Log.d(TAG, "removeGeofenceDraw()");
         if (geoFenceMarker != null)
@@ -510,17 +511,11 @@ public class ShowMap extends AppCompatActivity
     @Override
     public void onPause(){
         Log.e(TAG, "On pause!!!");
-        if(db != null){
-            db.close();
-        }
         super.onPause();
     }
 
     @Override
     protected void onDestroy() {
-        if(db != null) {
-            db.close();
-        }
         Log.e(TAG, "On destroy!!!");
         super.onDestroy();
     }

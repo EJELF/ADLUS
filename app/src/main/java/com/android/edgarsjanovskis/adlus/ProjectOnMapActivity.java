@@ -184,15 +184,10 @@ public class ProjectOnMapActivity extends AppCompatActivity
                     .radius(Integer.parseInt(radius));
             geoFenceLimits = map.addCircle(circleOptions);
 
-
             float zoom = 16f;
             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom((new LatLng(Double.parseDouble(latit), Double.parseDouble(longit))), zoom);
             map.animateCamera(cameraUpdate);
             }
         }
-
-
-
-
     }
 }

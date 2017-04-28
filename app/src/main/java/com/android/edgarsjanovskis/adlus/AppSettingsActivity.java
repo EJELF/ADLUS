@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -56,14 +57,17 @@ public class AppSettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_settings);
+
         imageButton = (ImageButton)findViewById(R.id.ib_Start);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         SharedPreferences prefs = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
         String imei = prefs.getString("User_IMEI", " ");
         final String server = prefs.getString("Server_URL", " ");
         EditText et1 = (EditText) findViewById(R.id.etImei);
+        et1.setEllipsize(TextUtils.TruncateAt.START);
         et1.setText(imei);
         EditText et2 = (EditText) findViewById(R.id.etServer);
+        et1.setSelection(0);
         et2.setText(server);
         cb = (CheckBox)findViewById(R.id.cbTime);
         cb.setChecked(prefs.getBoolean("timeSelected", false));
@@ -131,7 +135,6 @@ public class AppSettingsActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
     @SuppressLint("NewApi")
     @SuppressWarnings("deprecation")
@@ -145,15 +148,7 @@ public class AppSettingsActivity extends AppCompatActivity {
                 minutesStart = tp1.getMinute();
             }
             }else {hoursStart = 0; minutesStart = 0;}
-             /*   StringBuilder sb = new StringBuilder();
-            sb.append(hoursStop).append(":");
-            if (minutesStop<10){
-                sb.append("0");
-                sb.append(minutesStop);
-            }
-            else{sb.append(minutesStop);}
-            String startTime = sb.toString();
-        */
+
             SharedPreferences prefs = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
             prefs.edit().putInt(APP_START_TIME_HOUR, hoursStart).apply();
             prefs.edit().putInt(APP_START_TIME_MINUTE, minutesStart).apply();
@@ -169,34 +164,29 @@ public class AppSettingsActivity extends AppCompatActivity {
         }else{
             hoursStop = 0;
             minutesStop = 0;}
-        /*
-        StringBuilder sb1 = new StringBuilder();
-        sb1.append(hoursStop).append(":");
-        if (minutesStop<10){
-            sb.append("0");
-            sb.append(minutesStop);
-        }
-        else{sb1.append(minutesStop);}
-        String stopTime = sb1.toString();
-*/
+
         SharedPreferences prefs1 = getSharedPreferences("AdlusPrefsFile", MODE_PRIVATE);
         prefs1.edit().putInt(APP_STOP_TIME_HOUR, hoursStop).apply();
         prefs1.edit().putInt(APP_STOP_TIME_MINUTE, minutesStop).apply();
 
+        if (cb.isChecked()) {
+            if(Build.VERSION.SDK_INT < 23){
+                Toast.makeText(getApplicationContext(), "Diemžēl laika uzstādīšana strādā\n tikai no Android 6.0 versijas!", Toast.LENGTH_LONG).show();
+                cal1 = null;
+                cal2 =null;
+            }else {
+                cal1 = Calendar.getInstance();
+                cal1.getTime();
+                cal1.add(Calendar.DAY_OF_MONTH, 0);
+                cal1.set(cal1.get(Calendar.YEAR), cal1.get(Calendar.MONTH), cal1.get(Calendar.DAY_OF_MONTH), hoursStart - 3, minutesStart);
 
-        ////
-        cal1 = Calendar.getInstance();
-        cal1.getTime();
-        cal1.add(Calendar.DAY_OF_MONTH, 0);
-        cal1.set(cal1.get(Calendar.YEAR), cal1.get(Calendar.MONTH), cal1.get(Calendar.DAY_OF_MONTH), hoursStart-3, minutesStart);
-
-        cal2 = Calendar.getInstance();
-        cal2.getTime();
-        cal2.add(Calendar.DAY_OF_MONTH, 0);
-        cal2.set(cal2.get(Calendar.YEAR), cal2.get(Calendar.MONTH), cal2.get(Calendar.DAY_OF_MONTH), hoursStop-3, minutesStop);
-        ////
-
-}
+                cal2 = Calendar.getInstance();
+                cal2.getTime();
+                cal2.add(Calendar.DAY_OF_MONTH, 0);
+                cal2.set(cal2.get(Calendar.YEAR), cal2.get(Calendar.MONTH), cal2.get(Calendar.DAY_OF_MONTH), hoursStop - 3, minutesStop);
+            }
+        }
+    }
 
     @SuppressLint("NewApi")
     public void buttonSave_onClick (View view){
@@ -307,12 +297,13 @@ public class AppSettingsActivity extends AppCompatActivity {
             }
 
             // if service not running both senders are set, otherwise only Stop sender
-
-            //if (!isMyServiceRunning(GeofencingService.class)) {
+            if(Build.VERSION.SDK_INT < 23){
+                return;
+            }else{
             am = (AlarmManager) getSystemService(ALARM_SERVICE);
             am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, cal1.getTimeInMillis(), sender1);
             am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, cal2.getTimeInMillis(), sender2);
-            //}
+            }
 
             Toast.makeText(getApplicationContext(), "Uzstādīta automātiska iesl.-izsl. \n no plkst. " + String.valueOf(hoursStart)
                     + ":" + mStart + " līdz " + String.valueOf(hoursStop) + ":" + mStop, Toast.LENGTH_LONG).show();
@@ -340,4 +331,6 @@ public class AppSettingsActivity extends AppCompatActivity {
         }
         return false;
     }
+
+
 }

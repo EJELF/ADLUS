@@ -11,7 +11,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Laipni lūgts ADLUS!"
+        android:text="@string/laipni_l_gts_adlus"
         android:textColor="@color/lightBlue"
         android:fontFamily="serif"
         android:textStyle="bold"
@@ -23,7 +23,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Darba laika uzskaites sistēmā, kura radīta, lai atvieglotu Tavu darba ikdienu"
+        android:text="@string/darba_laika_uzskaites_sist_m_kas_rad_ta_lai_atvieglotu_tavu_darba_ikdienu"
         android:textColor="@color/white"
         android:textStyle="bold"
         android:textSize="17sp"
@@ -36,7 +36,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Lai ADLUS apikācija varētu darboties, tai ir nepieciešamas šādas atļaujas: \n * Atļauja noteikt atrašanās vietu \n * Atļauja izmantot WiFi tīklu \n * Atļauja izmantot mobilos datus"
+        android:text="@string/lai_adlus_aplik_cija_var_tu_darboties_tai_ir_nepiecie_amas_das_at_aujas_n_at_auja_noteikt_atra_an_s_vietu_n_at_auja_izmantot_wifi_t_klu_n_at_auja_izmantot_mobilos_datus"
         android:textColor="@color/colorAccent"
         android:textStyle="bold"
         android:textSize="14sp"
@@ -47,7 +47,7 @@
         android:layout_centerHorizontal="true" />
 
     <Button
-        android:text="Spied šeit un sāc lietot!"
+        android:text="@string/spied_eit_un_s_c_lietot"
         android:textSize="22sp"
         android:background="@color/lightBlue"
         android:layout_width="170dp"
