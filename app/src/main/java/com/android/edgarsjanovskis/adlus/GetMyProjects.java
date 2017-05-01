@@ -242,7 +242,6 @@ public class GetMyProjects extends AppCompatActivity {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, final View view, final int i, long l) {
 
-                    // nezinu ko lai dara!!!
                     StringBuilder sb = new StringBuilder();
                     StringBuilder phone = sb.append(mProjectList.get(i).get("CustodianPhone"));
 
