@@ -33,7 +33,7 @@
     <string name="splashscreen">SplashScreen</string>
     <string name="welcome">Laipni lūgts ADLUS!</string>
     <string name="welcome_message">Darba laika uzskaites sistēmā, kas radīta, lai atvieglotu Tavu darba ikdienu</string>
-    <string name="startup_message">Lai ADLUS aplikācija varētu darboties, tai ir nepieciešamas šādas atļaujas:   * Atļauja noteikt atrašanās vietu   * Atļauja izmantot WiFi tīklu   * Atļauja izmantot mobilos datus</string>
+    <string name="startup_message">Lai ADLUS aplikācija varētu darboties, tai ir nepieciešamas šādas atļaujas:\n   * Atļauja noteikt atrašanās vietu\n   * Atļauja izmantot WiFi tīklu\n   * Atļauja izmantot mobilos datus</string>
     <string name="push_to_start">Spied šeit un sāc lietot!</string>
     <string name="phone_id">TĀLRUŅA ID:</string>
     <string name="id_number">ID numurs, kuru piešķir administrators</string>

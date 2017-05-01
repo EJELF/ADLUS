@@ -143,7 +143,7 @@ public class GeofencingService extends Service implements GoogleApiClient.Connec
             db.close();
         }
         //player.stop();
-        stopLocationUpdates();
+        //stopLocationUpdates();
         stopGeofences();
         stopService();
         Toast.makeText(this, "Service is destroyed!", Toast.LENGTH_LONG).show();
