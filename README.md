@@ -1,2 +1,2 @@
 # ADLUS
-Automated working hour monitoring module for M-Files
+Automated working hours monitoring module for M-Files
